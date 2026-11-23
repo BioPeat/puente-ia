@@ -4,11 +4,11 @@
   "repo_url": "https://github.com/BioPeat/estadisticas.git",
   "pages_url": "https://biopeat.github.io/estadisticas/",
   "branch": "main",
-  "commit": "1c052b27c3c1dd6cba07f065e140981caae2a531",
+  "commit": "0c2fc471b076516b9ca44449c20c5fb85988e2f9",
   "dirty_local": false,
   "public": true,
   "status": "synced",
-  "synced_at": "2026-11-23T18:02:57.407954+00:00",
+  "synced_at": "2026-11-23T18:48:38.679036+00:00",
   "file_count": 35,
   "omitted_count": 12,
   "estado_txt_path": "catalogo/estadisticas/ESTADO_estadisticas.txt",
@@ -90,8 +90,8 @@
     },
     {
       "path": "app.js",
-      "size": 207455,
-      "sha256": "6e3961b33affca1a613eb2ed41af77799aeb658e260f8c7aae0ad244b99fef63"
+      "size": 208838,
+      "sha256": "631bf08887dd72c26d08eff9c63414ce7de1b74b3dd11a60ca92529fe91851a5"
     },
     {
       "path": "config.js",
@@ -120,13 +120,13 @@
     },
     {
       "path": "styles.css",
-      "size": 91599,
-      "sha256": "24ee8c5f94285352cdd77867f7bcc4e674a6565d251b89486d805bc693f55816"
+      "size": 95957,
+      "sha256": "1e9adb91ab6944caea21ead1b0e641eaa82884c6ffdf34e31bd7e899165de3ef"
     },
     {
       "path": "sw.js",
       "size": 1656,
-      "sha256": "c4c19cc8b3fe1da045995bef5663cd9fe2a13dd74c6adebe240580879d527307"
+      "sha256": "d8ea84621777fa6504a6fc91bff7dc606c583ea7bb7283edf7beb7dbb8406a81"
     },
     {
       "path": "tests/fixtures/dehesa_directo_sanitizado.json",
@@ -155,8 +155,8 @@
     },
     {
       "path": "tests/smoke.py",
-      "size": 30080,
-      "sha256": "6578367c99f6a1f9544bf320ec82bce16e762ce6d7b50045677c8ee8754d6e4a"
+      "size": 32697,
+      "sha256": "3f4d2ead7ebc56cd0eafcf3d6de7ba6a5f3674cb94800a2dba4b2b2d0cf72ac9"
     },
     {
       "path": "tests/updater_e2e.py",

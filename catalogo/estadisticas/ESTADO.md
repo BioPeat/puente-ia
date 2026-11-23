@@ -4,8 +4,8 @@
 - **Repositorio:** https://github.com/BioPeat/estadisticas.git
 - **App publicada:** https://biopeat.github.io/estadisticas/
 - **Rama:** `main`
-- **Commit actual (`source_commit`):** `1c052b27c3c1dd6cba07f065e140981caae2a531`
-- **Sincronizado (UTC):** 2026-11-23T18:02:57.407954+00:00
+- **Commit actual (`source_commit`):** `0c2fc471b076516b9ca44449c20c5fb85988e2f9`
+- **Sincronizado (UTC):** 2026-11-23T18:48:38.679036+00:00
 - **Archivos de texto legibles incluidos:** 35
 
 ## Lectura rápida recomendada (para empezar desde cero en Copilot)
@@ -34,20 +34,20 @@
 | [README.md](files/README.md) | 2123 | `a1e86c197462` |
 | [REVISION_AUDITORIA_GPT.md](files/REVISION_AUDITORIA_GPT.md) | 5612 | `5f0d5df3507c` |
 | [actualizar.html](files/actualizar.html) | 23631 | `5037dd1b01b6` |
-| [app.js](files/app.js) | 207455 | `6e3961b33aff` |
+| [app.js](files/app.js) | 208838 | `631bf08887dd` |
 | [config.js](files/config.js) | 173 | `8493b9a39e2c` |
 | [configurar.html](files/configurar.html) | 3687 | `d005e6f59049` |
 | [index.html](files/index.html) | 4492 | `5214a4f2ff2d` |
 | [instalar.html](files/instalar.html) | 25034 | `fd91b0435342` |
 | [manifest.json](files/manifest.json) | 634 | `9a46d3f543b1` |
-| [styles.css](files/styles.css) | 91599 | `24ee8c5f9428` |
-| [sw.js](files/sw.js) | 1656 | `c4c19cc8b3fe` |
+| [styles.css](files/styles.css) | 95957 | `1e9adb91ab69` |
+| [sw.js](files/sw.js) | 1656 | `d8ea84621777` |
 | [tests/fixtures/dehesa_directo_sanitizado.json](files/tests/fixtures/dehesa_directo_sanitizado.json) | 32494 | `b7379e1d3b02` |
 | [tests/fixtures/mapa_ensanche.json](files/tests/fixtures/mapa_ensanche.json) | 821 | `cf0b42111c2b` |
 | [tests/fixtures/mapa_las_rozas.json](files/tests/fixtures/mapa_las_rozas.json) | 743 | `29725452b1f2` |
 | [tests/fixtures/mapa_olimpico.json](files/tests/fixtures/mapa_olimpico.json) | 714 | `c856ee40097e` |
 | [tests/fixtures/real_3_partidos.json](files/tests/fixtures/real_3_partidos.json) | 50880 | `bdfa2205097c` |
-| [tests/smoke.py](files/tests/smoke.py) | 30080 | `6578367c99f6` |
+| [tests/smoke.py](files/tests/smoke.py) | 32697 | `3f4d2ead7ebc` |
 | [tests/updater_e2e.py](files/tests/updater_e2e.py) | 7264 | `b486528dd216` |
 | [tests/worker_mock.mjs](files/tests/worker_mock.mjs) | 11203 | `2dbb002517ff` |
 | [tools/capture.py](files/tools/capture.py) | 4636 | `c2dab5a15854` |

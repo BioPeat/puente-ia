@@ -6,9 +6,9 @@
   "repo_url": "https://github.com/BioPeat/biopeat.git",
   "branch": "main",
   "source_commit": "1c21adb8a651c19771ea4ebe6ee49def9243971b",
-  "objective": "Traspaso de prueba v2.0.0 autocontenido sin modificar BioPeat",
+  "final_commit": "1c21adb8a651c19771ea4ebe6ee49def9243971b",
+  "objective": "Confirmar la recepción y lectura del traspaso de prueba v2.0.0 sin modificar BioPeat",
   "para_copilot_txt": "ultimo/PARA_COPILOT.txt",
-  "task_para_copilot_txt": "handoffs/20261123-prueba-v2/PARA_COPILOT.txt",
-  "updated_at": "2026-11-23T16:59:11.000296+00:00",
-  "status": "ready_for_copilot"
+  "updated_at": "2026-11-23T17:10:49.290745+00:00",
+  "status": "completed"
 }

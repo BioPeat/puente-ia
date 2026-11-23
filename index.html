@@ -1,29 +1,49 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <title>Puente IA · Copilot ↔ Antigravity</title>
-  <style>
-    body{font:15px/1.6 system-ui,sans-serif;max-width:900px;margin:36px auto;padding:0 20px;background:#111318;color:#e7e9ee}
-    a{color:#7cc4ff}
-    .card{background:#191d24;border:1px solid #2b3240;border-radius:12px;padding:18px;margin:16px 0}
-    .warn{color:#f5b971}
-    code{background:#232833;padding:2px 6px;border-radius:6px}
-  </style>
-</head>
-<body>
-  <h1>Puente IA · BioPeat (Protocolo 1.1)</h1>
-  <p class="warn">Contenido técnico público. Prohibido incluir secretos, rutas locales o datos privados.</p>
-  <div class="card">
-    <h2>Enlaces rápidos para Copilot</h2>
-    <ul>
-      <li><a href="PARA_COPILOT_LEEME.md">PARA_COPILOT_LEEME.md</a> (auditoría, protocolo 1.1 y reglas)</li>
-      <li><a href="ultimo.html">ultimo.html</a> · <a href="ULTIMO_TRASPASO.md">ULTIMO_TRASPASO.md</a> (Sentido 1: Antigravity → Copilot)</li>
-      <li><a href="catalogo.html">catalogo.html</a> · <a href="CATALOGO.md">CATALOGO.md</a> (Sentido 2: Copilot → Antigravity desde cero)</li>
-      <li><a href="HISTORIAL.md">HISTORIAL.md</a> (registro de tareas)</li>
-    </ul>
-  </div>
-</body>
-</html>
+<!doctype html><html lang='es'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='robots' content='noindex,nofollow'><title>Puente IA · Portal único Copilot ↔ Antigravity</title><style>:root{color-scheme:dark light}body{font:15px/1.6 system-ui,sans-serif;max-width:960px;margin:28px auto;padding:0 18px;background:#111318;color:#e7e9ee}a{color:#7cc4ff}.card{background:#191d24;border:1px solid #2b3240;border-radius:12px;padding:16px 18px;margin:14px 0}pre{white-space:pre-wrap;word-break:break-word;background:#13161d;padding:14px;border-radius:8px;border:1px solid #262c38;margin:8px 0 0}table{border-collapse:collapse;width:100%;margin-top:8px}th,td{border:1px solid #2b3240;padding:8px 10px;text-align:left}.warn{color:#f5b971}.nav a{margin-right:12px;font-weight:600}.pill{display:inline-block;padding:2px 8px;border-radius:999px;background:#232a36;font-size:13px}</style></head><body><h1>Puente IA · Portal único (v1.2)</h1><nav class='nav'><a href='guia.html'>Guía visual para Diego</a><a href='START.md'>START.md (Markdown)</a><a href='ultimo.html'>Último traspaso</a><a href='catalogo.html'>Catálogo completo</a><a href='PARA_COPILOT_LEEME.md'>PARA_COPILOT_LEEME.md</a></nav><p class='warn'>Contenido técnico público. Prohibido incluir secretos, rutas locales o datos privados.</p><div class='card'><h2>Instrucciones para Copilot (Protocolo 1.1)</h2><pre>## INSTRUCCIONES OBLIGATORIAS PARA COPILOT (Protocolo 1.1)
+
+1. **Si Diego continúa una tarea de Antigravity:** lee el bloque **Último traspaso / estado actual** de abajo y los archivos enlazados en `handoffs/&lt;ID&gt;/context/`. Usa `origin_mode: &quot;reply_to_handoff&quot;`.
+2. **Si Diego empieza una tarea desde cero:** abre el proyecto en la tabla **Catálogo actual** (`ESTADO.md`, `estado.json`), lee obligatoriamente su `AGENTS.md` y todos los archivos reales afectados en `catalogo/&lt;slug&gt;/files/`. Usa el `commit` exacto de la tabla como `source_commit` y `origin_mode: &quot;copilot_from_scratch&quot;`.
+3. **PROHIBIDO SUPONER O INVENTAR:** si algún enlace da error, no puedes leer un archivo o falta un requisito, **PARA antes de empezar** y pídele a Diego exactamente lo que te falta.
+4. **Formato de entrega:** devuelve un ZIP `COPILOT_A_ANTIGRAVITY_&lt;ID&gt;.zip` con `HANDOFF.json` (`protocol_version` `1.1`, `task_id`, `direction: &quot;copilot_to_antigravity&quot;`, `origin_mode`, `project`, `repo_url`, `branch`, `source_commit`, `created_at`, `objective`, `files` con SHA-256 minúsculas), `RESPUESTA.md`, `PRUEBAS.md` y, si hay cambios, `PATCH.diff` y/o `files/` (`deleted_files` opcional). Prohibidos ejecutables binarios, scripts no declarados, `..`, rutas absolutas o secretos.
+</pre></div><div class='card'><h2>Último traspaso / estado <span class='pill'>20261123-prueba-inicial · ready_for_copilot</span></h2><pre># Traspaso a Copilot
+
+- **ID:** 20261123-prueba-inicial
+- **Modo:** `reply_to_handoff`
+- **Proyecto:** biopeat
+- **Repositorio:** https://github.com/BioPeat/biopeat.git
+- **Rama:** main
+- **Commit de origen:** `1c21adb8a651c19771ea4ebe6ee49def9243971b`
+- **Creado:** 2026-11-23T13:35:23.572796+00:00
+- **Estado:** listo_para_copilot
+
+## Objetivo
+
+Traspaso de prueba inicial v1.1.0 sin modificar BioPeat
+
+## Qué se ha hecho
+
+Instalacion de copilot-bridge v1.1.0, catalogo sincronizado y puente inicializado.
+
+## Qué falta
+
+Leer PARA_COPILOT_LEEME.md y confirmar lectura desde Microsoft Copilot.
+
+## Archivos de contexto
+
+- [context/README.md](context/README.md) — `f4b78c8f993e0b2c171e93348809f554ea2d9d13482433beffdfeea5ae5315f2`
+- [context/AGENTS.md](context/AGENTS.md) — `9b91fb1b0d76d72974b47d62cb65f185bbff430b3bba858c8fbb14599c8defe4`
+
+## Pruebas ejecutadas y resultado
+
+self_test.py 26/26 superadas.
+
+## Decisiones y restricciones
+
+No modificar codigo de biopeat, Finanzas ni estadisticas en esta prueba inicial.
+
+## Pregunta concreta para Copilot
+
+Confirma ID, proyecto, commit de origen y que puedes abrir los archivos del catalogo.
+
+## Regla de entrega
+
+Responder con `COPILOT_A_ANTIGRAVITY_20261123-prueba-inicial.zip` incluyendo `HANDOFF.json` (`protocol_version`: `1.1`, `direction`: `copilot_to_antigravity`, `origin_mode`: `reply_to_handoff`, `source_commit`: `1c21adb8a651c19771ea4ebe6ee49def9243971b`), `RESPUESTA.md`, `PRUEBAS.md` y, si hay cambios, `PATCH.diff` y `files/`.</pre></div><div class='card'><h2>Catálogo actual de apps públicas</h2><table><thead><tr><th>Proyecto</th><th>Visibilidad</th><th>Commit actual</th><th>Enlaces</th></tr></thead><tbody><tr><td><strong>biopeat</strong></td><td>Público</td><td><code title='1c21adb8a651c19771ea4ebe6ee49def9243971b'>1c21adb8a6</code></td><td><a href='catalogo/biopeat/resumen.html'>resumen</a> · <a href='catalogo/biopeat/ESTADO.md'>ESTADO.md</a> · <a href='catalogo/biopeat/estado.json'>estado.json</a> · <a href='catalogo/biopeat/files/AGENTS.md'>AGENTS.md</a></td></tr><tr><td><strong>Finanzas</strong></td><td>Público</td><td><code title='9cb8b81621da18cfbf4a558c5cd64fb7bb1e3b47'>9cb8b81621</code></td><td><a href='catalogo/finanzas/resumen.html'>resumen</a> · <a href='catalogo/finanzas/ESTADO.md'>ESTADO.md</a> · <a href='catalogo/finanzas/estado.json'>estado.json</a> · <a href='catalogo/finanzas/files/AGENTS.md'>AGENTS.md</a></td></tr><tr><td><strong>estadisticas</strong></td><td>Público</td><td><code title='fb7a56a4efaeae13c9f73518518f73388ceb6a98'>fb7a56a4ef</code></td><td><a href='catalogo/estadisticas/resumen.html'>resumen</a> · <a href='catalogo/estadisticas/ESTADO.md'>ESTADO.md</a> · <a href='catalogo/estadisticas/estado.json'>estado.json</a> · <a href='catalogo/estadisticas/files/AGENTS.md'>AGENTS.md</a></td></tr></tbody></table></div></body></html>

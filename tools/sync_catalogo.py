@@ -121,6 +121,124 @@ def render_html_doc(title: str, md_body: str, links: list[tuple[str, str]]) -> s
     )
 
 
+def refresh_portal(bridge: Path) -> None:
+    state: dict = {}
+    state_file = bridge / "estado.json"
+    if state_file.is_file():
+        try:
+            state = json.loads(state_file.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            state = {}
+
+    latest_id = state.get("latest_task_id")
+    latest_detail = ""
+    if latest_id:
+        for cand in ("HANDOFF.md", "RESULTADO.md", "ORIGEN_COPILOT.md"):
+            p = bridge / "handoffs" / str(latest_id) / cand
+            if p.is_file():
+                latest_detail = p.read_text(encoding="utf-8", errors="replace").strip()
+                break
+    if not latest_detail and (bridge / "ULTIMO_TRASPASO.md").is_file():
+        latest_detail = (bridge / "ULTIMO_TRASPASO.md").read_text(encoding="utf-8", errors="replace").strip()
+    if not latest_detail:
+        latest_detail = "Todavía no hay ningún traspaso registrado."
+
+    cat_projects: list[dict] = []
+    cat_file = bridge / "catalogo.json"
+    if cat_file.is_file():
+        try:
+            cat_projects = json.loads(cat_file.read_text(encoding="utf-8")).get("projects", [])
+        except json.JSONDecodeError:
+            cat_projects = []
+
+    cat_rows_md = []
+    cat_rows_html = []
+    for e in cat_projects:
+        name = str(e.get("name", ""))
+        slug = str(e.get("slug", name.lower()))
+        if not e.get("public"):
+            cat_rows_md.append(f"| {name} | Privado | - | No copiado (usar PairDrop) |")
+            cat_rows_html.append(
+                f"<tr><td>{html.escape(name)}</td><td>Privado</td><td><code>-</code></td><td>No copiado (usar PairDrop)</td></tr>"
+            )
+        else:
+            commit = str(e.get("commit", ""))
+            short_c = commit[:10]
+            cat_rows_md.append(
+                f"| {name} | Público | `{commit}` | "
+                f"[ESTADO.md](catalogo/{slug}/ESTADO.md) · [resumen.html](catalogo/{slug}/resumen.html) · "
+                f"[estado.json](catalogo/{slug}/estado.json) · [AGENTS.md](catalogo/{slug}/files/AGENTS.md) |"
+            )
+            cat_rows_html.append(
+                f"<tr><td><strong>{html.escape(name)}</strong></td><td>Público</td>"
+                f"<td><code title='{html.escape(commit)}'>{html.escape(short_c)}</code></td>"
+                f"<td><a href='catalogo/{html.escape(slug)}/resumen.html'>resumen</a> · "
+                f"<a href='catalogo/{html.escape(slug)}/ESTADO.md'>ESTADO.md</a> · "
+                f"<a href='catalogo/{html.escape(slug)}/estado.json'>estado.json</a> · "
+                f"<a href='catalogo/{html.escape(slug)}/files/AGENTS.md'>AGENTS.md</a></td></tr>"
+            )
+
+    cat_table_md = (
+        "| Proyecto | Visibilidad | Commit actual (`source_commit`) | Enlaces directos |\n|---|---|---|---|\n"
+        + ("\n".join(cat_rows_md) if cat_rows_md else "| (sin proyectos) | - | - | - |")
+    )
+
+    instructions_md = (
+        "## INSTRUCCIONES OBLIGATORIAS PARA COPILOT (Protocolo 1.1)\n\n"
+        "1. **Si Diego continúa una tarea de Antigravity:** lee el bloque **Último traspaso / estado actual** de abajo y los archivos enlazados en `handoffs/<ID>/context/`. Usa `origin_mode: \"reply_to_handoff\"`.\n"
+        "2. **Si Diego empieza una tarea desde cero:** abre el proyecto en la tabla **Catálogo actual** (`ESTADO.md`, `estado.json`), lee obligatoriamente su `AGENTS.md` y todos los archivos reales afectados en `catalogo/<slug>/files/`. Usa el `commit` exacto de la tabla como `source_commit` y `origin_mode: \"copilot_from_scratch\"`.\n"
+        "3. **PROHIBIDO SUPONER O INVENTAR:** si algún enlace da error, no puedes leer un archivo o falta un requisito, **PARA antes de empezar** y pídele a Diego exactamente lo que te falta.\n"
+        "4. **Formato de entrega:** devuelve un ZIP `COPILOT_A_ANTIGRAVITY_<ID>.zip` con `HANDOFF.json` (`protocol_version` `1.1`, `task_id`, `direction: \"copilot_to_antigravity\"`, `origin_mode`, `project`, `repo_url`, `branch`, `source_commit`, `created_at`, `objective`, `files` con SHA-256 minúsculas), `RESPUESTA.md`, `PRUEBAS.md` y, si hay cambios, `PATCH.diff` y/o `files/` (`deleted_files` opcional). Prohibidos ejecutables binarios, scripts no declarados, `..`, rutas absolutas o secretos.\n"
+    )
+
+    start_md = (
+        "# PUENTE IA · PORTAL ÚNICO (Antigravity ↔ Copilot)\n\n"
+        "- **Guía rápida para Diego:** [guia.html](guia.html) · [GUIA_DIEGO.md](GUIA_DIEGO.md)\n"
+        "- **Referencia completa:** [PARA_COPILOT_LEEME.md](PARA_COPILOT_LEEME.md) · [HISTORIAL.md](HISTORIAL.md)\n\n"
+        f"{instructions_md}\n"
+        "## Último traspaso / estado actual\n\n"
+        f"{latest_detail}\n\n"
+        "## Catálogo actual de repositorios públicos\n\n"
+        f"{cat_table_md}\n"
+    )
+    (bridge / "START.md").write_text(start_md, encoding="utf-8")
+
+    cat_table_html = (
+        "<table><thead><tr><th>Proyecto</th><th>Visibilidad</th><th>Commit actual</th><th>Enlaces</th></tr></thead><tbody>"
+        + ("".join(cat_rows_html) if cat_rows_html else "<tr><td colspan='4'>Sin proyectos sincronizados todavía.</td></tr>")
+        + "</tbody></table>"
+    )
+    status_badge = html.escape(str(state.get("status", "empty")))
+    latest_id_esc = html.escape(str(latest_id or "ninguno"))
+    index_html = (
+        "<!doctype html><html lang='es'><head><meta charset='utf-8'>"
+        "<meta name='viewport' content='width=device-width,initial-scale=1'>"
+        "<meta name='robots' content='noindex,nofollow'>"
+        "<title>Puente IA · Portal único Copilot ↔ Antigravity</title>"
+        "<style>:root{color-scheme:dark light}body{font:15px/1.6 system-ui,sans-serif;max-width:960px;margin:28px auto;padding:0 18px;background:#111318;color:#e7e9ee}"
+        "a{color:#7cc4ff}.card{background:#191d24;border:1px solid #2b3240;border-radius:12px;padding:16px 18px;margin:14px 0}"
+        "pre{white-space:pre-wrap;word-break:break-word;background:#13161d;padding:14px;border-radius:8px;border:1px solid #262c38;margin:8px 0 0}"
+        "table{border-collapse:collapse;width:100%;margin-top:8px}th,td{border:1px solid #2b3240;padding:8px 10px;text-align:left}"
+        ".warn{color:#f5b971}.nav a{margin-right:12px;font-weight:600}.pill{display:inline-block;padding:2px 8px;border-radius:999px;background:#232a36;font-size:13px}</style></head><body>"
+        "<h1>Puente IA · Portal único (v1.2)</h1>"
+        "<nav class='nav'>"
+        "<a href='guia.html'>Guía visual para Diego</a>"
+        "<a href='START.md'>START.md (Markdown)</a>"
+        "<a href='ultimo.html'>Último traspaso</a>"
+        "<a href='catalogo.html'>Catálogo completo</a>"
+        "<a href='PARA_COPILOT_LEEME.md'>PARA_COPILOT_LEEME.md</a>"
+        "</nav>"
+        "<p class='warn'>Contenido técnico público. Prohibido incluir secretos, rutas locales o datos privados.</p>"
+        "<div class='card'><h2>Instrucciones para Copilot (Protocolo 1.1)</h2>"
+        f"<pre>{html.escape(instructions_md)}</pre></div>"
+        f"<div class='card'><h2>Último traspaso / estado <span class='pill'>{latest_id_esc} · {status_badge}</span></h2>"
+        f"<pre>{html.escape(latest_detail)}</pre></div>"
+        f"<div class='card'><h2>Catálogo actual de apps públicas</h2>{cat_table_html}</div>"
+        "</body></html>\n"
+    )
+    (bridge / "index.html").write_text(index_html, encoding="utf-8")
+
+
 def run_sync(bridge: Path) -> int:
     sources_path = bridge / "catalogo_fuentes.json"
     if not sources_path.is_file():
@@ -291,6 +409,7 @@ def run_sync(bridge: Path) -> int:
                 render_html_doc("Catálogo de repositorios", cat_md, [("Último traspaso", "ultimo.html"), ("Inicio", "index.html"), ("catalogo.json", "catalogo.json")]),
                 encoding="utf-8",
             )
+            refresh_portal(bridge)
             print("Catálogo actualizado.")
 
         errors = safety_scan(bridge)

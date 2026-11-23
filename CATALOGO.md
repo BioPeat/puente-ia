@@ -1,6 +1,6 @@
 # Catálogo actual de repositorios públicos
 
-Actualizado (UTC): `2026-11-23T13:35:20.895641+00:00`
+Actualizado (UTC): `2026-11-23T14:03:39.413704+00:00`
 
 Usa este catálogo cuando pidas una tarea a Copilot **desde cero** (sin traspaso previo de Antigravity).
 

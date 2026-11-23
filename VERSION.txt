@@ -1,4 +1,4 @@
 Puente IA Copilot-Antigravity
-Versión: 1.1.0
+Versión: 1.2.0
 Protocolo: 1.1 (compatible con 1.0)
 Fecha: 2026-11-23

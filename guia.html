@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Guía rápida · Puente IA (Diego)</title>
+  <style>
+    :root {
+      --bg: #0f1217;
+      --surface: #171c24;
+      --surface-2: #11151b;
+      --border: #293140;
+      --text: #eef1f6;
+      --muted: #a6b0c3;
+      --accent: #68b5ff;
+      --ok: #4cd495;
+      --warn: #f5b971;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f6f4ef;
+        --surface: #ffffff;
+        --surface-2: #f1eee7;
+        --border: #dcd6ca;
+        --text: #1c2026;
+        --muted: #5b6472;
+        --accent: #0b63ce;
+        --ok: #137a4b;
+        --warn: #9a5b00;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0 auto;
+      max-width: 820px;
+      padding: 28px 18px 56px;
+      font: 16px/1.55 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    header { margin-bottom: 22px; }
+    h1 { margin: 0 0 6px; font-size: 1.65rem; letter-spacing: -0.02em; }
+    .sub { margin: 0; color: var(--muted); }
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin-bottom: 18px;
+    }
+    .hero-label { font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; }
+    .url-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+    .url-row a { color: var(--accent); font-weight: 700; word-break: break-all; }
+    .grid { display: grid; gap: 14px; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+    }
+    .card h2 { margin: 0 0 8px; font-size: 1.15rem; display: flex; align-items: center; gap: 8px; }
+    .tag {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .step { margin-top: 12px; }
+    .step-title { font-size: 0.9rem; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+    .copy-box {
+      display: flex;
+      gap: 10px;
+      align-items: stretch;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    .copy-text {
+      flex: 1;
+      font: 0.92rem/1.45 ui-monospace, SFMono-Regular, Consolas, monospace;
+      white-space: pre-wrap;
+      word-break: break-word;
+      user-select: all;
+    }
+    button.copy-btn {
+      flex: 0 0 auto;
+      align-self: center;
+      background: var(--accent);
+      color: #fff;
+      border: 0;
+      border-radius: 8px;
+      padding: 8px 13px;
+      font: 600 0.85rem system-ui, sans-serif;
+      cursor: pointer;
+    }
+    button.copy-btn.done { background: var(--ok); }
+    .note { font-size: 0.9rem; color: var(--muted); margin-top: 10px; }
+    .warn { color: var(--warn); font-size: 0.88rem; margin-top: 8px; }
+    nav { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 12px; font-size: 0.9rem; }
+    nav a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Puente IA · Guía rápida</h1>
+    <p class="sub">1 enlace único y 2 frases cortas para usar Antigravity y Copilot en los dos sentidos.</p>
+    <nav>
+      <a href="index.html">Portal para Copilot</a>
+      <a href="ultimo.html">Último traspaso</a>
+      <a href="catalogo.html">Catálogo de apps</a>
+      <a href="HISTORIAL.md">Historial</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-label">Tu enlace único (el único que necesitas guardar en el trabajo):</div>
+    <div class="url-row">
+      <a id="main-url" href="https://biopeat.github.io/puente-ia/">https://biopeat.github.io/puente-ia/</a>
+      <button class="copy-btn" type="button" data-copy="https://biopeat.github.io/puente-ia/">Copiar enlace</button>
+    </div>
+    <p class="note">Respaldo si algún día falla el anterior: <code>https://raw.githubusercontent.com/BioPeat/puente-ia/main/START.md</code></p>
+  </section>
+
+  <div class="grid">
+    <article class="card">
+      <h2><span class="tag">HOY</span> Primer paso (comprobar que Copilot lo lee)</h2>
+      <div class="step">
+        <div class="step-title">Pega esto en Copilot en el portátil del trabajo:</div>
+        <div class="copy-box">
+          <div class="copy-text">Abre https://biopeat.github.io/puente-ia/ y dime el ID, la app y el commit del último traspaso, y qué apps ves en el catálogo.</div>
+          <button class="copy-btn" type="button">Copiar</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <h2><span class="tag">CAMINO A</span> Empiezas en Antigravity → sigues en Copilot</h2>
+      <div class="step">
+        <div class="step-title">1. En Antigravity (portátil personal):</div>
+        <div class="copy-box">
+          <div class="copy-text">PUENTE: pásalo a Copilot</div>
+          <button class="copy-btn" type="button">Copiar</button>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-title">2. En Copilot (portátil del trabajo):</div>
+        <div class="copy-box">
+          <div class="copy-text">Abre https://biopeat.github.io/puente-ia/ y continúa la última tarea.</div>
+          <button class="copy-btn" type="button">Copiar</button>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-title">3. Descarga el ZIP de Copilot → pásalo por PairDrop a Descargas → en Antigravity di:</div>
+        <div class="copy-box">
+          <div class="copy-text">PUENTE: aplica lo de Copilot</div>
+          <button class="copy-btn" type="button">Copiar</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <h2><span class="tag">CAMINO B</span> Empiezas desde cero en Copilot → aplicas aquí</h2>
+      <div class="step">
+        <div class="step-title">1. En Copilot (cambia &lt;APP&gt; por BioPeat, Finanzas o Estadísticas, y &lt;TAREA&gt; por lo que quieras):</div>
+        <div class="copy-box">
+          <div class="copy-text">Abre https://biopeat.github.io/puente-ia/, revisa la app &lt;APP&gt; siguiendo sus instrucciones y haz esto: &lt;TAREA&gt;. Si te falta algún archivo, pídemelo antes de empezar.</div>
+          <button class="copy-btn" type="button">Copiar</button>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-title">2. Descarga el ZIP de Copilot → pásalo por PairDrop a Descargas → en Antigravity di:</div>
+        <div class="copy-box">
+          <div class="copy-text">PUENTE: aplica lo de Copilot</div>
+          <button class="copy-btn" type="button">Copiar</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <h2><span class="tag">FUTURO</span> Añadir una app nueva más adelante</h2>
+      <div class="step">
+        <div class="step-title">En Antigravity (sin reinstalar nada):</div>
+        <div class="copy-box">
+          <div class="copy-text">PUENTE: añade https://github.com/BioPeat/NUEVO_REPO.git</div>
+          <button class="copy-btn" type="button">Copiar</button>
+        </div>
+      </div>
+      <p class="warn">Recuerda: si creas un repositorio privado, no se copiará su código aquí; solo lo público entra en puente-ia.</p>
+      <p class="note">Los ZIP ya aplicados se archivan solos en <code>Descargas/Puente-IA-procesados/</code> para no mezclarse con los nuevos.</p>
+    </article>
+  </div>
+
+  <script>
+    document.querySelectorAll('.copy-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const text = btn.dataset.copy || btn.parentElement.querySelector('.copy-text').textContent.trim();
+        const prev = btn.textContent;
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          ta.remove();
+        }
+        btn.textContent = 'Copiado';
+        btn.classList.add('done');
+        setTimeout(() => { btn.textContent = prev; btn.classList.remove('done'); }, 1500);
+      });
+    });
+  </script>
+</body>
+</html>

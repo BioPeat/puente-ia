@@ -5,7 +5,7 @@
 - **App publicada:** https://biopeat.github.io/biopeat/
 - **Rama:** `main`
 - **Commit actual (`source_commit`):** `1c21adb8a651c19771ea4ebe6ee49def9243971b`
-- **Sincronizado (UTC):** 2026-11-23T13:35:20.895641+00:00
+- **Sincronizado (UTC):** 2026-11-23T14:03:39.413704+00:00
 - **Archivos de texto legibles incluidos:** 21
 
 ## Lectura rápida recomendada (para empezar desde cero en Copilot)

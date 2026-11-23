@@ -28,7 +28,7 @@ jobs:
           if [ -n "$(git status --porcelain)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add CATALOGO.md catalogo.json catalogo.html catalogo/
+            git add CATALOGO.md catalogo.json catalogo.html START.md index.html catalogo/
             git commit -m "chore: sincronizar catalogo de repositorios publicos"
             git push
           else

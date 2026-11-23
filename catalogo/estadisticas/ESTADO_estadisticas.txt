@@ -5,7 +5,7 @@ REPOSITORIO: https://github.com/BioPeat/estadisticas.git
 APP PUBLICADA: https://biopeat.github.io/estadisticas/
 RAMA: main
 COMMIT ACTUAL (source_commit): fb7a56a4efaeae13c9f73518518f73388ceb6a98
-SINCRONIZADO UTC: 2026-11-23T16:59:08.287049+00:00
+SINCRONIZADO UTC: 2026-11-23T17:19:12.916636+00:00
 PROTOCOLO DE VUELTA: 1.1
 
 INDICE COMPLETO DE ARCHIVOS PUBLICOS:
@@ -64,7 +64,7 @@ REGLA OBLIGATORIA ANTI-SUPOSICIONES:
 - Si necesitas leer archivos concretos de código de estadisticas, PARA antes de programar y pídeselos a Diego (puede empaquetarlos en 1 clic desde el panel como ARCHIVOS_estadisticas.txt).
 
 DOCUMENTACION CLAVE COMPLETA:
-===== FILE: AGENTS.md | sha256: 181b885ccc12910d28783326b0bd91a884253ce9b470aef790608b46e38f6c5a =====
+===== FILE: AGENTS.md | sha256: 181b885ccc12910d28783326b0bd91a884253ce9b470aef790608b46e38f6c5a | sha256_lf: 181b885ccc12910d28783326b0bd91a884253ce9b470aef790608b46e38f6c5a | eol: lf =====
 # AGENTS · v12.3
 - Conserva `STORE = 'estadisticas_shared_v2'` y `MULTI_STORE = 'estadisticas_multiteam_v11'`.
 - No renombres ni borres rutas/tablas w2. No recrees D1 y no pidas `/api/setup` en actualizaciones.
@@ -80,7 +80,7 @@ DOCUMENTACION CLAVE COMPLETA:
 - `instalar.html` instala la PWA raíz y conserva fallbacks iOS/in-app, accesibilidad y capturas anonimizadas.
 - `actualizar.html` conserva contexto íntegro, multipartes, `content`, create/delete y bloqueo de `assets/`.
 ===== END FILE: AGENTS.md =====
-===== FILE: CONTEXTO_ESTADISTICAS.md | sha256: ba922ceb46bb1c709fc03bab5e094831ad60680b62df392b736ee173ccba63a1 =====
+===== FILE: CONTEXTO_ESTADISTICAS.md | sha256: ba922ceb46bb1c709fc03bab5e094831ad60680b62df392b736ee173ccba63a1 | sha256_lf: ba922ceb46bb1c709fc03bab5e094831ad60680b62df392b736ee173ccba63a1 | eol: lf =====
 # Contexto de Estadísticas v12.3
 
 PWA local-first multiequipo para actas FBM, Directo y mapas. Los almacenes `estadisticas_shared_v2` y `estadisticas_multiteam_v11`, así como rutas/tablas w2, son contratos de compatibilidad.
@@ -91,7 +91,7 @@ El cliente resuelve conflictos por `revision`/`updatedAt` de partido y `mapRevis
 
 `instalar.html` instala la PWA raíz. `actualizar.html` genera contexto completo para Gemini/Claude. Nunca incluir tokens ni modificar/entregar `assets/`.
 ===== END FILE: CONTEXTO_ESTADISTICAS.md =====
-===== FILE: MAPA_DEL_CODIGO.md | sha256: bccd2d4f2dfe246a7f4910ec992c04b9a9454fddf66ca22c12e473753a60d779 =====
+===== FILE: MAPA_DEL_CODIGO.md | sha256: bccd2d4f2dfe246a7f4910ec992c04b9a9454fddf66ca22c12e473753a60d779 | sha256_lf: bccd2d4f2dfe246a7f4910ec992c04b9a9454fddf66ca22c12e473753a60d779 | eol: lf =====
 # Mapa del código · v12.3
 
 - `index.html`, `styles.css`, `app.js`: interfaz, estado local, importación FBM, estadísticas, Directo, mapas, multiequipo, conflictos y sincronización.
@@ -105,7 +105,7 @@ El cliente resuelve conflictos por `revision`/`updatedAt` de partido y `mapRevis
 - `tests/updater_e2e.py`: actualizador universal.
 - `tools/validate.py`: estructura, sintaxis, fixtures y secretos.
 ===== END FILE: MAPA_DEL_CODIGO.md =====
-===== FILE: PROYECTO_CLAUDE.md | sha256: dbf7c508d7c3a4e703489c1b750fa4cf33f728e1747030bd5030dbbb0e99fa28 =====
+===== FILE: PROYECTO_CLAUDE.md | sha256: dbf7c508d7c3a4e703489c1b750fa4cf33f728e1747030bd5030dbbb0e99fa28 | sha256_lf: dbf7c508d7c3a4e703489c1b750fa4cf33f728e1747030bd5030dbbb0e99fa28 | eol: lf =====
 # Proyecto Claude · reglas estables de Estadísticas v12.3
 
 Usa exclusivamente el contexto actual recién generado por `actualizar.html`; prevalece sobre conocimiento estable y conversaciones anteriores. Sin ese contexto, pide que lo generen.
@@ -117,7 +117,7 @@ Responde solo JSON `estadisticas-update` con `schema`, `updateId`, `targetVersio
 Conserva `estadisticas_shared_v2`, `estadisticas_multiteam_v11`, rutas/tablas w2, logo Aro vector, aislamiento por equipo y semántica de datos ausentes. El Worker solo admite migraciones D1 aditivas y tolerantes; nunca recrea la base ni requiere `/api/setup`. Toda subida de versión coordina APP_VERSION/estado, `?v=`, CACHE, CHANGELOG y pruebas.
 ===== END FILE: PROYECTO_CLAUDE.md =====
 - PROYECTO_ESTADISTICAS.md (734178 bytes, omitido por tamaño >80 KB; pídelo a Diego desde el panel si lo necesitas)
-===== FILE: README.md | sha256: a1e86c197462cfed4048eeba62f96977f2c9038d144f245deb635d3b237ac05a =====
+===== FILE: README.md | sha256: a1e86c197462cfed4048eeba62f96977f2c9038d144f245deb635d3b237ac05a | sha256_lf: a1e86c197462cfed4048eeba62f96977f2c9038d144f245deb635d3b237ac05a | eol: lf =====
 # Estadísticas v12.3
 
 PWA local-first y multiequipo para actas FBM, Directo, mapas y sincronización privada.

@@ -1,0 +1,13 @@
+{
+  "protocol_version": "1.1",
+  "task_id": "20261123-171428-finanzas-804f4d",
+  "direction": "copilot_to_antigravity",
+  "origin_mode": "copilot_from_scratch",
+  "project": "Finanzas",
+  "repo_url": "https://github.com/BioPeat/Finanzas.git",
+  "branch": "main",
+  "source_commit": "9cb8b81621da18cfbf4a558c5cd64fb7bb1e3b47",
+  "created_at": "2026-11-23T17:17:46.134422+00:00",
+  "objective": "Prueba desde cero: confirmar el commit actual de Finanzas y el ciclo de vuelta sin cambiar código",
+  "files": []
+}

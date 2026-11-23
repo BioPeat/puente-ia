@@ -5,7 +5,7 @@ REPOSITORIO: https://github.com/BioPeat/Finanzas.git
 APP PUBLICADA: https://biopeat.github.io/Finanzas/
 RAMA: main
 COMMIT ACTUAL (source_commit): 9cb8b81621da18cfbf4a558c5cd64fb7bb1e3b47
-SINCRONIZADO UTC: 2026-11-23T16:59:08.287049+00:00
+SINCRONIZADO UTC: 2026-11-23T17:19:12.916636+00:00
 PROTOCOLO DE VUELTA: 1.1
 
 INDICE COMPLETO DE ARCHIVOS PUBLICOS:
@@ -54,7 +54,7 @@ REGLA OBLIGATORIA ANTI-SUPOSICIONES:
 - Si necesitas leer archivos concretos de código de Finanzas, PARA antes de programar y pídeselos a Diego (puede empaquetarlos en 1 clic desde el panel como ARCHIVOS_finanzas.txt).
 
 DOCUMENTACION CLAVE COMPLETA:
-===== FILE: AGENTS.md | sha256: f9ecaa131c55432b39cc7f5d10ee5632799c49eb8bbf3a5331036682963454f4 =====
+===== FILE: AGENTS.md | sha256: f9ecaa131c55432b39cc7f5d10ee5632799c49eb8bbf3a5331036682963454f4 | sha256_lf: f9ecaa131c55432b39cc7f5d10ee5632799c49eb8bbf3a5331036682963454f4 | eol: lf =====
 # AGENTS.md · Finanzas v12
 
 ## Misión
@@ -111,7 +111,7 @@ Mejorar la app real sin perder datos ni degradar privacidad, claridad o fiabilid
 - Worker w6, Gemini local/real, radar, noticias y análisis técnico.
 - Pantallas con y sin inversiones; claro/oscuro; 360–1920 px.
 ===== END FILE: AGENTS.md =====
-===== FILE: CONTEXTO_FINANZAS.md | sha256: 979a4e18fb7ef0ce458f4c2cf6eb194459996a7c8babd4ef489d05fc90b20ec5 =====
+===== FILE: CONTEXTO_FINANZAS.md | sha256: 979a4e18fb7ef0ce458f4c2cf6eb194459996a7c8babd4ef489d05fc90b20ec5 | sha256_lf: 1ca5884928c21ba71f116d5fdd546f25b62a11cfc4d0d8057ef97c6cd255391c | eol: crlf =====
 # CONTEXTO · Finanzas
 
 **Versión actual: v12** · revisión 17 · Worker **w6**
@@ -144,7 +144,7 @@ PWA privada y local-first para unificar bancos, exchanges (KuCoin, Kraken, Binan
 - `tests/worker_smoke.mjs`: pruebas de rutas, CORS, TOKEN y KV del Worker `w6`.
 - `tools/`: generación de mapa y sincronización de versión.
 ===== END FILE: CONTEXTO_FINANZAS.md =====
-===== FILE: MAPA_DEL_CODIGO.md | sha256: 3c20309bb941b41268c51b3b89ae6a7cb52a5d05adc02e4e7490eb86c9779553 =====
+===== FILE: MAPA_DEL_CODIGO.md | sha256: 3c20309bb941b41268c51b3b89ae6a7cb52a5d05adc02e4e7490eb86c9779553 | sha256_lf: 4c48f9948dc0805b2e07b896a38970a2c517ab9df4ff0572317ec86459f384cf | eol: crlf =====
 # MAPA DEL CÓDIGO · Finanzas v12
 
 Generado automáticamente a partir de los módulos `js/*.js`.
@@ -430,7 +430,7 @@ Generado automáticamente a partir de los módulos `js/*.js`.
 - `refreshAll(force)` · js/app.js:685
 - `init()` · js/app.js:693
 ===== END FILE: MAPA_DEL_CODIGO.md =====
-===== FILE: README.md | sha256: 62a67b11436feddca7b6720f673a72a021fb7829f8735e0876c9e0994d4c2f16 =====
+===== FILE: README.md | sha256: 62a67b11436feddca7b6720f673a72a021fb7829f8735e0876c9e0994d4c2f16 | sha256_lf: 62a67b11436feddca7b6720f673a72a021fb7829f8735e0876c9e0994d4c2f16 | eol: lf =====
 # Finanzas v12 · Centro de Control Financiero
 
 PWA privada y local-first para controlar desde un mismo sitio todas tus cuentas bancarias (Santander, Revolut y cualquier banco), exchanges (KuCoin, Kraken, Binance, OKX, Bybit), brókeres, wallets on-chain, derivados en vivo, gráficos interactivos, fiscalidad FIFO en España y Copiloto IA con Gemini.

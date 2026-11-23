@@ -1,14 +1,14 @@
 {
   "protocol_version": "1.1",
-  "latest_task_id": "20261123-prueba-v2",
-  "origin_mode": "reply_to_handoff",
-  "project": "biopeat",
-  "repo_url": "https://github.com/BioPeat/biopeat.git",
+  "latest_task_id": "20261123-171428-finanzas-804f4d",
+  "origin_mode": "copilot_from_scratch",
+  "project": "Finanzas",
+  "repo_url": "https://github.com/BioPeat/Finanzas.git",
   "branch": "main",
-  "source_commit": "1c21adb8a651c19771ea4ebe6ee49def9243971b",
-  "final_commit": "1c21adb8a651c19771ea4ebe6ee49def9243971b",
-  "objective": "Confirmar la recepción y lectura del traspaso de prueba v2.0.0 sin modificar BioPeat",
+  "source_commit": "9cb8b81621da18cfbf4a558c5cd64fb7bb1e3b47",
+  "final_commit": "9cb8b81621da18cfbf4a558c5cd64fb7bb1e3b47",
+  "objective": "Prueba desde cero: confirmar el commit actual de Finanzas y el ciclo de vuelta sin cambiar código",
   "para_copilot_txt": "ultimo/PARA_COPILOT.txt",
-  "updated_at": "2026-11-23T17:10:49.290745+00:00",
+  "updated_at": "2026-11-23T17:17:46.134422+00:00",
   "status": "completed"
 }

@@ -1,13 +1,13 @@
 # Último estado del puente
 
-- **Última tarea registrada:** [20261123-prueba-v2](handoffs/20261123-prueba-v2/RESULTADO.md) (detalle: [HANDOFF.md](handoffs/20261123-prueba-v2/HANDOFF.md))
-- **Modo:** `reply_to_handoff`
+- **Última tarea registrada:** [20261123-171428-finanzas-804f4d](handoffs/20261123-171428-finanzas-804f4d/RESULTADO.md) (detalle: [ORIGEN_COPILOT.md](handoffs/20261123-171428-finanzas-804f4d/ORIGEN_COPILOT.md))
+- **Modo:** `copilot_from_scratch`
 - **Estado:** `completed`
-- **Proyecto:** biopeat
-- **Repositorio:** https://github.com/BioPeat/biopeat.git
-- **Commit final:** `1c21adb8a651c19771ea4ebe6ee49def9243971b`
+- **Proyecto:** Finanzas
+- **Repositorio:** https://github.com/BioPeat/Finanzas.git
+- **Commit final:** `9cb8b81621da18cfbf4a558c5cd64fb7bb1e3b47`
 - **Catálogo actual para tareas desde cero:** [CATALOGO.md](CATALOGO.md)
 
 ## Resumen
 
-Primer ciclo real Antigravity -> Copilot -> Antigravity verificado sin cambios en BioPeat.
+Primer ciclo real Copilot desde cero -> Antigravity verificado sin cambios en Finanzas.

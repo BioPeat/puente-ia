@@ -54,6 +54,15 @@ def sha256(path: Path) -> str:
     return h.hexdigest()
 
 
+def text_lf_info(path: Path) -> tuple[str, str, str]:
+    raw_bytes = path.read_bytes()
+    eol = "crlf" if b"\r\n" in raw_bytes else "lf"
+    lf_bytes = raw_bytes.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    sha_lf = hashlib.sha256(lf_bytes).hexdigest()
+    text_lf = lf_bytes.decode("utf-8")
+    return text_lf, sha_lf, eol
+
+
 def safe_rel(raw: str) -> PurePosixPath:
     cleaned = raw.replace("\\", "/").strip("/")
     rel = PurePosixPath(cleaned)
@@ -388,9 +397,16 @@ def run_sync(bridge: Path) -> int:
                         )
                         continue
                     kd_path = stage_files / Path(*PurePosixPath(kd["path"]).parts)
-                    kd_body = kd_path.read_text(encoding="utf-8", errors="replace").rstrip()
+                    try:
+                        kd_lf, kd_sha_lf, kd_eol = text_lf_info(kd_path)
+                    except UnicodeDecodeError:
+                        kd_lf = kd_path.read_text(encoding="utf-8", errors="replace")
+                        kd_sha_lf = hashlib.sha256(kd_lf.replace("\r\n", "\n").encode("utf-8")).hexdigest()
+                        kd_eol = "lf"
                     estado_txt_lines.append(
-                        f"===== FILE: {kd['path']} | sha256: {kd['sha256']} =====\n{kd_body}\n===== END FILE: {kd['path']} ====="
+                        f"===== FILE: {kd['path']} | sha256: {kd['sha256']} | sha256_lf: {kd_sha_lf} | eol: {kd_eol} =====\n"
+                        f"{kd_lf.rstrip()}\n"
+                        f"===== END FILE: {kd['path']} ====="
                     )
             estado_txt_lines.extend([
                 "",
@@ -403,7 +419,7 @@ def run_sync(bridge: Path) -> int:
                 "- Incluye RESPUESTA.md, PRUEBAS.md y, si hay cambios, PATCH.diff y/o files/ (deleted_files opcional).",
                 "- PROHIBIDO: ejecutables binarios, scripts no declarados, rutas .. o absolutas, secretos o rutas locales.",
             ])
-            (stage_dir / f"ESTADO_{slug}.txt").write_text("\n".join(estado_txt_lines) + "\n", encoding="utf-8")
+            (stage_dir / f"ESTADO_{slug}.txt").write_text("\n".join(estado_txt_lines) + "\n", encoding="utf-8", newline="\n")
             file_rows = "\n".join(f"| [{f['path']}](files/{f['path']}) | {f['size']} | `{f['sha256'][:12]}` |" for f in files_out)
             omit_rows = "\n".join(f"- `{o['path']}` ({o['reason']})" for o in omitted_out) or "- Ninguno"
             key_docs = [f["path"] for f in files_out if f["path"] in {"AGENTS.md", "README.md"} or f["path"].startswith(("CONTEXTO_", "MAPA_"))]

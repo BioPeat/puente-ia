@@ -1,6 +1,6 @@
 {
   "protocol_version": "1.1",
-  "updated_at": "2026-11-23T16:59:08.287049+00:00",
+  "updated_at": "2026-11-23T17:19:12.916636+00:00",
   "projects": [
     {
       "name": "biopeat",
@@ -12,7 +12,7 @@
       "dirty_local": false,
       "public": true,
       "status": "synced",
-      "synced_at": "2026-11-23T16:59:08.287049+00:00",
+      "synced_at": "2026-11-23T17:19:12.916636+00:00",
       "file_count": 21,
       "omitted_count": 3,
       "estado_txt_path": "catalogo/biopeat/ESTADO_biopeat.txt",
@@ -37,7 +37,7 @@
       "dirty_local": false,
       "public": true,
       "status": "synced",
-      "synced_at": "2026-11-23T16:59:08.287049+00:00",
+      "synced_at": "2026-11-23T17:19:12.916636+00:00",
       "file_count": 30,
       "omitted_count": 7,
       "estado_txt_path": "catalogo/finanzas/ESTADO_finanzas.txt",
@@ -62,7 +62,7 @@
       "dirty_local": false,
       "public": true,
       "status": "synced",
-      "synced_at": "2026-11-23T16:59:08.287049+00:00",
+      "synced_at": "2026-11-23T17:19:12.916636+00:00",
       "file_count": 35,
       "omitted_count": 12,
       "estado_txt_path": "catalogo/estadisticas/ESTADO_estadisticas.txt",

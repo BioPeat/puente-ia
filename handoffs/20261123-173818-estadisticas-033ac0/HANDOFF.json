@@ -1,0 +1,54 @@
+{
+  "protocol_version": "1.1",
+  "task_id": "20261123-173818-estadisticas-033ac0",
+  "direction": "antigravity_to_copilot",
+  "origin_mode": "reply_to_handoff",
+  "project": "estadisticas",
+  "repo_url": "https://github.com/BioPeat/estadisticas.git",
+  "branch": "main",
+  "source_commit": "fb7a56a4efaeae13c9f73518518f73388ceb6a98",
+  "created_at": "2026-11-23T17:38:18.283181+00:00",
+  "objective": "Corregir 6 problemas visuales/funcionales reportados por el usuario en capturas móviles (cabecera del acta solapada, selector Totales/Por partido en Reparto de puntos, gráficas de dos líneas más altas y legibles, enlaces de Lector multiusuario vs Editor individual, botón Pegar del portapapeles en editor de mapa de tiro, rediseño de paletas no rojas y eliminación de colores rojo/azul fijos fuera de la paleta roja) + 3 pulidos adicionales detectados en las mismas vistas.",
+  "files": [
+    {
+      "path": "context/AGENTS.md",
+      "sha256": "181b885ccc12910d28783326b0bd91a884253ce9b470aef790608b46e38f6c5a"
+    },
+    {
+      "path": "context/CONTEXTO_ESTADISTICAS.md",
+      "sha256": "ba922ceb46bb1c709fc03bab5e094831ad60680b62df392b736ee173ccba63a1"
+    },
+    {
+      "path": "context/MAPA_DEL_CODIGO.md",
+      "sha256": "bccd2d4f2dfe246a7f4910ec992c04b9a9454fddf66ca22c12e473753a60d779"
+    },
+    {
+      "path": "context/index.html",
+      "sha256": "5214a4f2ff2d39b2a01a381205f22245990cdaa5860ba06bcdd0a8f9613d593e"
+    },
+    {
+      "path": "context/styles.css",
+      "sha256": "6bd65c7d8a1ef608baf3d84280151454a0370585ba8c4484186c5c19e2e08da9"
+    },
+    {
+      "path": "context/app.js",
+      "sha256": "10abf210b3a65e9027fcb5004fef94399867e3067760b32103a0916d18816975"
+    },
+    {
+      "path": "context/worker.js",
+      "sha256": "77e86b9000029ad302295395b8fdf1828b4f4f90bd0081ff55e5c82252f0d919"
+    },
+    {
+      "path": "context/tests/worker_mock.mjs",
+      "sha256": "3fc97d64c2b3662907e220b6c66b2b2b8b8e20b508db3e6c2f8f87ffbc031bdb"
+    },
+    {
+      "path": "context/tests/smoke.py",
+      "sha256": "98967d6e60d1ae776254abb231573d5f724c755fad89e41c8f0e175bcd7c59c3"
+    },
+    {
+      "path": "context/tools/validate.py",
+      "sha256": "4b187b8569ef466bad89ceb347d844826387ec0e0d7b0345b47e5832e9910dd1"
+    }
+  ]
+}

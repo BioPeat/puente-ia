@@ -1,6 +1,6 @@
 {
   "protocol_version": "1.1",
-  "updated_at": "2026-11-23T17:37:36.233937+00:00",
+  "updated_at": "2026-11-23T18:02:57.407954+00:00",
   "projects": [
     {
       "name": "biopeat",
@@ -58,11 +58,11 @@
       "repo_url": "https://github.com/BioPeat/estadisticas.git",
       "pages_url": "https://biopeat.github.io/estadisticas/",
       "branch": "main",
-      "commit": "fb7a56a4efaeae13c9f73518518f73388ceb6a98",
+      "commit": "1c052b27c3c1dd6cba07f065e140981caae2a531",
       "dirty_local": false,
       "public": true,
       "status": "synced",
-      "synced_at": "2026-11-23T17:37:36.233937+00:00",
+      "synced_at": "2026-11-23T18:02:57.407954+00:00",
       "file_count": 35,
       "omitted_count": 12,
       "estado_txt_path": "catalogo/estadisticas/ESTADO_estadisticas.txt",

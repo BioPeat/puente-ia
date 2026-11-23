@@ -1,14 +1,13 @@
-# Último traspaso
+# Último estado del puente
 
-- **Tarea activa:** [20261123-173818-estadisticas-033ac0](handoffs/20261123-173818-estadisticas-033ac0/HANDOFF.md)
-- **Manifiesto JSON:** [HANDOFF.json](handoffs/20261123-173818-estadisticas-033ac0/HANDOFF.json)
-- **Estado:** `ready_for_copilot`
+- **Última tarea registrada:** [20261123-173818-estadisticas-033ac0](handoffs/20261123-173818-estadisticas-033ac0/RESULTADO.md) (detalle: [HANDOFF.md](handoffs/20261123-173818-estadisticas-033ac0/HANDOFF.md))
+- **Modo:** `reply_to_handoff`
+- **Estado:** `applied`
 - **Proyecto:** estadisticas
 - **Repositorio:** https://github.com/BioPeat/estadisticas.git
-- **Rama:** main
-- **Commit:** `fb7a56a4efaeae13c9f73518518f73388ceb6a98`
-- **Catálogo general:** [CATALOGO.md](CATALOGO.md)
+- **Commit final:** `1c052b27c3c1dd6cba07f065e140981caae2a531`
+- **Catálogo actual para tareas desde cero:** [CATALOGO.md](CATALOGO.md)
 
-## Objetivo
+## Resumen
 
-Corregir 6 problemas visuales/funcionales reportados por el usuario en capturas móviles (cabecera del acta solapada, selector Totales/Por partido en Reparto de puntos, gráficas de dos líneas más altas y legibles, enlaces de Lector multiusuario vs Editor individual, botón Pegar del portapapeles en editor de mapa de tiro, rediseño de paletas no rojas y eliminación de colores rojo/azul fijos fuera de la paleta roja) + 3 pulidos adicionales detectados en las mismas vistas.
+Resuelto directamente en Antigravity: acta sin solape, selector Totales/Por partido en Reparto de puntos, graficas duales mas amplias, enlaces de editor individuales y lector compartible, boton Pegar del portapapeles, paletas nuevas sin rojo/azul fijos y Worker v4 desplegado en Cloudflare.

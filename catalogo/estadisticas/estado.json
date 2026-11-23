@@ -4,11 +4,11 @@
   "repo_url": "https://github.com/BioPeat/estadisticas.git",
   "pages_url": "https://biopeat.github.io/estadisticas/",
   "branch": "main",
-  "commit": "fb7a56a4efaeae13c9f73518518f73388ceb6a98",
+  "commit": "1c052b27c3c1dd6cba07f065e140981caae2a531",
   "dirty_local": false,
   "public": true,
   "status": "synced",
-  "synced_at": "2026-11-23T17:37:36.233937+00:00",
+  "synced_at": "2026-11-23T18:02:57.407954+00:00",
   "file_count": 35,
   "omitted_count": 12,
   "estado_txt_path": "catalogo/estadisticas/ESTADO_estadisticas.txt",
@@ -90,8 +90,8 @@
     },
     {
       "path": "app.js",
-      "size": 201111,
-      "sha256": "10abf210b3a65e9027fcb5004fef94399867e3067760b32103a0916d18816975"
+      "size": 207455,
+      "sha256": "6e3961b33affca1a613eb2ed41af77799aeb658e260f8c7aae0ad244b99fef63"
     },
     {
       "path": "config.js",
@@ -120,13 +120,13 @@
     },
     {
       "path": "styles.css",
-      "size": 87726,
-      "sha256": "6bd65c7d8a1ef608baf3d84280151454a0370585ba8c4484186c5c19e2e08da9"
+      "size": 91599,
+      "sha256": "24ee8c5f94285352cdd77867f7bcc4e674a6565d251b89486d805bc693f55816"
     },
     {
       "path": "sw.js",
       "size": 1656,
-      "sha256": "b80ad1b6a6474722bb4faef41204192fd5e1d2c11dd65f496f03c0f9e6d732a1"
+      "sha256": "c4c19cc8b3fe1da045995bef5663cd9fe2a13dd74c6adebe240580879d527307"
     },
     {
       "path": "tests/fixtures/dehesa_directo_sanitizado.json",
@@ -155,8 +155,8 @@
     },
     {
       "path": "tests/smoke.py",
-      "size": 28755,
-      "sha256": "98967d6e60d1ae776254abb231573d5f724c755fad89e41c8f0e175bcd7c59c3"
+      "size": 30080,
+      "sha256": "6578367c99f6a1f9544bf320ec82bce16e762ce6d7b50045677c8ee8754d6e4a"
     },
     {
       "path": "tests/updater_e2e.py",
@@ -165,8 +165,8 @@
     },
     {
       "path": "tests/worker_mock.mjs",
-      "size": 8394,
-      "sha256": "3fc97d64c2b3662907e220b6c66b2b2b8b8e20b508db3e6c2f8f87ffbc031bdb"
+      "size": 11203,
+      "sha256": "2dbb002517ff39e0c9587e02f46085f39d49cd1dad89074e5e126293b6b5de4f"
     },
     {
       "path": "tools/capture.py",
@@ -185,8 +185,8 @@
     },
     {
       "path": "worker.js",
-      "size": 17807,
-      "sha256": "77e86b9000029ad302295395b8fdf1828b4f4f90bd0081ff55e5c82252f0d919"
+      "size": 19096,
+      "sha256": "ccd5126be6bc876d646f91ed88683e377152353f26bc2451a366288fdc65c091"
     }
   ],
   "omitted": [

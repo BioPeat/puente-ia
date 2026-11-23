@@ -1,12 +1,13 @@
 # puente-ia
 
-Repositorio público de coordinación bidireccional entre **Google Antigravity** y **Microsoft Copilot** (`v1.2.0 · Protocolo 1.1`).
+Repositorio público de coordinación bidireccional entre **Google Antigravity** y **Microsoft Copilot** (`v2.0.0 · Protocolo 1.1`).
 
-## Portal único (todo en un enlace)
+## Panel único para Diego
 
-- **Portal web:** https://biopeat.github.io/puente-ia/ (`index.html`)
-- **Portal Markdown (respaldo Raw):** https://raw.githubusercontent.com/BioPeat/puente-ia/main/START.md
-- **Guía rápida con botones de copiar para Diego:** https://biopeat.github.io/puente-ia/guia.html ([GUIA_DIEGO.md](GUIA_DIEGO.md))
+- **Panel interactivo anti-caché:** https://biopeat.github.io/puente-ia/ (`index.html`)
+- **Guía rápida:** https://biopeat.github.io/puente-ia/guia.html ([GUIA_DIEGO.md](GUIA_DIEGO.md))
+- **Último traspaso autocontenido (.txt):** `ultimo/PARA_COPILOT.txt`
+- **Estado autocontenido por app (.txt):** `catalogo/<slug>/ESTADO_<slug>.txt`
 - **Guía técnica para Copilot:** [PARA_COPILOT_LEEME.md](PARA_COPILOT_LEEME.md)
 
 ## Seguridad

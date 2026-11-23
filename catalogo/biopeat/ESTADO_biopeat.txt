@@ -1,0 +1,935 @@
+PUENTE IA · ESTADO AUTOCONTENIDO DE BIOPEAT (biopeat)
+======================================================================
+PROYECTO: biopeat (biopeat)
+REPOSITORIO: https://github.com/BioPeat/biopeat.git
+APP PUBLICADA: https://biopeat.github.io/biopeat/
+RAMA: main
+COMMIT ACTUAL (source_commit): 1c21adb8a651c19771ea4ebe6ee49def9243971b
+SINCRONIZADO UTC: 2026-11-23T16:59:08.287049+00:00
+PROTOCOLO DE VUELTA: 1.1
+
+INDICE COMPLETO DE ARCHIVOS PUBLICOS:
+- .agents/skills/revisar-sugerencias/SKILL.md | 1899 bytes | sha256: 74c5ff01d0839be81c35976cf51214ade77a06a6101ee7601ac3bd9785ccfb04
+- .github/dependabot.yml | 118 bytes | sha256: 883b95e3be554fbadd92b315e4a8c6ea6ca688b64924e22dd61222b07f683507
+- .github/workflows/check.yml | 1189 bytes | sha256: c56dee73363f0ed364615b9c877af452479e291f55c6f2ebbee3c8cb887c5d96
+- .gitignore | 74 bytes | sha256: d7bf38035f09071bb2f47e901987c34846fa2d530627c1938be4c3e1202d0cf0
+- AGENTS.md | 13487 bytes | sha256: 9b91fb1b0d76d72974b47d62cb65f185bbff430b3bba858c8fbb14599c8defe4
+- CONTEXTO_BIOPEAT.md | 22141 bytes | sha256: bb2a8898e76822bcb34734d82795e429f53c219b5cd6025f39e78f39e5a83122
+- MAPA_DEL_CODIGO.md | 27892 bytes | sha256: f732344dba0ef15dcfd530b70bee3bc864fa08000e7e7ba0b23f929ab18ad50a
+- README.md | 2018 bytes | sha256: f4b78c8f993e0b2c171e93348809f554ea2d9d13482433beffdfeea5ae5315f2
+- actualizar.html | 35428 bytes | sha256: f07f36aee6467661ff5d51ed681aaeee29aabf0df3138898fffbdc67cf88021d
+- cloudflare/config.json | 323 bytes | sha256: 585093498f7646a334ff7c60c76e98325b27b9ce6fc9f54c479d59e25e50c40e
+- cloudflare/schema.sql | 1566 bytes | sha256: 9fa7e8e05ed202bbf4d2c59c84b84b97497b0c41ad0f7fdc7bffe8e754e3640a
+- cloudflare/worker.js | 37700 bytes | sha256: 66f558073c3a9ab2ff478a94bf502e53feac9da2146ac1906ad72baff6f9f165
+- index.html | 1038661 bytes | sha256: dc7027822233c67f239247388e438c7c596771ceba59a0391dbd980142c428b4
+- inicio.html | 44234 bytes | sha256: f5a000fb4a76cf9f64ad196165e2905ad389548e5ff4e6bd4116ed4c7f7f48d5
+- manifest.json | 1340 bytes | sha256: 7452c4433948dc279f2e234b15935a995c03bbee7a51e427ed36d97c48571b0a
+- sw.js | 1342 bytes | sha256: bedc7c20bbfb9891d91f35a58b8b66d48fb0d8b5dc247ddaaa08a8484cfa3ad3
+- tests/datos_prueba.json | 52526 bytes | sha256: db66997bbe34b71ef063326547139fd179332eecc0e56f1480cd956ff68d3e70
+- tests/smoke.py | 60320 bytes | sha256: aeedf82d207600931969480dc8b52f64215e75a7e3ceadbf73907b8c0450d643
+- tools/mapa.py | 2027 bytes | sha256: e2677b635de714e4ae18d9d2e18783db7eee277331c8b431c1ab14edc52749e8
+- tools/security_check.py | 5092 bytes | sha256: 953dd917274ececd1be18664ba171da08d8ea8f231fc0782a6b2b41f17f444da
+- tools/sincronizar_version.py | 1895 bytes | sha256: 71d096c3338f20ad40fff45fe9bfb95c50449eae5d7d930dabe78838baa101e3
+
+ARCHIVOS OMITIDOS (binarios, minificados o >2 MB):
+- icon-192.png (binario o minificado)
+- icon-512.png (binario o minificado)
+- icon-maskable-512.png (binario o minificado)
+
+REGLA OBLIGATORIA ANTI-SUPOSICIONES:
+- Nunca inventes el contenido de un archivo que no esté completo aquí.
+- Si necesitas leer archivos concretos de código de biopeat, PARA antes de programar y pídeselos a Diego (puede empaquetarlos en 1 clic desde el panel como ARCHIVOS_biopeat.txt).
+
+DOCUMENTACION CLAVE COMPLETA:
+===== FILE: AGENTS.md | sha256: 9b91fb1b0d76d72974b47d62cb65f185bbff430b3bba858c8fbb14599c8defe4 =====
+# AGENTS.md · Reglas para la IA que programa BioPeat
+
+Lo usan el Gem de Gemini «BioPeat Dev» y el proyecto de Claude «BioPeat Dev». Escribe siempre en **español de España**, claro y corto. Diego no programa: nunca le pidas que edite código a mano; él solo copia y pega.
+
+## 0. Cómo funciona el flujo
+1. Diego descarga desde `actualizar.html` (Paso 1) un **archivo enfocado**: solo los trozos del script que tienen que ver con su petición, todo el HTML y nada de CSS. Si te falta una función, **no la inventes**: dile su nombre y que descargue otro archivo enfocado que la incluya.
+2. Tú respondes con bloques `@@@` (ver apartado 2).
+3. Diego los pega en `actualizar.html`, que los aplica a una copia, arranca la app, la recorre entera y comprueba que sus datos se leen igual.
+4. Si sale rojo, Diego te pega un mensaje que empieza por **CORREGIR**. Trae el bloque que falla y, si es un error de escritura, la línea, la columna y el trozo de código exacto. Arregla la causa y entrega **solo los bloques que cambian**, con su **mismo número**, dentro de un único bloque de código y empezando por la línea `@@@ SOLO CORREGIDOS` (la página los combina con los anteriores). Si dudas, entrega todos.
+5. Si sale verde en un cambio grande, Diego te pega un mensaje que empieza por **REVISAR** (en cambios pequeños puede saltárselo): revísalo como si no lo hubieras escrito tú y contesta «✅ APROBADO» o «❌ HAY QUE CORREGIR» + respuesta nueva.
+6. Con «✅ APROBADO», Diego sube el `index.html` nuevo a GitHub.
+
+## 1. Archivos del repositorio
+`index.html`, `actualizar.html`, `manifest.json`, `sw.js`, `icon-192.png`, `icon-512.png`, `icon-maskable-512.png`, `AGENTS.md`, `CONTEXTO_BIOPEAT.md`, `MAPA_DEL_CODIGO.md`, `README.md`, `tests/smoke.py`, `tests/datos_prueba.json`, `tools/mapa.py`, `tools/sincronizar_version.py`, `.github/workflows/check.yml`. GitHub regenera solo la versión de `CONTEXTO_BIOPEAT.md` y `MAPA_DEL_CODIGO.md` en cada subida: no los edites para eso.
+- Normalmente solo cambias `index.html`. No crees archivos nuevos.
+
+## 2. Cómo editar
+- Entrega los cambios como bloques `@@@ BUSCAR n` / `@@@ CAMBIAR POR` / `@@@ FIN`. El texto de BUSCAR se copia **literalmente** del archivo y debe aparecer **exactamente una vez**. `actualizar.html` rechaza cualquier bloque que no cumpla esto.
+- Cambios centrados en la tarea. No reescribas ni «limpies» partes que no te han pedido.
+- Cada función se define **una sola vez**. Si cambias una función, sustitúyela **en su sitio**; no la dupliques ni la «envuelvas» (`x=function…`, `window.x=…`, `const origX=x`). **Nunca añadas otro `<script>` ni otro `<style>` al final del archivo**: todo va dentro del `<script id="app">` y del `<style>` principal. La v54 lo hizo así y el perfil de mujer volvía a hombre al recargar; `smoke.py` ahora lo rechaza.
+- **Para que no falle la comprobación:** prefiere añadir código en funciones nuevas y enganchar con el cambio más pequeño posible; líneas cortas (<150 caracteres); **sin plantillas con backticks anidadas** dentro de `${}` (construye cada trozo en una variable y únelos con `+`); en BUSCAR usa un fragmento corto y único (≤120 caracteres) aunque la línea sea larguísima; antes de entregar cuenta que ( ) { } [ ] comillas y backticks están cerrados.
+
+## 3. Reglas del código (su incumplimiento rompió v30-v32)
+- **Metas del día:** usa siempre `targetFor(fecha)`, `dayGoal()` o `goalsFor(fecha)`. **Nunca** guardes metas calculadas dentro de `state.days[fecha]`. El único ajuste por día permitido es `state.days[fecha].macroGoals = {p, f, kcal?}`.
+- **Cambiar datos:** solo dentro de `change(() => { ... }, 'mensaje')`. No llames a `save()` ni a `render()` tras un `change`.
+- **Migraciones de datos guardados:** crea `upgradeToNN(s, o)` que empiece con `if((Number(o.appRevision)||0) >= NN) return;`, llámala en `migrate()` y sube `APP_REVISION` a NN. Nunca hagas cambios de datos que se repitan en cada arranque.
+- **Claves guardadas que no se renombran:** `biopeat_pro_v10`, `biopeat_profiles_v1`, compare17, workouts18, favorites22, microTargets17, goalOrigin17, ratioGoals17, macroGoals, targetMode, `v54`, `profile.sex`.
+- **Perfiles:** el sexo está en `state.profile.sex` (`getSex()`, `isFemale()`); objetivo, semana, desayuno y batido en `state.v54` (`profV()`, limpiado por `cleanV54()` en `migrate()`). Lo de mujer va en `OPT_FEMALE`, `NEW_PROFILE_MICRO` y `femaleWhy()`, siempre con fuente. El asistente es `wizOpen({mode})` + `wizHTML()` + `wizCommit()`; repinta con `wizPaint()` sin mover la ventana. Para guardar el perfil usa `state.profile={...state.profile,...cambios}` (nunca sustituyas el objeto entero: se perdería el sexo).
+- **Clics:** registra manejadores con `onClick(fn)` y atributos `data-*`; nada de `onclick="..."` en el HTML ni `alert()` (usa `toast()`).
+- **Ventanas:** usa `modal(título, html)`. No toques `history` por tu cuenta.
+- **Estilos:** reutiliza las variables de `:root`. Para estilos nuevos, añade un bloque al final del `<style>` con un comentario `/* vNN: qué es */` usando BUSCAR `</style><!--FIN-CSS-->` y poniendo tu CSS delante (esa línea existe también en el archivo ligero).
+- **Reutiliza las piezas que ya existen:** `ratioInfo()`/`ratioFixes()` (equilibrios con porqué y cómo), `dayCard(fecha)` (ficha de un día), `monthStats()`/`sparkline()` (tendencias), `macroTone(%)` (colores), `aggregate()`/`weekSummary()` (semana).
+- **IA:** llama siempre a `requestAI()` (vale para Gemini, ChatGPT, Claude, OpenRouter y compatibles). No cambies `callGemini()`, `callChat()`, `AI_PROVIDERS`, el modelo ni el formato `BIOPEAT:` sin que la tarea lo pida. Nunca pongas claves en el código ni textos que digan que solo vale Gemini.
+- **Gimnasio:** las columnas que se reconocen están en `MAP` (alias por orden de prioridad) y las apps en `GYM_APPS`. Para soportar otra app, añade sus cabeceras ahí; no escribas otro importador.
+- **Sugerencias:** se envían al formulario de Google con `sendFeedback()` (`FORM_URL`, `FORM_FIELDS`). No cambies esos códigos.
+- **Contenido Peat:** no inventes cifras atribuidas a Peat; nada de tono médico ni juzgón.
+- **Zonas ideales de micronutrientes:** solo existen en la tabla `OPT` (`kind`, `lo`, `hi`, `src`, `ref`) y se leen con `optInfo()`/`optState()`/`optLine()`. No crees listas de bandas, límites o notas en otro sitio, ni compares a mano con `LIMIT`. Cada cifra nueva lleva su fuente (`src`) y su texto `ref`; si no hay fuente, `kind:'min'` con la meta del usuario.
+
+## 4. Estilo de la interfaz (para que todo se entienda igual)
+- **Cada bloque responde a una pregunta** en lenguaje normal («¿Cómo voy?», «¿Qué me falta?») con una línea gris debajo que explica qué se ve.
+- **Colores siempre con el mismo significado:** verde = en tu rango o bien · ámbar = por debajo o mejorable · violeta = por encima · gris = sin datos. Borde discontinuo = día sin marcar completo.
+- **Primero el dato y una frase sencilla**; los detalles, al tocar (ventana) o plegados en `<details>`.
+- Si algo está mal, di **por qué importa** (1-2 frases Peat) y **cómo corregirlo** con alimentos y cantidades concretas, con botón para añadirlo.
+- Nada de avisos médicos, confirmaciones de seguridad ni textos largos visibles por defecto.
+- Móvil primero: probar con 400 px de ancho; botones de al menos 44 px de alto.
+
+## 5. En cada cambio (obligatorio)
+1. **Versión:** sube `APP_VERSION` exactamente una unidad (`'v37'` → `'v38'`).
+2. **Registro de cambios del script:** en el comentario inicial de `<script id="app">`, añade arriba una línea `   vNN · Gemini · resumen` (o `Claude`), con 3 espacios delante.
+3. **Datos:** nunca cambies `STORE`, `migrate()`, `render()`, `storableState()` ni las claves guardadas. Si cambias la forma de los datos: `upgradeToNN(s,o)` + llamada en `migrate()` + sube `APP_REVISION`.
+4. **Respuesta:** «Qué voy a cambiar» (2-5 viñetas) → bloques `@@@` → «Cómo probarlo en el móvil» (1-3 pasos) → «Copia el bloque de código y pégalo en actualizar.html (Paso 2).» Los bloques `@@@` van dentro de **un único bloque de código** para que al copiar no se estropee nada.
+
+## 6. Tamaño de cada respuesta (Gemini corta las respuestas largas)
+- Como máximo **10 bloques y unas 200 líneas** por respuesta. En BUSCAR, fragmentos cortos (80-120 caracteres).
+- Si el cambio es más grande, **divídelo en partes**. Termina cada una con «PARTE 1 de N. Aplícala, pulsa "Aplicar la siguiente parte encima" y escríbeme SIGUIENTE». Solo la parte 1 sube `APP_VERSION` y añade la línea del Registro (que describe el cambio entero). Las demás no tocan la versión.
+- Nada de explicaciones largas: 2-5 viñetas, los bloques y cómo probarlo.
+
+## 7. App pública (desde v56)
+- La usa cualquiera. **Nunca pongas datos de Diego en el código** (pauta, desayuno, plan de macros, nombres de días, contexto). `defaults()` es un usuario genérico; el asistente lo configura. Lo de Diego vive solo en sus datos guardados y en CONTEXTO_BIOPEAT.md.
+- **Más** (`HUB`) y el **menú lateral** no repiten funciones: Más = secciones de uso diario; menú = perfiles, informe, sugerencias y el chat de IA fijo abajo.
+- **Comparar nutrientes:** `REF_TABLE` (UE y EE. UU. por sexo) y `refMode`; nunca cambian las metas del usuario.
+- Sugerencias de suplementos: solo en `SUPP_CATALOG` (`g:'peat'` o `g:'comun'`, con su «por qué»; si Peat lo desaconsejaba, dilo). «Lo básico de Peat»: `PEAT_BASIC`, `PEAT_BREAKFAST`, `PEAT_SHAKE`. No son recomendaciones médicas.
+- Textos para cualquier persona: tú/usted genérico, sin «tu pauta de K2» ni cifras de Diego.
+- Una mano: las ventanas son hojas inferiores en el móvil; los accesos nuevos van al centro **Más** (`HUB`) y no a la parte de arriba de la pantalla. Botones de al menos 44 px.
+- Iconos: usa `ico(nombre)` (tabla `ICON`, iconos de línea). No uses emojis como iconos principales.
+- La guía de uso es `TOUR` (`showTour(i)`). Si añades una función importante, añade una línea a la guía.
+
+### 8. Idiomas (desde v59)
+- La app está en **español e inglés**. El código y los textos se escriben **en español**; un traductor (`trTree`, `MutationObserver`) cambia en pantalla cada texto por su traducción de **`I18N_EN`** (una línea por texto, justo antes del bloque «v59: idioma»).
+- **Cada texto visible nuevo necesita su línea en `I18N_EN`**: la clave es el texto en español con cada cifra cambiada por `#` y el valor, el inglés con los mismos `#` en el mismo orden. Ej.: `"Faltan # kcal":"# kcal left",`. Para tener esa tabla en el archivo enfocado, pide a Diego que añada la palabra «ingles» al descargarlo.
+- **Nunca** guardes datos traducidos: los momentos de comida (`Desayuno`, `Comida`…) y los valores de los `<select>` siguen en español. Los nombres que escribe el usuario no se traducen.
+- Fechas y números: usa `LOC()` (no `'es-ES'` a mano) en `toLocaleDateString` y `toLocaleString`.
+- Si un texto no debe traducirse, ponle `data-no-tr="1"`.
+- Otras piezas de v59: `startStats()` (GoatCounter, sin cookies), mudanza de datos (`packMove`, `checkMove`, `#bp-move=` en el enlace), `inicio.html` (web, privacidad y aviso legal).
+
+### 9. Aspecto, modos y lo que se actualiza solo (desde v68)
+- **Modo claro y oscuro** (`body.bp-light`, preferencia `bp_theme`): todo componente nuevo necesita sus estilos de modo claro (fondo `#f8fafc`, borde `#e2e8f0`, texto `#0f172a`, dorado `#b45309`/`#f59e0b`). Pruébalo en los dos.
+- **Modo resumen** (`body.bp-compact`): solo cifras, gráficos y botones. Todo texto explicativo nuevo (clases `section-note`, `gp-hint`, `rg-goal`…) debe ocultarse en el modo resumen.
+- **Equilibrios del día:** `ratioZones(i)` da la zona «aceptable» (`near`) y la meta corta; `ratioTone(i)` devuelve `ok`, `near`, `warn` o `none`. Colores: verde = bien, lima = aceptable, ámbar = mejorable. La meta se ve siempre en la tarjeta (`.rg-meta`).
+- **Gimnasio (v69):** `gpWeekly` («Series por semana»: barras apiladas por músculo, 12 semanas, línea de media, filtro por músculo con `data-gp-wmus` y detalle debajo con `data-gp-wsel`), `gpHeat` («Constancia»: mapa de días L-D × semanas, 3 o 6 meses con `data-gp-hr`, intensidad por series y detalle del día con `data-gp-hday`) y `gpWeekModal`. Estado en `GP` (wSel, wMus, hRange, hSel).
+- **«Para llegar a tus metas de hoy»** (`renderCoach`/`coachCandidates`): solo propone alimentos que el usuario ya come. Un usuario nuevo sin comidas no ve el recuadro.
+- **Informe para IA** (`buildAIExportText`): empieza con `aiFrameworkLines()`, que explica a cualquier IA las reglas Peat, los 5 equilibrios y la zona de cada micronutriente (lee OPT, ratioInfo y ratioZones, así que se actualiza solo).
+- **Modo claro:** los textos grises sobre blanco, como mínimo `#475569` (nunca `#c5d2e3` ni `#a9bbd2`).
+- **Primera vez:** el asistente sale solo si el dispositivo no tiene datos, y también al entrar con `?empezar=1` (los botones de `inicio.html`) si no hay comidas ni pauta.
+- **`inicio.html`** comparte `bp_theme` y `bp_lang` con la app y usa su misma estética. Sus textos van en dos bloques `data-lang="es"` / `data-lang="en"`.
+- **Se actualiza solo en GitHub** (no lo hagas a mano): versión, «Qué hace la app (vNN)» e **Historial** de CONTEXTO_BIOPEAT.md (se copia del «Registro de cambios» de index.html) y MAPA_DEL_CODIGO.md. Por eso la línea del Registro de cambios es obligatoria y debe resumir bien el cambio.
+===== END FILE: AGENTS.md =====
+===== FILE: CONTEXTO_BIOPEAT.md | sha256: bb2a8898e76822bcb34734d82795e429f53c219b5cd6025f39e78f39e5a83122 =====
+# CONTEXTO · BioPeat
+
+**Versión actual: v78** (revisión de datos 26)
+
+Documento maestro. Lo lee la IA que programa BioPeat (Gemini «BioPeat Dev» o Claude). Los cambios se entregan en bloques `@@@` y los aplica y prueba `actualizar.html`. **Se actualiza sustituyendo el texto de cada apartado, nunca añadiendo apartados nuevos al final.** Si algo de aquí contradice al código, manda el código; avisa de la diferencia.
+
+## 0. App pública (desde v56)
+- **BioPeat la usa cualquiera.** Diego es el creador y el usuario principal, pero **nada suyo está en el código** (desde v58): ni su pauta, ni su desayuno o batido, ni su plan de macros, ni sus nombres de días. Todo eso vive solo en sus datos guardados y se describe en los apartados 1-4 para que la IA lo conozca. Un usuario nuevo: un usuario nuevo empieza con `defaults()` genérico (sin pauta, sin desayuno ni batido fijos, metas genéricas, sin Nesquik ni Haribo) y el **asistente** lo configura (bienvenida, ayuda en cada paso y sugerencias de suplementos de `SUPP_CATALOG`). Al terminar sale la **guía de uso** (`TOUR`, siempre en Más → Guía de uso).
+- **Más** (barra inferior, `HUB`): Nutrientes, Tu pauta, Gimnasio, Ajustes, Copia de seguridad y Guía de uso, más un botón ancho que abre el **menú lateral** (logo): Perfiles, Exportar datos para IA y Sugerir una mejora, con **Pregunta a tu IA siempre visible abajo**. No se repiten funciones entre los dos.
+- **Asistente, punto de partida** (primera vez y perfil nuevo): «Empezar de cero» o «Lo básico de Peat» (`PEAT_BREAKFAST`, `PEAT_SHAKE` y suplementos `PEAT_BASIC`: D3, K2, E, magnesio y glicina, que se pueden quitar). Suplementos: `SUPP_CATALOG` en dos grupos (`g:'peat'` y `g:'comun'`, con la postura de Peat si los desaconsejaba) y «Añadir otro a mano».
+- **Nutrientes → Comparar:** mis metas, referencia UE (EFSA) o EE. UU. (NIH) por sexo (`REF_TABLE`, `refMode`); solo cambia la comparación, nunca las metas.
+- **Una mano:** en el móvil las ventanas son hojas que salen desde abajo (se cierran deslizando hacia abajo), «Añadir» es el botón central elevado, y deslizar el recuadro de la fecha cambia de día.
+- **Sugerencias de usuarios:** Más → Sugerir una mejora las envía (sin cuentas) al formulario de Google de Diego (`FORM_URL`, `FORM_FIELDS`: tipo, título, descripción, versión) con `fetch` `no-cors`; llegan a una hoja de Google. Diego las ve en `actualizar.html` → Buzón (lee la hoja publicada en CSV), marca las que quiere, copia la petición para la IA y las marca como «Hecha».
+- **Idiomas (v59):** español e inglés. Se elige en el paso 1 del asistente (primera vez y perfil nuevo) y en Ajustes (`setLang`, preferencia `bp_lang` del dispositivo; por defecto, el idioma del móvil). Traducción en pantalla con la tabla `I18N_EN`; los datos se guardan siempre en español. La IA responde en el idioma elegido.
+- **Lanzamiento (v59):** `inicio.html` es la web de presentación (ES/EN) con instalación, preguntas, **privacidad** (#privacidad) y **aviso legal** (#aviso-legal); contacto biopeatapp@gmail.com. Estadísticas sin cookies con GoatCounter (código `biopeat`, solo en la web publicada). **Mudanza:** Ajustes → «Mudar mis datos a otra dirección» abre la nueva dirección con los datos comprimidos en el enlace (`#bp-move=`) y allí se confirman. Sugerencias con «¿Cómo nos has conocido?» (va en la descripción como «[Origen: …]»).
+- **v68:** equilibrios con zona «aceptable» (lima) y meta visible en cada tarjeta (`ratioZones`, `ratioTone`); gimnasio con «¿Cuánto entrenas cada semana?» y «¿Qué días entrenas?»; asistente garantizado la primera vez (también con `?empezar=1` desde la web); `inicio.html` con la estética de la app, modo claro, botón Instalar y textos de venta. El historial de este archivo se rellena solo desde el Registro de cambios.
+- **v69:** gimnasio con «Series por semana» (barras apiladas por músculo, media, filtro por músculo, detalle al tocar) y «Constancia» (mapa de días de 3 o 6 meses, detalle del día); modo claro legible en gimnasio y semana; el informe para IA incluye un marco de referencia (`aiFrameworkLines`) para que cualquier IA lo entienda sin contexto; «Para llegar a tus metas» solo sugiere lo que el usuario ya come.
+- **Actualizaciones:** cada `index.html` publicado llega a todos los usuarios (aviso «Hay una versión nueva»). Los datos de cada uno no se tocan.
+
+## 1. Diego y cómo quiere la app
+- La app tiene **perfiles**. Cada perfil guarda sus datos aparte y tiene **sexo** (hombre o mujer), objetivo, semana, desayuno, batido y pauta propios. Lo que sigue describe **solo el perfil de Diego** (sus datos guardados), no lo que ve un usuario nuevo.
+- 23 años, hombre, 185 cm, ~77,5 kg (editable). Madrid. Escribe rápido y con faltas: entiéndelo por el sentido.
+- Trabaja en finanzas y entrena a dos equipos de baloncesto.
+- Pesas full body **lunes, miércoles y sábado**; partido el **domingo**; martes, jueves y viernes sin pesas.
+- Registra el gimnasio en **HEVY gratis**: exporta un CSV y lo importa en la app (vale el CSV de cualquier app).
+- Enfoque **Ray Peat / Georgi Dinkov**, pero la app **no debe ser juzgona ni rígida**: datos claros y sugerencias, sin avisos médicos ni confirmaciones por motivos de salud. Sabe lo que hace con su suplementación y aspirina.
+- Gustos: móvil primero, muy visual, gráficos que se tocan, porcentajes que pasan del 100 %, pocas pantallas, añadir con un toque (se puede deshacer). No soporta que se diga «hecho» o «comprobado» si no lo está.
+
+## 2. Metas del día
+Se calculan siempre al vuelo con `targetFor(fecha)`. Orden de prioridad: ajuste manual de ese día → metas globales («todos los días» o «entreno/descanso») → plan del perfil. Desde v58 el plan de Diego (tabla de abajo) está guardado en **sus metas «entreno / descanso»** (`upgradeTo26` lo pasó una vez); ya no hay plan personal en el código. Los demás perfiles calculan proteína y grasa con `GOAL_TYPES` (g/kg según objetivo, sexo y día de entreno o descanso) y la energía con la TMB × el FAF del tipo de día (`DAY_TYPES`). Mujer: TMB −161 en vez de +5, **proteína mínima 80 g** y un suelo de calorías para no quedarse corta.
+
+| Día | Actividad | FAF | Proteína | Grasa | Aspirina |
+|---|---|---|---|---|---|
+| Lunes | Full body | 1,725 | 145 g | 75 g | 500 mg |
+| Martes | Pista | 1,5 | 130 g | 65 g | 250 mg |
+| Miércoles | Full body | 1,725 | 145 g | 75 g | 500 mg |
+| Jueves | Pista + selenio | 1,5 | 130 g | 65 g | 250 mg |
+| Viernes | Pista | 1,5 | 130 g | 65 g | 250 mg |
+| Sábado | Full body | 1,65 | 145 g | 75 g | 500 mg |
+| Domingo | Partido + selenio | 1,75 | 145 g | 75 g | 500 mg |
+
+- Energía = TMB Mifflin-St Jeor (10×peso + 6,25×185 − 5×23 + 5) × FAF, redondeada a 5.
+- Proteína y grasa del plan por defecto escalan con el peso (peso / 77,5).
+- Hidratos = el resto de la energía, con un **mínimo de 3 g por g de proteína** (C:P ≥ 3). Si no cabe, sube la energía.
+- Diego puede cambiar las metas en **Nutrientes → Editar objetivos** (todos los días, entreno/descanso o solo un día) y en **Ajustes → Editar objetivos de macros del día**. «Volver al plan Peat por defecto» lo restablece desde hoy.
+
+## 3. Pauta de suplementos (la de Diego; un usuario nuevo empieza sin pauta)
+Se suma sola cada día y cuenta como tomada. Si un día no se toma algo, Diego toca esa toma en «Tu pauta» y deja de contar (tocar otra vez la recupera). Se edita en «Tu pauta → Cambiar mi pauta habitual».
+
+| Momento | Qué | Cantidad | Días |
+|---|---|---|---|
+| Desayuno | Vitamina D3 | 4.000 UI (100 µg) | todos |
+| Desayuno | Vitamina A (retinol) | 10.000 UI (3.000 µg RAE) | todos (la quita a mano si come hígado) |
+| Desayuno | K2 MK-4 | 0,5 mg | todos |
+| Comida | Vitamina E | 200 UI (134 mg) | todos |
+| Comida | Benfotiamina (B1) | 250 mg | todos |
+| Comida | Glicina | 5 g | todos |
+| Comida | Bisglicinato de magnesio HSN | 2 g de polvo (≈220 mg Mg) | todos |
+| Comida | Selenio | 200 µg | jueves y domingo |
+| Merienda | Creatina | 5 g | todos (la del batido no se duplica) |
+| Merienda | K2 MK-4 | 0,5 mg | todos |
+| Merienda | Aspirina, toda la del día | 500 mg L/X/S/D · 250 mg M/J/V | todos |
+| Antes de dormir | Glicina | 5 g | todos |
+| Antes de dormir | Bisglicinato de magnesio HSN | 2 g de polvo | todos |
+
+La B1 se muestra aparte: mg de benfotiamina frente a su pauta; la tiamina de los alimentos va por separado.
+
+## 4. Comidas habituales (un toque; las de Diego, un usuario nuevo las configura en el asistente)
+Se guardan por perfil en `state.v54.breakfast` y `state.v54.shake` y se editan en el asistente (⚙). Las de Diego:
+- **Desayuno:** 220 ml leche entera + 21 g Nesquik + 1 plátano (120 g) + 250 ml zumo de naranja.
+- **Batido de merienda:** 200 ml leche + 150 ml zumo + 35 g azúcar + 1 plátano + whey 0-40 g (con un control deslizante que muestra el % de proteína del día).
+- Durante el entreno o el partido: ositos Haribo con azúcar.
+
+## 5. Reglas Peat / Dinkov de la app
+- **PUFA ≤ 4 g/día** (es un máximo, no una meta). **Ca:P ≥ 1,20**. Calcio 2.000 mg. **Hierro ≤ 14 mg** (límite).
+- **Zona ideal de cada micro: UNA sola tabla, `OPT`** (en `index.html`, junto a `DEPOSIT`). Cada entrada tiene `kind` (`min` llegar a la meta · `band` entre `lo` y `hi` · `max` tope · `ref` solo referencia), `src` (peat, din, foro, of, tuya) y `ref` (texto que se ve al tocar el nutriente). Helpers: `optInfo()`, `optState()`, `optLine()`. **No crees otras listas de bandas o límites.** Valores actuales: vitamina A banda 3.000-3.800 µg (Peat: 10.000 UI), vitamina D mín. 100 µg (4.000 UI), selenio banda 100-200 µg, yodo banda 150-225 µg, hierro máx. 14 mg, calcio mín. 2.000 mg (Peat/Dinkov 2.000-3.000), **fósforo solo referencia** (importa Ca:P) y sodio sin «te falta». PUFA máx. 4 g. A:D 2-4 : 1 y Zn:Cu ~10 : 1 son referencias de la app sin cifra verificada de Peat.
+- **Depósitos (media de 7 días):** A, D, E, B12, folato, selenio, yodo, cobre y hierro. Los días sin registro cuentan 0 (la tarjeta dice «n/7 con registro»; «parcial» solo significa que a algún alimento le falta el dato). El día de hoy no cuenta hasta marcarlo completo: se mide con los 7 días cerrados hasta ayer y la tarjeta indica cuánto suma hoy. El resto son diarios.
+- **Grasa saturada:** para la meta de grasa cuenta ×0,5 (`SAT_W`), por ser la grasa que mejor encaja con Peat (coco, mantequilla, lácteos); el PUFA es lo que se vigila. La energía (kcal) cuenta todo.
+- Alimentos preferidos para sugerir: leche, queso, zumo de naranja, fruta madura, miel/azúcar, patata, arroz, huevos, marisco, gelatina, carne con caldo. Evitar aceites vegetales.
+- **No inventes cifras atribuidas a Peat.** Donde no hay cifra suya, se usa la meta personal.
+- **Mujer:** la tabla `OPT_FEMALE` cambia solo lo que tiene fuente (se aplica con `applySexOpt()` en cada `render()`): hierro tope 18 mg (oficial; Peat: el estrógeno hace absorber más hierro, «From PMS to Menopause»), zinc 8 mg (oficial), magnesio 400 mg (Peat/Dinkov; «Nutrition for Women»: corta los calambres menstruales), sodio sin restringir (edema premenstrual), y notas de Peat en vitamina A, E, B2 y calcio. `femaleWhy()` añade una frase de Peat para mujer en los equilibrios. **Peat no dio cifras distintas para mujer en PUFA, Ca:P ni C:P: son las mismas (4 g, 1,2 y 3).** Metas de partida de un perfil nuevo: `NEW_PROFILE_MICRO`.
+
+## 6. Qué hace la app (v78)
+Una sola página. Barra inferior **Hoy · Registro · Añadir · Semana · Más** (no cambiar el orden) y botón redondo de **Gimnasio**.
+- **Menú lateral** (tocar el logo): Perfiles (tocar = usar; ⚙ = asistente; ✎ renombrar; × borrar; «+ Crear perfil nuevo»), Exportar datos para IA y Pregunta a tu IA. La lista se desplaza sola sin mover la página.
+- **Asistente de perfil** (`wizOpen({mode})`, modos `first` / `new` / `edit`): 5 pasos (Tú · Objetivo · Comidas · Suplementos · Resumen con las metas de un día de entreno y uno de descanso). Sale solo al empezar de cero (con botón para restaurar una copia). Al crear un perfil se puede empezar de cero o copiar la despensa y la pauta del perfil activo. Al guardar, las dosis y aportes de la pauta se conservan (si cambias la dosis, el aporte se escala).
+- **Hoy:** energía, anillos de macros (% sin tope, «Te faltan X g»), recomendación del día + «Pedir sugerencia a la IA», **Equilibrio del día** (5 tarjetas: Ca:P, PUFA, hidratos:proteína, A:D, Zn:Cu; cada una con semáforo ✓/!, barra con zona verde y «Tú», y una frase sencilla; al tocarla: «¿Por qué importa?» (explicación Peat) y «Cómo llegar hoy» con alimentos y cantidades exactas que se añaden con un toque), comidas del día con «Igual que ayer», «Marcar día completo», «Vista Resumen».
+- Al añadir la primera comida de un día, el día anterior se marca solo como completo (v35).
+- **Añadir:** texto libre de varias comidas en un mensaje (sin IA si reconoce los alimentos), foto con IA, «Foto en Gemini» (copiar prompt + pegar respuesta `BIOPEAT:`), manual, rápidos/favoritos, desayuno, batido, suplemento extra, Mi despensa (lo que analiza la IA se guarda y se reutiliza).
+- **Registro:** buscador, grupos por comida, − / + / ✎ / ×, deshacer, probar una ración, reparto de energía y tipos de grasa.
+- **Tus nutrientes:** tres bloques (Escudo Peat: PUFA y hierro · Diarios · Tanques de 7 días), tarjetas o mapa, filtros.
+- **Tu pauta:** las tomas de hoy por momento del día (se suman solas; tocar = no tomada hoy), «+ Toma extra», «Lo que te aporta tu pauta» (qué parte de cada meta cubren los suplementos frente a la comida) y el editor de la pauta habitual plegado.
+- **Semana:** 4 preguntas numeradas: 1 ¿Cómo voy? (media diaria de los días con comidas frente a la meta, 4 anillos y una frase), 2 Día a día (7 barras de energía; tocar = ficha del día), 3 ¿Qué me falta? (resumen con 4 filtros: te faltan / te pasas / en zona / sin datos; cada hueco se abre al tocarlo y propone alimentos de tu despensa, con vasos o huevos si encajan, que se añaden a hoy con un toque; «Ver N más»; los 25 micros plegados), 4 ¿Voy mejorando? (8 semanas). Debajo, el **calendario**: selector Energía/Proteína/Hidratos/Grasa, media del mes, tendencia (últimos 7 días frente a los 7 anteriores), gráfico de línea del mes y cuadrícula con color por día (verde en rango, ámbar por debajo, violeta por encima, gris sin datos) y 3 barritas de macros; tocar un día = ficha rápida. Opciones de cálculo y tablas, plegadas al final.
+- **Gimnasio:** importación del CSV de **cualquier app** (reconoce solas Hevy, Strong, Fitbod, FitNotes y CSV genéricos en inglés o español con `MAP` y `GYM_APPS`; libras→kg, metros→km, fechas DD/MM o MM/DD deducidas, columna «series» que se expande; si no reconoce el formato, el usuario elige una vez la fecha y el ejercicio y se recuerda en `bp_gym_maps`), progresión por peso y repeticiones, 1RM (Epley), récords, volumen, reparto muscular, constancia, nutrición en días de entreno, análisis con IA.
+- **Metas genéricas de partida** (usuario nuevo, `MICRO`): vit. E 15 mg, K 120 µg, C 90 mg, B1 1,2 mg, B2 1,3, B3 16, B5 5, B6 1,7, biotina 30 µg, B12 2,4 µg, magnesio 400 mg, potasio 3.500 mg, zinc 11 mg (resto igual). B1 solo se trata como «benfotiamina» si la pauta la incluye (`benfoUser()`).
+- **Más → Ajustes:** sexo (♂/♀), botón del asistente, perfil, metas, conexión IA, notas para la IA (+ «Aplicar instrucciones con IA»), estado de la app, copias JSON/HTML (en el móvil se comparten; al restaurar se ve un resumen antes).
+- **Avisos:** «Hay una versión nueva» al volver a la app si GitHub tiene una más reciente; aviso sin conexión.
+
+## 7. Conexión con IA (no tocar sin pedirlo)
+- Cada usuario conecta **su** IA en Añadir → Conectar IA (`ai-mode`): **Gemini** (`direct`, gratis, por defecto), **ChatGPT** (`openai`), **Claude** (`anthropic`), **OpenRouter**, **otra compatible con OpenAI** (`compat`, con dirección base `ai-base`) o servidor propio (`proxy`). Datos de cada uno en `AI_PROVIDERS`. Sin clave: «Foto en tu chat» copia el prompt para pegarlo en cualquier chat y luego se pega la respuesta `BIOPEAT:`.
+- La clave se guarda solo en el móvil si marca «Recordar» (`biopeat_ai24`). **Nunca pongas claves en el código.**
+- `requestAI(prompt, img, signal)` es la única puerta: Gemini → `callGemini()` (API estable, `thinkingLevel: 'low'`, cadena con `AI_FALLBACK` gemini-3.1-flash-lite); resto → `callChat()` (formato OpenAI `/chat/completions` o Anthropic `/v1/messages`), 3 intentos. Saturación (429/503, `AI_BUSY`) → reintento con espera y mensaje claro.
+- Modelo: Gemini por defecto `gemini-3.8-flash`. En los demás, si el campo está vacío, «Probar conexión» lee la lista de modelos de la cuenta (`listModels()`, `pickModel()`) y elige uno de texto.
+- Foto: se reduce a 1.600 px (JPG 0,88) y se analiza componente a componente con `photoPrompt()`. Hace falta un modelo con visión; si no la tiene, se avisa.
+- Formato de importación: `BIOPEAT:{...}` o `BIOPEAT:[{...}]` con meal, name, grams, kcal, p, c, f, pufa y los 25 micros. Lo desconocido se omite o va como null, nunca 0.
+- Claves de los 25 micros: vitA, vitD, vitE, vitK, vitC, b1, b2, b3, b5, b6, b7, b9, b12, colina, ca, phos, mg, k, na, fe, zn, cu, se, i, mn.
+
+## 8. Datos y publicación
+- Los datos viven en el navegador del móvil (`localStorage`, clave `biopeat_pro_v10`). **Nunca se suben a GitHub.**
+- Claves guardadas que **no se renombran:** `biopeat_pro_v10`, `biopeat_profiles_v1` (perfiles), compare17, workouts18, favorites22, microTargets17, goalOrigin17, ratioGoals17, macroGoals, targetMode, `v54` (ajustes del perfil: el nombre es histórico) y `profile.sex`.
+- Publicada con **GitHub Pages** (rama main) e instalada como app (manifest.json + sw.js). Al subir un index.html nuevo la app se actualiza sola en 1-2 minutos sin perder datos.
+
+## 9. Cómo está hecho el código (resumen técnico)
+- Todo en `index.html`: CSS, HTML y un único `<script id="app">`. Sin librerías.
+- `change(fn, mensaje)`: única forma de modificar datos (guarda, repinta y permite deshacer).
+- `render()`: único punto que repinta. Semana y Gimnasio se pintan al acercarse (`flushLazy`).
+- Un solo listener de clic: cada sección registra el suyo con `onClick(fn)`.
+- Piezas reutilizables (v34): `ratioInfo(clave)` + `ratioFixes()` (equilibrios), `dayCard(fecha)` (ficha rápida de un día), `monthStats()` + `sparkline()` (tendencias), `macroTone(%)` (colores ok/low/high/none).
+- Metas: `targetFor(fecha)` / `dayGoal()` / `goalsFor(fecha)`. No se guardan metas calculadas en los días; solo el ajuste manual `days[fecha].macroGoals`.
+- Logo: SVG dentro de `.brand-icon` (ids bp-bg, bp-rim, bp-mark). Iconos del móvil: icon-192.png, icon-512.png e icon-maskable-512.png (Ajustes → «Descargar iconos» los regenera desde el SVG). Colores: azul noche (#16243a) y dorado (#e9bf5c, variables --gold y --gold-soft); verde, ámbar y violeta siguen siendo los colores de estado.
+- Migraciones: `migrate()` → `migrateBase` + `upgradeToNN` + `cleanV54()`. Cada `upgradeToNN` se ejecuta una sola vez comprobando `o.appRevision`. `upgradeTo25` repara el magnesio que estropeó el asistente de v54.
+- **Prohibido** añadir otro `<script>` o «envolver» funciones (`x=function…`, `window.x=…`): la v54 lo hizo y el perfil de mujer volvía a hombre al recargar. `smoke.py` lo detecta y falla.
+
+## 10. Historial (una línea por versión, máximo 8)
+- **v78 · Antigravity:** Ajustes y sincronización en la nube simplificados sin tecnicismos: guía clara en 2 pasos para conectar dispositivos y recuperar tras desinstalar, y envío/guardado del enlace personal en un toque (WhatsApp, Notas, correo o copiar).
+- **v77 · Antigravity:** Corrección de solapamientos en mapa visual de micronutrientes y calendario, reorganización de Ajustes ocultando funciones técnicas, rediseño compacto de sugerencias del día y retirada del botón de ajustes externo en Zinc : cobre.
+- **v76 · Antigravity:** Lanzamiento global: respaldo automático cifrado E2EE en Cloudflare, buzón de sugerencias y estadísticas privadas sin cookies, parser bilingüe ES/EN, escáner de códigos, marcadores de temperatura/pulso, mejoras de fluidez anti-lag, precisión Peat/Dinkov y auditoría de seguridad/UX.
+- **v75 · Antigravity:** Actualización automática de modelos Gemini antiguos guardados (3.1/2.x) a Gemini 4 Hydrogen / 3.8 Flash gratis, y mejor selección automática en «Probar conexión».
+- **v74 · Antigravity:** «¿Qué me falta?» restablece la tarjeta abierta al añadir un alimento sugerido para priorizar siempre el siguiente micronutriente pendiente.
+- **v73 · Antigravity:** IA más rápida y precisa (0 €): motor híbrido con base USDA/BEDCA de 150 alimentos, JSON estructurado con caché de sistema, corrección de thinkingLevel en Gemini 4 Hydrogen, streaming en chat/coach/gym, verificación con Open Food Facts y buscador de productos/códigos de barras, selector de velocidad/precisión y soporte directo para Groq gratis (Llama 4).
+- **v72 · Antigravity:** Auditoría integral: app 100 % pública sin restos personales ni botones de desarrollo, botón de zinc configurable en Zn:Cu que reconoce cualquier suplemento, IA actualizada a Gemini 4 Hydrogen con autodetección de modelos y chat más rápido, contraste Peat/Dinkov (B1/B2/B3, K2 MK-4, vit. E natural), Gimnasio en preguntas numeradas, inglés sin dobles traducciones y CSS optimizado.
+- **v71 · Gemini:** El equilibrio Vitamina A : D se calcula con la media de depósito de 7 días (comidas + pauta semanal, contando los días que suplementas y los que descansas).
+
+## 11. Pendiente / ideas
+- Unificar las capas de CSS sin cambiar el aspecto (hay reglas repetidas de varias versiones).
+- Gimnasio: aplicar el mismo estilo de «preguntas numeradas» que Semana.
+===== END FILE: CONTEXTO_BIOPEAT.md =====
+===== FILE: MAPA_DEL_CODIGO.md | sha256: f732344dba0ef15dcfd530b70bee3bc864fa08000e7e7ba0b23f929ab18ad50a =====
+# MAPA DEL CÓDIGO · BioPeat v78 (revisión de datos 26)
+
+Generado con `python tools/mapa.py`. No lo edites a mano. Las líneas son orientativas: busca siempre por nombre.
+
+`index.html` (1008 KB): CSS (`<style>`) y HTML de las secciones en las líneas 1-6482; todo el JavaScript en `<script id="app">` (desde la línea 6483).
+
+## Secciones de la página (id)
+
+- `#view-today` — Resumen del día
+- `#day-coach`
+- `#balance-card`
+- `#view-add` — Añadir comidas
+- `#view-log` — Registro de comidas
+- `#view-micros` — Micronutrientes
+- `#view-supplements` — Suplementos y medicación
+- `#weekly`
+- `#exercise`
+- `#view-settings` — Ajustes y copias
+
+## JavaScript: bloques y funciones (en orden)
+
+- L6550 constante `ZERO_MICRO` — Valores de referencia USDA FoodData Central por 100 g (aprox.). Revisa tu etiqueta si difiere.
+- L6551 constante `AZUCAR_N`
+- L6552 constante `USDA_N`
+- L6558 constante `FOODS`
+- L6560 constante `BASE_FAT_FIX`
+- L6564 constante `REF_COLS` — Base de referencia verificada (USDA FoodData Central / BEDCA, por 100 g o 100 ml comestibles).
+- L6565 constante `REF_RAW`
+- L6730 constante `REF_MAP`
+- L6731 constante `REF_CACHE`
+- L6733 `ensureRefIndex()`
+- L6740 `refNutrients(id)`
+- L6748 constante `STRIP_PREP_RE`
+- L6749 `findRef(text,strict=false)`
+- L6772 `refCatalogCompact()`
+- L6773 `fromRef(id,amount,meal,note='',srcText='')`
+- L6778 constante `EXTRA`
+- L6779 constante `KEYS`
+- L6781 constante `SAT_W` — Grasa para la meta: la saturada (leche, mantequilla, coco) cuenta SAT_W veces; el resto (mono y PUFA) cuenta entera. La energía (kcal) siempre cuenta todo.
+- L6783 constante `DEPOSIT` — Micros de «depósito»: el cuerpo los almacena, así que se valoran con la media de 7 días. «limit»: mejor por debajo.
+
+### Zona ideal de cada micronutriente: UNA sola tabla
+
+- L6787 constante `SRC_NAME` — lo/hi:'goal' usa tu meta personal. src: de dónde sale la cifra. ref: texto que se ve al tocar el nutriente. nogap: no se propone «te falta».
+- L6788 constante `OPT`
+- L6814 constante `LIMIT`
+- L6815 `optInfo(k,goal)`
+- L6822 `optState(k,v,goal)` — Estado de un valor frente a su zona: 'none' | 'low' | 'ok' | 'high' | 'ref'
+- L6830 `optLine(k,goal,unit)`
+- L6837 `optRefHTML(k,goal,unit)`
+- L6839 constante `DAYS`
+- L6840 constante `FAF`
+- L6842 constante `LOC`
+- L6846 `number(v,min=0,max=1e6)`
+- L6852 `decimalInputs(root=document)`
+- L6853 `localDate(d=new Date()`
+- L6854 `validDate(s)`
+- L6859 `shift(s,n)`
+- L6867 `stripProto(o)`
+- L6874 `cleanBio(b)`
+- L6883 constante `CONTEXT` — Contexto libre de cada perfil (lo escribe el usuario en sus notas). Vacío por defecto.
+- L6885 constante `GOAL_TYPES` — Ajustes de perfil por defecto (se usan ya en defaults(), por eso van aquí arriba). Detalle en «Perfiles: sexo, objetivo…».
+- L6891 constante `DAY_TYPES`
+- L6892 constante `NEW_V54`
+- L6896 `defaults()` — Usuario nuevo: sin pauta, sin desayuno ni batido fijos y sin alimentos de marca; el asistente lo configura.
+- L6899 `bmr(w=state.profile.weight)` — Mifflin-St Jeor: +5 en hombre, -161 en mujer.
+- L6905 `targetFor(d)` — Prioridad: 1) ajuste manual de ese día (state.days[d].macroGoals) 2) metas globales (targetMode all/split) 3) plan por defecto.
+- L6930 `cleanNutrients(o,required=false)`
+- L6942 `cleanEntry(e)`
+- L6947 `cleanPlan(p)`
+- L6951 `planEntry(p)`
+- L6960 `seedPlan(d,whichDate)`
+- L6964 `ensureDay(d=date)`
+- L6971 `effectiveEntries(d=day()`
+- L6972 constante `SALTED_IDS`
+- L6973 constante `SWEET_RE`
+- L6974 `inferFatShares(e,txt=normalize((e?.name||'')`
+- L6992 `inferredNutrients(e)`
+- L7034 `totals(entries)`
+- L7046 `change(fn,message='Guardado')`
+- L7050 `undo()`
+- L7058 `toast(text,canUndo=false)`
+- L7066 constante `CLICK_HANDLERS` — Un solo listener de clic para toda la página; cada sección registra su manejador con onClick().
+- L7067 `onClick(fn)`
+- L7069 `attempt(fn)`
+- L7073 `modal(title,body)`
+- L7082 `modalRestore()`
+- L7092 `afterModal(fn)` — Cierra la ventana y espera a que el historial se asiente antes de desplazar la página.
+- L7093 `modalBack()`
+- L7094 `goDate(d)`
+- L7101 `renderHeader()`
+- L7114 `renderRows(entries)`
+- L7118 `entryValues(e)`
+- L7119 `renderLog()`
+- L7126 `fromFood(id,amount,meal)`
+- L7132 `pantryId(name)`
+- L7134 `rememberFood(e)` — Guarda en Mi despensa (por 100 g) un plato analizado por la IA, para reconocerlo después sin IA.
+- L7150 `addEntries(entries,message='Añadido',d=date,opts={})`
+- L7159 `recipe(kind)`
+- L7166 `summary(entries)`
+- L7170 `renderPresetInfo()`
+- L7183 `stripCode(raw)`
+- L7189 `sanitizeNutrients(o,grams=100,fallbackRefId='')`
+- L7216 `parseBIO(raw,meal=$('meal-select')`
+- L7228 `parseSmart(raw)`
+- L7232 constante `COUNT`
+- L7233 constante `UNIT_RE`
+- L7285 `offToNutrients(nut={},fallbackName='')` — Open Food Facts (gratis, sin clave, CORS nativo): consulta por código de barras o texto.
+- L7306 `lookupOFFBarcode(code,signal,ms=3200)`
+- L7321 `searchOFF(query,signal,ms=4500)`
+- L7339 `openProductSearch()`
+- L7377 `nutrientFields(n,prefix='n_')`
+- L7378 `readNutrients(form,prefix='n_')`
+- L7383 `editEntry(id)`
+- L7392 `editFood(id,pending=null)`
+- L7397 `usageStats(days=90)`
+- L7405 `renderFoods(forceList=false)`
+- L7417 `nutrientSources(key)`
+- L7424 constante `SUPP_SLOTS` — Tu pauta de hoy: checklist por momento del día. Marcar = toma confirmada; desmarcar = vuelve a prevista.
+- L7425 `suppSlot(meal)`
+- L7426 `renderSupps()`
+- L7441 `editPlan(id)`
+- L7448 `renderSettings()`
+
+### IA y fotos: prompt BIOPEAT (ración completa; lo desconocido queda null, nunca 0)
+
+- L7469 `makePrompt(meal='Comida',note='')`
+- L7474 `pantryHint()` — Prompt específico de FOTO: un objeto por ingrediente, con tamaño estimado por referencias y tu despensa como base.
+- L7478 `pantryCompact()`
+- L7482 constante `MEAL_AI_SCHEMA`
+- L7522 `mealSystemPrompt(usePhoto)`
+- L7538 `hydrateAIItems(rawItems,fallback,usePhoto,aiModel,signal)`
+- L7581 `photoPrompt(meal,note)`
+- L7584 `resetPhoto()`
+- L7595 `openPhoto()`
+- L7601 `shrinkPhoto(file)`
+- L7604 `selectPhoto(file)`
+
+### Datos: validación, migración de copias antiguas, almacenamiento y copias
+
+- L7630 `cleanDayGoals(g)` — Valida un ajuste manual de macros de un día: {p,f} y opcionalmente kcal.
+- L7637 `cleanFood(id,f)`
+- L7641 `migrateBase(o)`
+- L7661 `download(name,text,type)`
+- L7670 `portable()`
+- L7712 `syncAppIcons()`
+- L7720 `downloadAppIcons()`
+- L7757 constante `PROFILES_KEY`
+- L7759 `ensureProfilesStore()`
+- L7779 `resetProfileSessionUI()`
+- L7786 `saveProfilesStore(st)`
+- L7795 `syncCurrentProfileToStore(snapObj=null,immediate=true)`
+- L7806 `activeProfileName()`
+- L7810 `renderProfilesList()`
+- L7852 `switchProfile(id)`
+- L7874 `deleteProfileById(id)`
+- L7899 `refreshDrawerSummary()`
+- L7916 `toggleLeftDrawer(force)`
+- L7931 `buildAIExportText(rangeOverride)`
+- L8186 `copyAIExport()`
+- L8200 `downloadAIExport()`
+- L8209 `renderDrawerChat()`
+- L8228 `buildDrawerChatContext()`
+- L8267 `buildDrawerChatPrompt(question)`
+- L8279 `askDrawerAI(rawQuestion)`
+- L8368 constante `CLOUD_OFF_KEY`
+- L8379 `bytesToB64(u8)`
+- L8380 `b64ToBytes(s)`
+- L8381 `bytesToB64Url(u8)`
+- L8382 `sha256Hex(str)`
+- L8383 `sha256Bytes(str)`
+- L8384 `generateSyncKey()`
+- L8385 `ensureSyncKey()`
+- L8386 `mirrorSyncKey(k)`
+- L8387 `deriveSyncCreds(keyStr)`
+- L8393 `hasMeaningfulData()`
+- L8400 `buildCloudBundle()`
+- L8407 `encryptVaultPayload(obj,keyStr)`
+- L8415 `readDecompressedText(bytes,maxBytes=10*1024*1024)`
+- L8431 `decryptVaultPayload(resp,keyStr)`
+- L8443 `bundleHash(bundle)`
+- L8447 `applyCloudBundle(o,rev=1)`
+- L8457 `cloudPull(keyStr,opts={})`
+- L8477 `cloudPush(opts={})`
+- L8514 `scheduleCloudPush()`
+- L8520 `scheduleAutoCloudPull(delayMs=120)`
+- L8534 `saveSyncToPassMgr()`
+- L8541 `trySilentPassMgrRecovery()`
+- L8551 `extractSyncKeyInput(val)`
+- L8557 `applySyncKey(rawKey,opts={})`
+- L8578 `takeSyncCode()`
+- L8589 `renderCloudStatus()`
+- L8612 `buildMagicSyncUrl()`
+- L8619 `openMagicSyncModal()`
+- L8628 `shareMagicSyncLink()`
+- L8635 `copyMagicSyncLink()`
+- L8640 `openCloudLinkModal()`
+- L8643 `deleteCloudBackup(confirmed=false)`
+- L8680 `mirrorToIDB(raw,profRaw)`
+- L8683 `storageStatus()`
+- L8690 `idbReadWrite(mode,value,key='current')`
+- L8691 `openDB()`
+- L8693 `flushDeferredSave()`
+- L8703 `save(skipCloud=false)`
+
+### Eventos generales: añadir con un toque, editar, eliminar
+
+- L8731 `setQuantity(id,value,msg='Cantidad actualizada')`
+- L8735 `niceStep(v)`
+- L8736 `stepQuantity(id,dir)`
+- L8790 `renderAppInfo(force=false)`
+- L8822 `init()`
+- L8858 `upgradeTo11(s,o)` — Revisión 11 (antigua): solo marca la revisión. La corrección de la pauta de entonces ya está en los datos.
+
+### Navegación: una sola página; la barra inferior solo desplaza
+
+- L8860 `setNav(v)`
+- L8865 `go(v,focus)`
+- L8876 constante `THEME_KEY`
+- L8877 constante `SUN_SVG`
+- L8878 constante `MOON_SVG`
+- L8880 `syncThemeUI()`
+- L8892 `toggleTheme()`
+- L8901 `syncLogoTheme()`
+- L8912 `applyMenuBtnState()`
+- L8935 `syncDatePill()`
+- L8948 `clampBtnPos(el,x,y)`
+- L8958 `bindDraggableBtn(el,storeKey)`
+- L9043 `bindDrawerGestures()`
+- L9081 `animateValue(el,to,suffix='%',digits=0)`
+- L9090 `tick(now)`
+- L9093 `macroCard(key,name,color)`
+- L9094 `renderToday()`
+- L9118 `renderBio()`
+- L9143 `kindTag(k)`
+
+### Recomendación del día: ideas sencillas con lo que hay en casa y lo que sueles comer; IA opcional
+
+- L9145 constante `HOME`
+- L9147 `coachCandidates()`
+- L9153 `coachIdeas(t,g,ref,meal)`
+- L9172 `coachQuickAdd(key)`
+- L9180 `renderCoach()`
+- L9202 `coachPrompt()`
+- L9211 `nutrientDetailStandard(key)`
+- L9226 `updateMacroPreview()`
+
+### Hoy: anillos de macros, ratios, micros (B1 = benfotiamina aparte)
+
+- L9232 `upgradeTo12(s,o)`
+- L9237 `benfotiamineTotals(entries=effectiveEntries()`
+- L9246 `dayActive(d)` — Un día cuenta si tiene comidas o alguna toma real (manual o confirmada). Los días sin registro restan: el depósito se vacía.
+- L9248 `rollingMicro(key,dt=date,source='all')` — Depósito de 7 días que termina en dt: suma de lo ingerido / (7 × meta). Cada día nuevo entra y el más antiguo sale.
+- L9260 `microStat(m,t=totals()`
+- L9265 `metric(m,t=totals()`
+
+### Equilibrio del día: 5 ratios explicados en lenguaje sencillo, con el porqué y cómo llegar
+
+- L9272 constante `RATIO_NAMES` — solver: {num,den,target} → busca cuánto de un alimento hace que num/den alcance target (mantener ≥ target).
+- L9273 `ratioInfo(key,t=totals()`
+- L9312 `ratioFixes(info,t=totals()` — Alimentos de tu despensa que llevan el ratio a la meta, con la cantidad exacta (ración razonable).
+- L9329 constante `RATIO_ENDS`
+- L9331 `ratioZones(i)` — v68: cada equilibrio tiene una zona «aceptable» (ni verde ni mala) y su meta visible en la tarjeta.
+- L9339 `ratioTone(i)`
+- L9344 constante `NEAR_HEAD`
+- L9345 `ratioBar(i,big=false)`
+- L9354 `ratioNeedBase(i,t=totals()` — v44: qué te falta (o te sobra) en cada equilibrio, con la cantidad que cambia el resultado.
+- L9372 `needHTML(i,t)`
+- L9373 `ratioNeed(i,t=totals()`
+- L9377 `adBalance(t=totals()`
+- L9404 `zncuSuppKey()`
+- L9405 `zncuSuppCfg()`
+- L9427 `zncuDoseLabel(zn,cu)`
+- L9430 `hasZncuSupp(d=day()`
+- L9435 `toggleZncuSupp()`
+- L9455 `openZncuConfig()`
+- L9461 `renderRatios()`
+- L9472 `ratioDetail(key)`
+- L9489 `microCardHTML(m,x,personal)` — Tarjeta de un nutriente: cifra, barra con tu zona ideal en verde y una línea con la zona y de dónde sale.
+- L9506 `renderMicrosForDay()` — Tus nutrientes en 3 bloques: Escudo Peat (límites), Diarios y Tanques (depósito 7 días). Respeta el filtro elegido.
+- L9521 `renderMicroMap(t=totals()`
+- L9534 `nutrientDetailForDay(key)`
+- L9539 `editTargetsForm()`
+- L9549 `mealData()`
+- L9554 `renderMealSegments()`
+- L9562 `mealDetail(index)`
+
+### Registro: origen de la energía, tipos de grasa y «probar una ración»
+
+- L9597 constante `FAT_KEYS`
+- L9599 `fatData(entries=effectiveEntries()`
+- L9605 `energyData(entries=effectiveEntries()`
+- L9609 `segmentedBar(items,total,attr)`
+- L9613 `renderMealChart()`
+- L9618 `renderFat()`
+- L9626 `fatDetail(key)`
+- L9631 `energyDetail(key)`
+- L9638 `portionCandidates(q='')`
+- L9643 `openPortion()`
+- L9656 `previewPortion()`
+
+### Añadir: suplementos extra y batido con previsión de proteína
+
+- L9671 `templates()`
+- L9675 `renderExtra()`
+- L9686 `updateExtra(reset=true)`
+- L9698 `addExtra(id,amount)`
+- L9714 `shakePreview()`
+- L9715 `renderPresets()`
+
+### Contexto Peat al tocar un gráfico (educativo, no clínico)
+
+- L9730 constante `LENS`
+- L9736 `lensKey(key)`
+- L9737 `lensHTML(key)`
+- L9741 `appendLens(key)`
+- L9750 `weekDates()`
+
+### IA en la página: conexión directa o por servidor
+
+- L9760 constante `MEAL_WORD`
+- L9761 `mealOfWord(w)`
+- L9762 `mealFromText(raw,fallback)`
+- L9766 `canonMeal(v,fallback)`
+- L9774 `localMeal(raw,meal)`
+- L9780 constante `AI_FALLBACK`
+- L9781 constante `GEMINI_DEFAULTS`
+- L9782 constante `GROQ_DEFAULTS`
+- L9783 `aiTaskProfile(task,hasImg=false)`
+- L9790 `geminiThinkLevel(model,want)`
+- L9796 `supportsGeminiTemp(model)`
+- L9797 `readSSE(res,onEvent)`
+- L9816 `applyAIConfig(raw)`
+- L9842 `aiError(msg,extra={})` — Si el modelo elegido tarda o falla (tiempo, 429, 5xx, 404), se reintenta solo con AI_FALLBACK.
+- L9843 `callGemini(model,key,prompt,img,signal,opts={})`
+- L9889 constante `AI_PROVIDERS` — Proveedores de IA: Gemini (gratis), Groq (gratis), ChatGPT, Claude, OpenRouter, cualquier API compatible con OpenAI, o servidor propio.
+- L9897 `aiProv(m=$('ai-mode')`
+- L9898 `aiBase(mode)`
+- L9907 `chatHeaders(mode,key)`
+- L9914 `callChat(mode,model,key,prompt,img,signal,opts={})` — ChatGPT, Claude, Groq, OpenRouter y APIs compatibles. Mismo contrato que callGemini: devuelve texto o lanza aiError (retry si merece reintento).
+- L9968 `listModels(mode,key)` — Lista de modelos de la cuenta (para elegir uno sin saber su nombre exacto).
+- L9983 constante `OLD_GEMINI_RE`
+- L9984 constante `MODEL_PREF`
+- L9985 `pickModel(ids,mode=$('ai-mode')`
+- L9999 `ensureModel(st)`
+- L10015 `syncProvider()`
+- L10034 `requestAI(prompt,img,signal,modelOverride='',onStep=null,opts={})`
+- L10071 constante `AI_PREF`
+- L10072 `aiConnected()`
+- L10073 `syncAI()`
+- L10075 `saveAIPrefs()`
+- L10076 `loadAIPrefs()`
+- L10077 `openAISetup()`
+- L10084 `upgradeTo16(s,o)`
+
+### Semana: totales, 25 micros, ratios, mapa por día
+
+- L10091 constante `MACROS`
+- L10093 `cleanGoals(o,fallback)`
+- L10098 `cleanCompare(o={})`
+- L10102 `snapshotDay(d,reference='saved')`
+- L10107 `upgradeTo17(s,o)`
+- L10112 `entriesFor(d,source=weekSource)`
+- L10116 `dayRow(dt,source=weekSource)`
+- L10120 `goalsFor(dt)`
+- L10126 `metricValue(r,key)`
+- L10132 `targetOf(dt,key)`
+- L10136 `weekSummary()`
+- L10140 `aggregate(key,summary=weekSummary()`
+- L10144 `tone(pct,mode='macro')`
+- L10151 `pctText(a)`
+- L10152 `weekProgress(a,color)`
+- L10153 `renderWeekMicros(s)`
+- L10165 `ratioAggregate(s,num,den)`
+- L10169 `renderWeekRatios(s)`
+- L10175 `renderWeekTable(s)`
+- L10176 `weeklyDetail(key,oneDate=null)`
+- L10185 `weekRatioDetail(key)`
+- L10193 `shiftMonth(n)` — Calendar: compare explicit personal goals, never classify health or infer unrecorded days.
+- L10199 `openDay(dt)`
+- L10237 `withDayGoals(fn)`
+- L10242 `renderMicros()`
+- L10243 `nutrientDetail(key)`
+- L10244 `editTargets()`
+- L10245 `revealSection(id)`
+
+### Semana: resumen rápido y tendencia de ocho semanas
+
+- L10255 `summaryFor(start)`
+- L10259 `ringSVG(pct,color,marker)`
+- L10261 `trendData()` — Vista rápida de la semana: 4 anillos de macros, micros y ratios, y una tira de 7 días con colores.
+- L10265 `renderTrends()`
+
+### Semana y calendario (v34): 4 preguntas claras + calendario con tendencia
+
+- L10282 constante `MACRO4` — 1 ¿Cómo voy? (media diaria frente a tu meta) · 2 Día a día · 3 Lo que más falta · 4 Tendencia. Luego el calendario.
+- L10283 `macroTone(p)`
+- L10284 `dayMacroPct(dt,k)`
+- L10285 `renderWeekly()`
+- L10308 `weekDetail(dt,picked)`
+- L10316 `dayCard(dt)` — Ficha rápida de un día: 4 barras de macros + ratios en palabras. Se usa en Semana y en Calendario.
+- L10326 `monthStats(month,key)` — Estadística de un mes para una métrica: % diario frente a la meta y media.
+- L10332 `sparkline(pts)`
+- L10338 `renderCalendar()`
+- L10355 constante `MEALS` — One message can describe multiple meals; all-or-nothing import, no forced single meal.
+- L10356 `splitMeals(raw)`
+- L10366 `localDay(raw,fallback)`
+- L10373 `promptDay(raw,fallback)`
+- L10374 `analyzeDay(usePhoto=false)`
+
+### Gimnasio: importación del CSV de cualquier app (Hevy, Strong, Fitbod, FitNotes…), sesiones y análisis IA
+
+- L10413 `parseCsv(text)`
+- L10428 `hevyDate(value,format='auto')`
+- L10445 constante `MAP` — Columnas que se reconocen solas (Hevy, Strong, Fitbod, FitNotes, Jefit y CSV genéricos en inglés o español). El orden marca la prioridad.
+- L10460 constante `GYM_APPS`
+- L10462 `gymSig(headers)`
+- L10463 `gymApp(headers)`
+- L10464 `hevyMapping()`
+- L10465 `gymSaved()`
+- L10466 `renderMapping(parsed)`
+- L10483 `optionalNum(v,min=0,max=1e7)`
+- L10488 `durSec(v)` — Segundos a partir de «45», «1:30», «01:02:03» o «1h 5m 3s».
+- L10495 `buildHevy(parsed,map)`
+- L10529 `cleanWorkout(s)`
+- L10536 `analyzeGym()`
+
+### Gimnasio: progresión por peso y repeticiones, buscador y gráficos interactivos
+
+- L10551 constante `GP` — Lee state.workouts18 (formato existente). No modifica los entrenamientos salvo «Eliminar sesión».
+- L10552 constante `GP_ALIAS`
+- L10562 `gpNorm(s)`
+- L10563 `gpKey(name)`
+- L10567 `gpF(n,d=0)`
+- L10568 `gpDate(d,opt)`
+- L10569 `gpMonday(d)`
+- L10570 constante `GP_GROUPS`
+- L10585 constante `GP_COLORS`
+- L10586 `gpGroup(name)`
+- L10587 `gpWorkSets(s)`
+- L10588 `gpModel()`
+- L10612 `gpSessionMetrics(e,sets)`
+- L10627 constante `GP_METRICS`
+- L10632 `gpMetricsFor(e)`
+- L10633 `gpRangeHist(e)`
+- L10634 `gpPRs(model)`
+- L10657 `gpStatus(e)`
+- L10675 `gpNext(e)`
+- L10683 `gpChart(e)`
+- L10711 `gpPointDetail(e)`
+- L10717 `gpRepTable(e)`
+- L10724 `gpKpis(model)`
+- L10733 `gpWeekData(model,w)` — Datos de una semana de gimnasio (series por músculo y sesiones).
+- L10738 `gpWeekLabel(w,short)`
+- L10739 `gpWeekly(model)`
+- L10758 `gpMuscles(model)`
+- L10766 `gpHeat(model)` — v69: «Constancia» — mapa de días entrenados (como antes), con días de la semana, meses, intensidad y detalle al tocar.
+- L10786 `gpExList(model)`
+- L10793 `gpExDetail(model)`
+- L10806 `gpDayFood(dt)`
+- L10807 `gpNutrition(model)`
+- L10814 `gpRecentPRs(model)`
+- L10818 `gpSessions(model)`
+- L10824 `gpSessionModal(id)`
+- L10835 `gpWeekModal(w)`
+- L10842 `gpSelect(key)`
+- L10843 `gpClick(e)`
+- L10859 `renderGym()`
+- L10879 `upgradeTo19(s,o)` — v26: calcio 1.500 → 2.000 mg (Peat/Dinkov) solo donde seguía el valor antiguo por defecto; el pasado no se toca.
+- L10888 `upgradeTo20(s,o)` — v27: azúcar con micros a 0, fichas USDA para las vacías, sin campos de día que no se usan.
+- L10894 `upgradeTo18(s,o)`
+
+### Herramientas de uso diario: menú Más, comidas de un vistazo, buscador, repetir comida, rápidos, copias
+
+- L10919 `openMoreMenu()` — Menú «Más»: todo lo que no está en la barra, en botones grandes al alcance del pulgar.
+- L10923 `showHelp()`
+- L10927 constante `BACKUP_KEY` — Copias JSON: una sola función para todos los botones.
+- L10929 `markBackup()`
+- L10933 `exportJSON()`
+- L10938 `drawBackupReminder()`
+- L10948 `applyDensity()`
+- L10960 `syncDayComplete()`
+- L10963 `drawMeals()` — Comidas del día de un vistazo.
+- L10971 `filterLog()` — Buscador de Registro.
+- L10984 `clampNotes()` — Textos largos: dos líneas y «ver más».
+- L10990 `recentFoods()`
+- L10995 `quickChip(e,fav)`
+- L11013 `drawQuickFoods()`
+- L11042 `syncAddTools()` — Botones de «¿Qué has comido?»: un panel abierto cada vez.
+- L11046 `toggleAddPanel(id)`
+- L11059 `extractBiopeat(raw)` — Pegar la respuesta de Gemini: localiza el bloque BIOPEAT o el JSON dentro del texto.
+- L11070 `pasteMessage(text,ok)`
+- L11078 `copyGoals(s,o)` — Copia las metas globales guardadas (antes de v33 se perdían al recargar).
+- L11089 `upgradeTo23(s,o)` — Ahora: vuelve al plan por defecto (145P/75G entreno, 130P/65G descanso), Ca:P 1,20, PUFA 4 g, C:P 3, y referencias de ratio en cada día.
+- L11100 `upgradeTo25(s,o)` — Se repara con la ficha HSN (1,5 g de polvo = 165 mg de magnesio, es decir 110 mg por gramo), en la pauta y en los días guardados.
+- L11106 `migrate(o)`
+
+### Guardado: no se almacenan días que solo contienen la pauta automática sin cambios
+
+- L11127 `storableState()`
+
+### Render único: actualiza toda la página
+
+- L11136 `nearView(el)`
+- L11138 `flushLazy(force='')` — Semana y Gimnasio son las partes más pesadas: se repintan cuando están cerca de la pantalla o al ir a ellas.
+- L11143 `scheduleLazyRender()`
+- L11147 `render()`
+
+### v58: referencias oficiales para comparar (adultos 19-50 años)
+
+- L11184 constante `REF_NAMES` — Solo sirven para comparar: no cambian tus metas. B1 y B3 de la EFSA van por energía; aquí se usan para unas 2.400 kcal (hombre) y 2.000 kcal (mujer).
+- L11185 constante `REF_TABLE`
+- L11192 `refTargets(mode)`
+- L11193 `syncMicroMode()`
+- L11206 `mealByHour(h=new Date()`
+- L11213 `syncMealByHour()`
+
+### v43: restaurar copia con resumen, compartir copia, aviso de versión nueva y sin conexión
+
+- L11224 `dataSummary(s)`
+- L11228 `confirmImport(next,name)`
+- L11235 `shareOrDownload(name,text,type)` — En el móvil abre «Compartir» (WhatsApp, Drive, correo…); en el ordenador descarga el archivo.
+- L11241 `checkUpdate()`
+- L11246 `showUpdate(v)`
+
+### v50: «¿Qué me falta?» de Semana
+
+- L11261 constante `GAP_PREFER`
+- L11262 constante `GAP_SKIP`
+- L11263 constante `GAP_UNIT`
+- L11264 `gapQty(f,x)`
+- L11265 `gapFoods(key,gap,ctx)`
+- L11284 `weekSources(key,sum)`
+- L11290 `gapRows(sum)` — Estado de cada micro esta semana: media diaria frente a su zona (con un 10 % de margen en lo que falta).
+- L11303 `gapRow(x,open,meal,sum,ctx)`
+- L11319 `renderGaps(sum,s)`
+
+### Perfiles: sexo, objetivo, semana, comidas habituales y asistente
+
+- L11344 `getSex(s=state)` — «v54» es solo el nombre histórico de la clave guardada: no se renombra.
+- L11345 `isFemale(s=state)`
+- L11346 `sexLabel(s=state)`
+- L11347 `sexBadge(sex)`
+- L11349 constante `OPT_BASE` — Cambios por sexo sobre la tabla OPT (mismo formato). Solo se cambia lo que tiene fuente; el resto es igual para los dos.
+- L11350 constante `OPT_FEMALE`
+- L11361 constante `NEW_PROFILE_MICRO` — Metas de partida de un perfil nuevo. Mujer: hierro, zinc y magnesio de las fuentes de arriba; A (1.500 µg = 5.000 UI) y D (50 µg = 2.000 UI) mantienen A:D en zona verde (2,5:1).
+- L11362 `applySexOpt(sex)`
+- L11364 `femaleWhy(key)` — Equilibrios del día: frase extra para mujer, con su fuente.
+- L11369 `cleanPreset(p,fb)`
+- L11373 `dayNamesFor(types)`
+- L11375 `cleanV54(v,sex)` — Limpia los ajustes del perfil guardados. Sin datos (copias antiguas) se usan los de un perfil nuevo.
+- L11385 `upgradeTo26(s,o)` — Si el perfil lo usaba, sus cifras pasan a sus metas guardadas (entreno/descanso) y la energía se calcula igual que antes.
+- L11393 `profV()`
+- L11394 `isTrainDay(i)`
+- L11395 `activityName(i)`
+- L11396 `dayFaf(i)`
+- L11397 `presetDesc(cfg,shake)`
+- L11401 `profileDescription()`
+- L11409 constante `WIZ_STEPS` — Un único borrador «wiz». Se pinta dentro de la ventana normal (modal) y se repinta sin perder la posición.
+- L11411 `wizCatalog()`
+- L11412 `wizOpen(opts={})`
+- L11428 `wizTitle()`
+- L11429 `wizPaint(sameStep=true)`
+- L11438 `wizSync()`
+- L11457 `wizFoodOptions()`
+- L11460 `wizPresetSummary(cfg,whey)`
+- L11465 `wizPresetHTML(kind)`
+- L11473 `wizPreview()`
+- L11484 `wizLiveHTML()`
+- L11488 `wizHTML()`
+- L11534 `wizCommit()` — Guarda el borrador. Las dosis y valores de la pauta se conservan; si cambias la dosis, el aporte se escala en proporción.
+
+### v56: app pública — sugerencias de suplementos, guía de uso, centro «Más», buzón de sugerencias y gestos de una mano
+
+- L11632 constante `ALL_DAYS` — No son recomendaciones médicas: el usuario elige y ajusta la dosis a su etiqueta. También puede añadir cualquier otro a mano.
+- L11633 constante `SUPP_CATALOG`
+- L11658 constante `PEAT_BASIC` — «Lo básico de Peat» al crear un perfil: comidas habituales y suplementos que suele recomendar su entorno (se pueden quitar en el paso 4).
+- L11659 constante `PEAT_BREAKFAST`
+- L11660 constante `PEAT_SHAKE`
+- L11662 constante `WIZ_HELP` — Ayuda corta que sale arriba de cada paso del asistente.
+- L11669 `benfoUser()`
+- L11671 constante `ICON` — Iconos de línea propios (se ven igual en todos los móviles, a diferencia de los emojis).
+- L11687 `ico(n)`
+- L11689 constante `TOUR` — ----- Guía de uso (sale al terminar el asistente y siempre en Más → Guía de uso) -----
+- L11698 `showTour(i=0)`
+- L11710 constante `HUB` — ----- Centro «Más»: todo a un toque del pulgar -----
+- L11711 `hubAction(v)`
+- L11719 constante `FB_CATS` — Envíos anónimos directos al buzón de BioPeat (sin cuentas ni datos personales).
+- L11721 `openFeedback()`
+- L11725 `feedbackData()`
+- L11732 `feedbackText()`
+- L11733 `sendFeedback()`
+- L11753 `shareFeedback()`
+- L11770 `bindSheetSwipe()` — Deslizar la ventana hacia abajo desde su cabecera la cierra.
+- L11777 `bindDateSwipe()` — Deslizar el recuadro de la fecha a izquierda o derecha cambia de día.
+
+### v59: traducciones al inglés (una por línea; el texto en español con # en lugar de las cifras)
+
+- L11785 constante `I18N_EN`
+
+### v59: idioma (español / inglés)
+
+- L13714 constante `NUM_RE` — Para un texto nuevo: añade su línea a I18N_EN (está justo encima). Lo que no esté en la tabla se queda en español.
+- L13715 constante `WD_EN`
+- L13716 `trOne(s)`
+- L13724 constante `TR_VERB` — Plantillas para etiquetas con un nombre dentro («Editar Leche entera»). Solo se usan si el nombre se traduce o en atributos (aria-label…).
+- L13725 constante `ES_FOOD_GYM`
+- L13762 `trFood(s)`
+- L13774 constante `TR_TPL`
+- L13815 `trLower(s)`
+- L13816 `trTpl(s,attr)`
+- L13817 constante `FOOD_SEL`
+- L13818 `trText(s,attr=false)`
+- L13828 `trNode(n)`
+- L13847 `trEl(el)`
+- L13860 `trTree(root)`
+- L13869 `untrTree(root)` — Vuelve al español sin recargar: restaura los textos originales guardados.
+- L13883 `flushTr()`
+- L13884 `syncTrObserver()`
+- L13888 `setLang(l,quiet)`
+- L13902 `langPickerHTML()`
+
+### v59: estadísticas sin cookies (GoatCounter + Worker agregados), solo en la web publicada
+
+- L13911 constante `GC_CODE`
+- L13912 `pingAnalytics(extra={})`
+- L13928 `startStats()`
+
+### v59: mudanza de datos a otra dirección web (por ejemplo, un dominio propio)
+
+- L13940 constante `MOVE_TAG` — Los datos viven en el navegador y van ligados a la dirección. Esto los empaqueta, comprimidos, en el enlace de la nueva dirección.
+- L13941 `packMove()`
+- L13949 `unpackMove(code)`
+- L13960 `moveData()`
+- L13970 `takeMoveCode()` — Se lee y se quita del enlace al arrancar (antes de abrir ninguna ventana, para que «Atrás» no lo devuelva).
+- L13976 `checkMove(code)`
+- L13995 `aiFrameworkLines()` — v69: marco de referencia del informe para IA. Así cualquier IA, aunque no conozca la app ni al usuario, sabe con qué comparar.
+
+### Arranque
+===== END FILE: MAPA_DEL_CODIGO.md =====
+===== FILE: README.md | sha256: f4b78c8f993e0b2c171e93348809f554ea2d9d13482433beffdfeea5ae5315f2 =====
+# BioPeat
+
+App de nutrición bioenergética gratuita con enfoque Ray Peat / Georgi Dinkov, en un solo archivo (`index.html`), publicada con GitHub Pages e instalable como PWA en Android, iPhone y ordenador.
+
+- **Web de presentación:** [inicio.html](inicio.html) (qué es, mockup interactivo de 4 pestañas, instalación inteligente por dispositivo, privacidad RGPD y aviso legal, en español e inglés).
+- **Idiomas:** español e inglés (`I18N_EN` y parser bilingüe `parseSmart` ES/EN + Open Food Facts + escáner de códigos de barras con cámara).
+- **Privacidad y respaldo cifrado E2EE:** los datos se guardan localmente (`localStorage` + espejo automático en `IndexedDB`) y se cifran en el propio dispositivo con **AES-256-GCM** antes de guardarse opcionalmente en nuestra bóveda zero-knowledge (`cloudflare/worker.js` + D1 UE), con recuperación mediante gestor de contraseñas o enlace secreto `#bp-sync=`. Nunca se suben claves de IA.
+- **Sugerencias y estadísticas sin cookies:** llegan automáticamente a Cloudflare D1 mediante `/api/feedback` y `/api/ping`. Se gestionan en el panel privado `/admin` o con Antigravity usando `.agents/skills/revisar-sugerencias/SKILL.md` (y `actualizar.html` enlaza al panel).
+- **Marcadores bioenergéticos (opcional):** temperatura, pulso y nivel de energía diarios en Hoy, integrados en el informe para IA y chat.
+- **IA:** cada usuario conecta la suya opcionalmente (Gemini o Groq gratis, ChatGPT, Claude, OpenRouter u otra compatible). **Gimnasio:** importa CSV de Hevy, Strong, Fitbod, FitNotes o cualquier app.
+- **Qué es la app y cómo se programa:** [CONTEXTO_BIOPEAT.md](CONTEXTO_BIOPEAT.md), [AGENTS.md](AGENTS.md) y [MAPA_DEL_CODIGO.md](MAPA_DEL_CODIGO.md) (lo regenera GitHub automáticamente).
+- **Comprobación de seguridad y pruebas:**
+  - `python tools/security_check.py` (CSP, `eval`, aislamiento de secretos/claves, SQL parametrizado en Worker).
+  - `python tests/smoke.py` (ejecución completa en Chromium headless en cada subida y semanalmente).
+===== END FILE: README.md =====
+
+INSTRUCCIONES DEL ZIP DE VUELTA (DESDE CERO):
+- Entrega un ZIP llamado: COPILOT_A_ANTIGRAVITY_YYYYMMDD-HHMMSS-biopeat-<6hex>.zip
+- Incluye HANDOFF.json con:
+  - protocol_version: "1.1", direction: "copilot_to_antigravity", origin_mode: "copilot_from_scratch"
+  - project: "biopeat", repo_url: "https://github.com/BioPeat/biopeat.git", branch: "main", source_commit: "1c21adb8a651c19771ea4ebe6ee49def9243971b"
+  - task_id único (>=8 chars), created_at, objective, files (con sha256 en minúsculas)
+- Incluye RESPUESTA.md, PRUEBAS.md y, si hay cambios, PATCH.diff y/o files/ (deleted_files opcional).
+- PROHIBIDO: ejecutables binarios, scripts no declarados, rutas .. o absolutas, secretos o rutas locales.

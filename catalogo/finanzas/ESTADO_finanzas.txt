@@ -1,0 +1,483 @@
+PUENTE IA · ESTADO AUTOCONTENIDO DE FINANZAS (finanzas)
+======================================================================
+PROYECTO: Finanzas (finanzas)
+REPOSITORIO: https://github.com/BioPeat/Finanzas.git
+APP PUBLICADA: https://biopeat.github.io/Finanzas/
+RAMA: main
+COMMIT ACTUAL (source_commit): 9cb8b81621da18cfbf4a558c5cd64fb7bb1e3b47
+SINCRONIZADO UTC: 2026-11-23T16:59:08.287049+00:00
+PROTOCOLO DE VUELTA: 1.1
+
+INDICE COMPLETO DE ARCHIVOS PUBLICOS:
+- .agents/skills/verificar-cambios/SKILL.md | 3458 bytes | sha256: 135620ec4f86abccc7124641dfcb5b19cb2ec8c5e87254c8837c3de3538ed11d
+- .agents/skills/verificar-cambios/scripts/check-static.mjs | 4675 bytes | sha256: 71484783f1ed61d91c8f1b2a9e3c05862f64db8b515c9090a52caa63a7fd9b25
+- .github/workflows/check.yml | 1144 bytes | sha256: ed171fd9a9ac911cca35b84a0f5d79b5b3bc143dd83e18ccff53aea7c58cac18
+- .gitignore | 269 bytes | sha256: aa309fc1076e6ccdc97f9261274437f6322caca06b74ebc1105f6cc4e8bad0c5
+- AGENTS.md | 4782 bytes | sha256: f9ecaa131c55432b39cc7f5d10ee5632799c49eb8bbf3a5331036682963454f4
+- CONTEXTO_FINANZAS.md | 2587 bytes | sha256: 979a4e18fb7ef0ce458f4c2cf6eb194459996a7c8babd4ef489d05fc90b20ec5
+- MAPA_DEL_CODIGO.md | 12567 bytes | sha256: 3c20309bb941b41268c51b3b89ae6a7cb52a5d05adc02e4e7490eb86c9779553
+- README.md | 2329 bytes | sha256: 62a67b11436feddca7b6720f673a72a021fb7829f8735e0876c9e0994d4c2f16
+- actualizar.html | 2455 bytes | sha256: 3dcfe8a490fdec298f11708559d963ac911af6c898f4c3bd9c8ce5937c43b844
+- css/app.css | 54929 bytes | sha256: 2d8ed2d759e93179a60a3d416211a8a57614b7d320eefd2b4996caef8fe0548e
+- index.html | 5823 bytes | sha256: 8b36926531b5c361148636f22a9ccf82cedad26f851a2b393b07d2764b049c0c
+- js/ai.js | 16524 bytes | sha256: ef9f14cac1af2d3614b2ed4bd3acc62e6973e930b1f90e613f9dbccb101dfe79
+- js/app.js | 62753 bytes | sha256: 03d475da2a16f0c1cc1577551465fd9c20a8ab53a79fcef9e5be9b485e567a38
+- js/charts.js | 24116 bytes | sha256: a57327d0eeb70d48632c8d8267b2e4dc4e54de912a78d0d954d1c075ee91d821
+- js/connectors.js | 37064 bytes | sha256: 71d65059bb071f83904c40cd2a57e8694e957994390a599b222cfaf3c523388d
+- js/finance.js | 38098 bytes | sha256: 1b81c3f4772185880f8e2ec9d6f737050da1ecdfee4660eb45419a6b845bb2af
+- js/importers.js | 29193 bytes | sha256: 03459f927b70f30fce5c92b6c16088db783a877ca7bbf71fd4f080ef08205a96
+- js/live.js | 13096 bytes | sha256: 3621a0207a43a6f5e3a1273195a5deb9f002f1aedc1803cb3c2fe9ba3b1a12c3
+- js/state.js | 28541 bytes | sha256: f7ede7c221d989b5bd08aa0fa2f79174fabfb61e730a987d839ce4ae6a0ef168
+- js/views-desktop.js | 72305 bytes | sha256: 3c820f6e302a065a8a5cd67b1ddbcf749f4c99d29e1a0e2355ce9c5adb6f494e
+- js/views-mobile.js | 23177 bytes | sha256: 826f95bef679568f3890b64ca371fd1f897d76db4a57a15286fd77879ef09aff
+- manifest.json | 1790 bytes | sha256: 80bd694d4b57ba56dd836a6439f7c06bf24a01ec3b09b0fc2eecd4f3dd3e04e1
+- sw.js | 1449 bytes | sha256: 5cb295adcbf7ed2c040a305b0af39674cbd62cc9014e674fc4d4d2ebd9d72988
+- tests/smoke.py | 18132 bytes | sha256: 036f75c4cd191e5f6a85a17d17076a1ac4cc9c6289eb3689a843d6a53594a161
+- tests/worker_smoke.mjs | 17375 bytes | sha256: 88d394a65e874b683f65e08369433d772331b8c74f9179d082aef6f103723c12
+- tools/generar_capturas.py | 6030 bytes | sha256: df6106b0d14ab771c76507f651937fa56c7b76d6a7b1fec6f140f3d542e8cc7b
+- tools/generar_guia_pdf.py | 23187 bytes | sha256: 549827a53a3c93d9a86d2723b2f8a55883f70fff54835a787858bba2e1f74f7b
+- tools/mapa.py | 1159 bytes | sha256: cb63ebc32bb15d5c189e881928ed2e00e84db0205a7583182ba9c315174f3335
+- tools/sincronizar_version.py | 837 bytes | sha256: 066a867b2f3003c20bfb6e06b1ec7a44f74257ce3fc4bbf65355357d481b5005
+- worker.js | 59157 bytes | sha256: 477a1d5951646a7f3f4e6e6dc082503f8efd02315b486d8e877d41f1b7978815
+
+ARCHIVOS OMITIDOS (binarios, minificados o >2 MB):
+- .agents/REGISTRO_CONFIG_ANTIGRAVITY.md (metadato o carpeta interna excluida)
+- icon-192.png (binario o minificado)
+- icon-512.png (binario o minificado)
+- icon-maskable-512.png (binario o minificado)
+- tests/binance_ejemplo.csv (binario o minificado)
+- tests/kraken_ejemplo.csv (binario o minificado)
+- tests/santander_ejemplo.xlsx (binario o minificado)
+
+REGLA OBLIGATORIA ANTI-SUPOSICIONES:
+- Nunca inventes el contenido de un archivo que no esté completo aquí.
+- Si necesitas leer archivos concretos de código de Finanzas, PARA antes de programar y pídeselos a Diego (puede empaquetarlos en 1 clic desde el panel como ARCHIVOS_finanzas.txt).
+
+DOCUMENTACION CLAVE COMPLETA:
+===== FILE: AGENTS.md | sha256: f9ecaa131c55432b39cc7f5d10ee5632799c49eb8bbf3a5331036682963454f4 =====
+# AGENTS.md · Finanzas v12
+
+## Misión
+Mejorar la app real sin perder datos ni degradar privacidad, claridad o fiabilidad. Haz cambios en su lugar correcto, ejecuta todas las pruebas y no declares éxito sin `TODO OK`.
+
+## Invariantes
+1. No cambiar `caudal_v1`, `caudal:`, `X-Caudal-Token`, el KV `CAUDAL` ni el `id` `finanzas-app`.
+2. El TOKEN se pinta vacío y enmascarado; nunca aparece en HTML, logs, capturas ni prompts.
+3. Local-first: persistir antes de usar red. Los fallos deben quedar visibles y reintentarse sin perder cambios.
+4. No introducir pagos obligatorios. Las credenciales de exchanges son solo lectura.
+5. La IA es opt-in, usa mínimos datos, no ejecuta operaciones y no promete rentabilidad.
+6. Toda función accesible por gesto tiene botón alternativo. Objetivos táctiles principales: 44 px en móvil.
+7. Una aportación, importación inicial o traspaso no puede presentarse como rentabilidad.
+8. No rellenar huecos con módulos gigantes: el escritorio es denso; el móvil prioriza y secuencia.
+
+## Arquitectura
+- `index.html` + `css/app.css` + `js/*.js`: estado, finanzas, gráficos, importadores, tiempo real, conectores, Copiloto y vistas PC/móvil.
+- `worker.js` w6: CORS/origen, precios, exchanges, mercado, Enable Banking, on-chain, IA y KV `CAUDAL`.
+- `sw.js`: caché `finanzas-v12-16`, actualización y modo sin conexión.
+- `manifest.json`: identidad PWA estable.
+- `actualizar.html`: aplica parches propuestos por IA en una copia y los valida.
+- `tests/`: navegador integral (`smoke.py`) y Worker (`worker_smoke.mjs`).
+- `tools/`: contexto, mapa y guía.
+
+## Jerarquía del producto
+- Inicio: posición general → cambios reales → cuentas → activos → flujo → decisiones.
+- Mercados: panorama → salud/datos → decisiones → posiciones → exposición → escenarios → radar/noticias.
+- Móvil y PC son composiciones distintas; no basta con apilar la cuadrícula de PC.
+- Azul: posición/cuentas. Bronce: inversión. Verde petróleo: flujo. Ciruela: inteligencia. Verde/rojo: estado.
+
+## Flujo de cambio obligatorio
+1. Empieza por el objetivo, los archivos señalados, los cambios actuales y sus dependencias directas: lee `CONTEXTO_FINANZAS.md` y busca símbolos puntuales en `MAPA_DEL_CODIGO.md` antes de ampliar.
+2. Amplía la investigación solo cuando la evidencia lo requiera; formula el cambio y sus riesgos para datos, móvil, PC y Worker.
+3. Mantén las modificaciones centradas en la tarea y en la función original; no añadas parches que reasignen funciones.
+4. Consulta documentación externa vigente (Context7 `context7-mcp` o plugin de Cloudflare) solo cuando una librería, API externa o versión concreta lo justifique (Playwright, Cloudflare Workers/KV, APIs externas); evítalo en código vanilla interno.
+5. Verifica de menor a mayor coste con `.agents/skills/verificar-cambios/SKILL.md`: sintaxis y chequeo estático (`check-static.mjs`) → `tests/worker_smoke.mjs` → `tests/smoke.py` + revisión visual 390×844 y 1440×900 en claro y oscuro según riesgo y antes de cerrar una entrega funcional.
+6. Actualiza versión/revisión, comentarios, contexto, mapa, pruebas y guía si cambia el uso.
+7. Cierra con un resumen breve: archivos cambiados, comprobaciones ejecutadas con su resultado real (separando probado vs pendiente) y riesgos pendientes.
+
+## Decisiones técnicas y comandos comprobados
+- **Stack**: PWA 100 % vanilla sin `package.json` ni bundler (`index.html`, `css/app.css`, `js/*.js`), `localStorage` (`caudal_v1`), Cloudflare Worker `w6` + KV `CAUDAL` y CI automático en `.github/workflows/check.yml`.
+- **Chequeo estático rápido local**: `node .agents/skills/verificar-cambios/scripts/check-static.mjs` (respaldo: `& "$env:APPDATA\Antigravity\bin\agy-node.cmd" .agents\skills\verificar-cambios\scripts\check-static.mjs`).
+- **Pruebas Worker `w6`**: `node tests/worker_smoke.mjs` (respaldo: `& "$env:APPDATA\Antigravity\bin\agy-node.cmd" tests\worker_smoke.mjs`).
+- **Pruebas integrales en navegador** (Python 3.12 + Playwright Chromium instalados en usuario): `python tests/smoke.py`.
+- **Sincronizar contexto y mapa**: `python tools/sincronizar_version.py` y `python tools/mapa.py`.
+- **Revisión visual local**: usar el subagente integrado `browser` (`Model: "flash"`) en modo lectura/datos de prueba (no hace falta `@playwright/cli`).
+
+## Comprobaciones críticas
+- Importar Santander/Binance/Kraken y reimportar sin duplicados.
+- Privacidad oculta importes y saldos de movimientos.
+- Historial no incluye salto artificial desde cero.
+- Sincronización mezcla cambios simultáneos y respeta borrados.
+- HTTP 403 explica cómo corregir `ALLOWED_ORIGIN`.
+- Worker w6, Gemini local/real, radar, noticias y análisis técnico.
+- Pantallas con y sin inversiones; claro/oscuro; 360–1920 px.
+===== END FILE: AGENTS.md =====
+===== FILE: CONTEXTO_FINANZAS.md | sha256: 979a4e18fb7ef0ce458f4c2cf6eb194459996a7c8babd4ef489d05fc90b20ec5 =====
+# CONTEXTO · Finanzas
+
+**Versión actual: v12** · revisión 17 · Worker **w6**
+
+## Qué es
+PWA privada y local-first para unificar bancos, exchanges (KuCoin, Kraken, Binance, OKX, Bybit), brókeres, wallets on-chain, derivados en vivo, flujo mensual, fiscalidad española y Copiloto IA (Gemini). Se publica en GitHub Pages con un Cloudflare Worker gratuito (`w6`).
+
+## Contratos estables
+- `caudal_v1`: almacenamiento local en el navegador.
+- `caudal:`: derivación del identificador de sincronización.
+- `X-Caudal-Token`: cabecera de autenticación del Worker.
+- `CAUDAL`: binding KV de Cloudflare.
+- `finanzas-app`: identidad estable del manifest PWA.
+
+## Diseño v12 (Editorial Ledger · Obsidian Dark & Warm Paper)
+- **Escritorio (`>= 1024px`)**: barra lateral izquierda fija de `248px` con buscador `Ctrl+K`, navegación agrupada y lista viva de cuentas con puntos semánticos de `6px`; lienzo editorial limpio sin barra superior saturada, bento de 2 filas equilibrado en Inicio (Patrimonio + Flujo, Movimientos + Cartera/Gastos), terminal de Mercados con un único simulador en Derivados, y estudio conversacional neutro para Copiloto.
+- **Móvil (`< 1024px`)**: cabecera ligera con menú, privacidad y `+` rápido (sin botón flotante duplicado); hero de patrimonio directo sobre el lienzo con micro-insight, distribución en inversión y curva spline; filas planas separadas por hairlines; barra inferior de 5 pestañas y controles `>= 44 px`.
+
+## Conexiones y APIs (solo lectura y coste 0 €)
+- **Bancos**: Open Banking PSD2 gratuito via Enable Banking (`ENABLE_BANKING_APP_ID` + `ENABLE_BANKING_PRIVATE_KEY`) + importador Santander/Revolut/BBVA/OFX/QIF + extractor multimodal con Gemini IA.
+- **Exchanges**: KuCoin (Spot + Earn + Futuros), Kraken (Spot + Margen + Futuros), Binance (Spot + Fondos + Earn + Futuros), OKX, Bybit e importación de historial API (`/history`).
+- **On-chain**: consulta gratuita de BTC (`mempool.space`), Ethereum, Arbitrum, Base, Polygon y Solana.
+- **IA**: Copiloto conversacional multi-turno (Gemini / OpenAI / Anthropic / Local sin clave), autocategorización de comercios desconocidos y lectura de extractos/capturas.
+
+## Archivos
+- `index.html` + `css/app.css` + `js/*.js`: aplicación modular completa.
+- `worker.js`: Worker `w6`.
+- `sw.js`: caché `finanzas-v12-16` (network-first con respaldo sin conexión).
+- `tests/smoke.py`: batería integral en navegador.
+- `tests/worker_smoke.mjs`: pruebas de rutas, CORS, TOKEN y KV del Worker `w6`.
+- `tools/`: generación de mapa y sincronización de versión.
+===== END FILE: CONTEXTO_FINANZAS.md =====
+===== FILE: MAPA_DEL_CODIGO.md | sha256: 3c20309bb941b41268c51b3b89ae6a7cb52a5d05adc02e4e7490eb86c9779553 =====
+# MAPA DEL CÓDIGO · Finanzas v12
+
+Generado automáticamente a partir de los módulos `js/*.js`.
+
+
+## js/state.js
+### Estado, almacenamiento local, sincronización cifrada y utilidades · línea 1
+- `localDate(d)` · js/state.js:13
+- `addDays(s, n)` · js/state.js:14
+- `monthAdd(m, n)` · js/state.js:16
+- `fmtDate(s, o = { day: 'numeric', month: 'short' })` · js/state.js:20
+- `nf(n, d = 2, min = d)` · js/state.js:21
+- `money(eur, opts = {})` · js/state.js:22
+- `moneyBig(eur)` · js/state.js:31
+- `toNum(v)` · js/state.js:38
+- `toDate(v, dmy = true)` · js/state.js:48
+- `download(name, text, type = 'application/json')` · js/state.js:61
+- `copyText(t, msg = 'Copiado')` · js/state.js:65
+- `defaults()` · js/state.js:117
+- `load()` · js/state.js:139
+- `migrate(o)` · js/state.js:144
+- `autoBackup()` · js/state.js:155
+- `backupInfo()` · js/state.js:163
+- `restoreAutomaticBackup()` · js/state.js:164
+- `save(sync = true)` · js/state.js:174
+- `stampChanges(before)` · js/state.js:179
+- `change(fn, msg)` · js/state.js:195
+- `undo()` · js/state.js:202
+- `toast(text, canUndo = false)` · js/state.js:211
+### Sincronización cifrada entre dispositivos · línea 216
+- `b64u(b)` · js/state.js:217
+- `syncKey()` · js/state.js:219
+- `syncId()` · js/state.js:220
+- `syncPayload()` · js/state.js:221
+- `encrypt(obj)` · js/state.js:222
+- `decrypt(s)` · js/state.js:228
+- `mergeStates(local, remote)` · js/state.js:233
+- `scheduleSync(ms = 1500)` · js/state.js:262
+- `syncNow(manual = false)` · js/state.js:263
+- `ago(t)` · js/state.js:318
+- `paintSync()` · js/state.js:319
+- `pairLink()` · js/state.js:332
+- `readPair()` · js/state.js:338
+- `instKey(a)` · js/state.js:369
+- `assetColor(sym)` · js/state.js:378
+- `catInitials(c)` · js/state.js:384
+- `initials(s)` · js/state.js:388
+
+## js/finance.js
+### Categorías, finanzas, cartera, derivados, análisis y fiscalidad España · línea 1
+- `merchantOf(desc)` · js/finance.js:38
+- `fmtMerchant(s)` · js/finance.js:46
+- `fmtFreq(days)` · js/finance.js:49
+- `categorize(t)` · js/finance.js:59
+### Activos, divisas y normalización · línea 70
+- `normAsset(a)` · js/finance.js:78
+- `baseSym(instr)` · js/finance.js:83
+- `ensureAsset(sym)` · js/finance.js:90
+- `fx(cur)` · js/finance.js:92
+- `priceEUR(sym)` · js/finance.js:93
+- `trackedAssets()` · js/finance.js:99
+### Cartera, saldos y derivados en tiempo real · línea 108
+- `bankBalance(a)` · js/finance.js:109
+- `positionRows()` · js/finance.js:117
+- `accValue(a, rows)` · js/finance.js:129
+- `derivRows()` · js/finance.js:131
+- `derivSummary()` · js/finance.js:171
+- `netWorth()` · js/finance.js:183
+- `investmentSummary()` · js/finance.js:190
+- `snapshot()` · js/finance.js:203
+- `bankHistory(days = 365)` · js/finance.js:209
+- `reliableHistory(points)` · js/finance.js:220
+- `netSeries(days)` · js/finance.js:231
+- `changeWindow(days)` · js/finance.js:244
+- `invSeries(days)` · js/finance.js:264
+### Flujo mensual, previsiones y alertas · línea 287
+- `monthTotals(m = monthKey(today()` · js/finance.js:288
+- `lastMonths(n)` · js/finance.js:295
+- `recurring()` · js/finance.js:297
+- `liquidity()` · js/finance.js:309
+- `avgMonthlyExpense()` · js/finance.js:310
+- `cushion()` · js/finance.js:315
+- `pace()` · js/finance.js:316
+- `upcoming(days = 31)` · js/finance.js:321
+- `forecast()` · js/finance.js:334
+- `safeToSpend()` · js/finance.js:346
+- `topMerchants(m, n = 5)` · js/finance.js:353
+- `dailySpend(m)` · js/finance.js:354
+- `goalSaved(g)` · js/finance.js:355
+- `alerts()` · js/finance.js:357
+### Fiscalidad España (FIFO, base del ahorro, Modelo 721) · línea 380
+- `cuotaAhorro(base)` · js/finance.js:382
+- `matchTransfers(L)` · js/finance.js:383
+- `taxGroups()` · js/finance.js:392
+- `taxPrefetch(onStep)` · js/finance.js:397
+- `taxCompute()` · js/finance.js:408
+- `costBasis()` · js/finance.js:453
+- `balancesAt(date)` · js/finance.js:454
+- `modelo721(year)` · js/finance.js:455
+- `taxSummary(year, extra = 0)` · js/finance.js:461
+- `byCoin(disp)` · js/finance.js:466
+- `taxCSV(year)` · js/finance.js:467
+- `taxAIText(year)` · js/finance.js:476
+
+## js/charts.js
+### Estado de interfaz y gráficos interactivos SVG (propios, sin librerías) · línea 1
+- `rangeBtns()` · js/charts.js:14
+- `fmtChartMoney(eur, d = 0, sign = false)` · js/charts.js:16
+- `svgLine(pts, { h, w, id = 'nw', col, axis = true } = )` · js/charts.js:25
+- `svgCandles(candles, { h, w, id = 'ohlcv', sym = 'BTC', s)` · js/charts.js:48
+- `svgCompare(m)` · js/charts.js:116
+- `svgDays(m)` · js/charts.js:139
+- `svgMonths(months)` · js/charts.js:155
+- `spendCalendarHTML(m)` · js/charts.js:162
+- `donut(entries, { id = 'cats', label = 'Gastado', to)` · js/charts.js:177
+- `allocBar(parts)` · js/charts.js:184
+- `bindCharts(root = document)` · js/charts.js:189
+
+## js/importers.js
+### Importadores universales (XLSX, CSV, OFX, QIF, JSON y extracción IA) · línea 1
+- `unzip(buf)` · js/importers.js:4
+- `readXlsx(buf)` · js/importers.js:19
+- `parseCSV(text)` · js/importers.js:38
+- `findHeader(rows, needles)` · js/importers.js:54
+- `detect(rows)` · js/importers.js:66
+- `col(hs, ...names)` · js/importers.js:70
+- `parseBank(rows, fmt, head)` · js/importers.js:72
+- `binanceKind(op, acct)` · js/importers.js:97
+- `krakenKind(type, sub)` · js/importers.js:109
+- `parseLedger(rows, fmt, head, map)` · js/importers.js:118
+- `parseOFX(text)` · js/importers.js:154
+- `parseQIF(text)` · js/importers.js:165
+- `readFile(file)` · js/importers.js:176
+- `importFiles(files)` · js/importers.js:192
+- `openImport(rows, det, fname, map)` · js/importers.js:206
+- `openMapper(rows, fname, rawText = '')` · js/importers.js:242
+- `openPositionsImport(rows, head, fname, map)` · js/importers.js:270
+- `importBackup(o)` · js/importers.js:294
+- `openAIImportModal(opts = {})` · js/importers.js:300
+
+## js/live.js
+### Datos en directo (WebSocket, precios, velas OHLCV, técnico, radar y TradingView) · línea 1
+- `startLiveStream()` · js/live.js:6
+- `stopLiveStream()` · js/live.js:45
+- `patchLiveDOM(sym, eur, chg, prevEur)` · js/live.js:50
+- `checkPriceAlertsLive(sym, eur)` · js/live.js:72
+- `refreshPrices(force = false)` · js/live.js:83
+- `directPrices(cryptos)` · js/live.js:101
+- `priceAt(sym, t)` · js/live.js:108
+- `loadOHLCV(sym, interval = chartInterval, force = false)` · js/live.js:125
+- `calcTechnical(closes)` · js/live.js:146
+- `loadAssetIntel(sym)` · js/live.js:157
+- `loadRadar()` · js/live.js:171
+- `searchTickers(q)` · js/live.js:188
+- `tvSymbol(sym)` · js/live.js:203
+- `tradingViewURL(sym)` · js/live.js:210
+- `exchangeTradeURL(ex, sym)` · js/live.js:214
+
+## js/connectors.js
+### Conectores automáticos: Exchanges, Open Banking (Enable Banking), Wallets On-Chain y Worker · línea 1
+- `resetWorkerRoute()` · js/connectors.js:6
+- `workerEndpoints()` · js/connectors.js:7
+- `rememberWorkerMirrors(info)` · js/connectors.js:13
+- `api(path, opts = {})` · js/connectors.js:24
+- `syncBalances(manual = false)` · js/connectors.js:62
+- `syncExchangeHistory(ex)` · js/connectors.js:86
+- `syncOnChainWallets(manual = false)` · js/connectors.js:107
+### Open Banking PSD2 gratuito (Enable Banking) · línea 130
+- `openBankConnectModal()` · js/connectors.js:131
+- `startBankAuth(aspspName, country)` · js/connectors.js:168
+- `handleBankCallback()` · js/connectors.js:180
+- `syncConnectedBanks(manual = false)` · js/connectors.js:206
+- `saveVaultCredentials(group, opts = {})` · js/connectors.js:292
+- `openConnectHub(initialTab = 'bancos')` · js/connectors.js:355
+
+## js/ai.js
+### Copiloto de IA: Chat conversacional (Gemini / Local), análisis, categorización y extracción · línea 1
+- `renderMarkdown(md)` · js/ai.js:4
+- `portfolioMetricsFromPayload(rows)` · js/ai.js:36
+- `aiPayload(kind)` · js/ai.js:41
+- `aiContext()` · js/ai.js:59
+- `localAdvice(kind)` · js/ai.js:61
+- `localChatReply(q)` · js/ai.js:93
+- `getActiveChat()` · js/ai.js:147
+- `sendChatMessage(text)` · js/ai.js:158
+- `runAI(kind)` · js/ai.js:187
+- `parseJSONSafe(text)` · js/ai.js:205
+- `aiCategorizeUnknowns()` · js/ai.js:211
+- `aiParseImport(payload)` · js/ai.js:242
+
+## js/views-desktop.js
+### Vistas de Escritorio (Editorial Ledger) y componentes compartidos · línea 1
+- `head(title, sub, actions = '')` · js/views-desktop.js:5
+- `compactEmpty(title, text, action = '')` · js/views-desktop.js:8
+- `changeCell(days, label)` · js/views-desktop.js:11
+- `changeGridHTML(tag = 'div', attrs = '')` · js/views-desktop.js:15
+- `accountLine(a, rows)` · js/views-desktop.js:40
+- `homeAssets(rows)` · js/views-desktop.js:44
+- `txItem(t)` · js/views-desktop.js:52
+- `catRow(k, v, max, total, attrs)` · js/views-desktop.js:62
+- `goalRow(g)` · js/views-desktop.js:70
+- `holdingRow(x)` · js/views-desktop.js:75
+- `accCard(a, rows)` · js/views-desktop.js:82
+- `derivCardHTML(d)` · js/views-desktop.js:92
+- `opsTable(ops, hideAcc = false)` · js/views-desktop.js:111
+- `invDonut(list)` · js/views-desktop.js:116
+- `workerInfoHTML(i)` · js/views-desktop.js:121
+- `onboarding()` · js/views-desktop.js:129
+- `renderDesktopTopbar()` · js/views-desktop.js:138
+- `renderAIDrawer()` · js/views-desktop.js:140
+### 1. Inicio Escritorio (Editorial Ledger) · línea 150
+- `vResumenDesktop()` · js/views-desktop.js:151
+### 2. Terminal de Mercados, Velas en directo y Derivados (Escritorio) · línea 254
+- `buildPortfolioContext()` · js/views-desktop.js:255
+- `portfolioMetrics(list, total)` · js/views-desktop.js:266
+- `watchlistSymbols(list)` · js/views-desktop.js:272
+- `marketChartDeck(sym)` · js/views-desktop.js:276
+- `vInvDesktop()` · js/views-desktop.js:297
+### 3. Movimientos (Escritorio) · línea 369
+- `filtered()` · js/views-desktop.js:370
+- `vMovsDesktop()` · js/views-desktop.js:375
+### 4. Cuentas y Detalle de Cuenta · línea 421
+- `vAccountDetail(accId)` · js/views-desktop.js:422
+- `vCuentasDesktop()` · js/views-desktop.js:445
+### 5. Plan, Presupuestos y Alertas de precio · línea 460
+- `vGoalsDesktop()` · js/views-desktop.js:461
+### 6. Impuestos España · línea 478
+- `vTax()` · js/views-desktop.js:479
+### 7. Copiloto Studio (Escritorio) · línea 504
+- `vCopilotDesktop()` · js/views-desktop.js:505
+### 8. Ajustes · línea 526
+- `vAjustes()` · js/views-desktop.js:528
+- `vMasDesktop()` · js/views-desktop.js:555
+
+## js/views-mobile.js
+### Vistas Móviles (Editorial Táctil) · línea 1
+- `vResumenMobile()` · js/views-mobile.js:4
+- `vInvMobile()` · js/views-mobile.js:73
+- `vMovsMobile()` · js/views-mobile.js:121
+- `vCuentasMobile()` · js/views-mobile.js:160
+- `vCopilotMobile()` · js/views-mobile.js:171
+
+## js/app.js
+### Navegación, ventanas modales, acciones, gestos y arranque · línea 1
+- `go(v, f)` · js/app.js:31
+- `navBtn(id, n, i, clsName = 'nav')` · js/app.js:50
+- `sideNav()` · js/app.js:54
+- `sideAccountsHTML()` · js/app.js:66
+- `drawerNav()` · js/app.js:81
+- `renderNav()` · js/app.js:83
+- `render()` · js/app.js:97
+### PWA · línea 111
+- `installState()` · js/app.js:116
+- `installApp()` · js/app.js:117
+- `repairPWA()` · js/app.js:122
+### Modales de edición, derivados, wallets, watchlist, detalle y búsqueda · línea 128
+- `modal(title, html)` · js/app.js:129
+- `editTx(id)` · js/app.js:137
+- `quickAdd()` · js/app.js:149
+- `editOp(id)` · js/app.js:171
+- `editDeriv(id)` · js/app.js:184
+- `closeDerivModal(id)` · js/app.js:196
+- `editAcc(id)` · js/app.js:202
+- `editWalletModal()` · js/app.js:213
+- `editGoal(id)` · js/app.js:221
+- `editPriceAlertModal(defaultSym = selectedSymbol || 'BTC')` · js/app.js:231
+- `openAddWatchModal()` · js/app.js:240
+- `assetIntelHTML(sym)` · js/app.js:262
+- `assetDetail(sym)` · js/app.js:271
+- `openCommandPalette()` · js/app.js:284
+### Drawer móvil, Drawer IA y Gestos · línea 325
+- `toggleAIDrawer(force)` · js/app.js:326
+- `resetDrawerGesture()` · js/app.js:333
+- `openDrawer()` · js/app.js:334
+- `closeDrawer()` · js/app.js:335
+- `gestureStart(e)` · js/app.js:338
+- `gestureMove(e)` · js/app.js:350
+- `gestureEnd(e)` · js/app.js:371
+### Acciones centralizadas · línea 384
+- `confirmTwice(el)` · js/app.js:385
+- `act(a, el)` · js/app.js:387
+- `afterRender()` · js/app.js:658
+- `refreshAll(force)` · js/app.js:685
+- `init()` · js/app.js:693
+===== END FILE: MAPA_DEL_CODIGO.md =====
+===== FILE: README.md | sha256: 62a67b11436feddca7b6720f673a72a021fb7829f8735e0876c9e0994d4c2f16 =====
+# Finanzas v12 · Centro de Control Financiero
+
+PWA privada y local-first para controlar desde un mismo sitio todas tus cuentas bancarias (Santander, Revolut y cualquier banco), exchanges (KuCoin, Kraken, Binance, OKX, Bybit), brókeres, wallets on-chain, derivados en vivo, gráficos interactivos, fiscalidad FIFO en España y Copiloto IA con Gemini.
+
+## Cómo publicar y actualizar (1 solo commit)
+1. En **GitHub Desktop**: revisa los cambios → escribe un mensaje (ej. `Finanzas v12`) → **Commit to main** → **Push origin**.
+2. Espera el visto verde de **Prueba Finanzas** en la pestaña **Actions** de GitHub.
+3. En **Cloudflare Workers & Pages → tu Worker → Edit code**: pega el archivo `worker.js` completo y pulsa **Deploy** (debe responder **w6**).
+
+## Secretos del Worker en Cloudflare (todos gratuitos)
+
+### Obligatorios
+- `TOKEN`: contraseña de 20 o más caracteres (debe coincidir con Ajustes → Código TOKEN).
+- `ALLOWED_ORIGIN`: origen exacto de tu GitHub Pages sin barra final (ej. `https://tu-usuario.github.io`).
+- Binding KV llamado exactamente `CAUDAL`.
+
+### Copiloto IA (Gemini gratuito)
+- `GEMINI_API_KEY`: clave gratuita de [Google AI Studio](https://aistudio.google.com).
+- `GEMINI_MODEL` (opcional, por defecto intenta `gemini-3.8-flash` y cambia en segundos con enfriamiento automático a `gemini-3.5-flash-lite` si está saturado o sin cuota).
+
+### Exchanges (siempre permisos de SOLO LECTURA)
+- **KuCoin (Spot + Futuros)**: `KUCOIN_KEY`, `KUCOIN_SECRET`, `KUCOIN_PASSPHRASE` (opcionales `KUCOIN_FUTURES_*` si usas claves separadas).
+- **Kraken Spot**: `KRAKEN_KEY`, `KRAKEN_SECRET`.
+- **Kraken Futures**: `KRAKEN_FUTURES_KEY`, `KRAKEN_FUTURES_SECRET`.
+- **Binance**: `BINANCE_KEY`, `BINANCE_SECRET`.
+- **OKX**: `OKX_KEY`, `OKX_SECRET`, `OKX_PASSPHRASE`.
+- **Bybit**: `BYBIT_KEY`, `BYBIT_SECRET`.
+
+### Open Banking PSD2 gratuito (opcional, para Santander/bancos automáticos)
+- `ENABLE_BANKING_APP_ID`: ID de aplicación en [Enable Banking](https://enablebanking.com) (uso personal).
+- `ENABLE_BANKING_PRIVATE_KEY`: clave privada RSA en formato PEM PKCS#8.
+
+## Contratos estables
+`caudal_v1`, `caudal:`, `X-Caudal-Token`, KV `CAUDAL` y `id` `finanzas-app` se mantienen intactos para conservar tus datos.
+
+## Pruebas automáticas
+```bash
+node tests/worker_smoke.mjs
+python tests/smoke.py
+```
+===== END FILE: README.md =====
+
+INSTRUCCIONES DEL ZIP DE VUELTA (DESDE CERO):
+- Entrega un ZIP llamado: COPILOT_A_ANTIGRAVITY_YYYYMMDD-HHMMSS-finanzas-<6hex>.zip
+- Incluye HANDOFF.json con:
+  - protocol_version: "1.1", direction: "copilot_to_antigravity", origin_mode: "copilot_from_scratch"
+  - project: "Finanzas", repo_url: "https://github.com/BioPeat/Finanzas.git", branch: "main", source_commit: "9cb8b81621da18cfbf4a558c5cd64fb7bb1e3b47"
+  - task_id único (>=8 chars), created_at, objective, files (con sha256 en minúsculas)
+- Incluye RESPUESTA.md, PRUEBAS.md y, si hay cambios, PATCH.diff y/o files/ (deleted_files opcional).
+- PROHIBIDO: ejecutables binarios, scripts no declarados, rutas .. o absolutas, secretos o rutas locales.

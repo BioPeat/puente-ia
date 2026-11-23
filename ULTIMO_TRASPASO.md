@@ -1,7 +1,7 @@
 # Último traspaso
 
-- **Tarea activa:** [20261123-prueba-inicial](handoffs/20261123-prueba-inicial/HANDOFF.md)
-- **Manifiesto JSON:** [HANDOFF.json](handoffs/20261123-prueba-inicial/HANDOFF.json)
+- **Tarea activa:** [20261123-prueba-v2](handoffs/20261123-prueba-v2/HANDOFF.md)
+- **Manifiesto JSON:** [HANDOFF.json](handoffs/20261123-prueba-v2/HANDOFF.json)
 - **Estado:** `ready_for_copilot`
 - **Proyecto:** biopeat
 - **Repositorio:** https://github.com/BioPeat/biopeat.git
@@ -11,4 +11,4 @@
 
 ## Objetivo
 
-Traspaso de prueba inicial v1.1.0 sin modificar BioPeat
+Traspaso de prueba v2.0.0 autocontenido sin modificar BioPeat

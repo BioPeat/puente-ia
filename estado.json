@@ -1,10 +1,14 @@
 {
   "protocol_version": "1.1",
-  "latest_task_id": "20261123-prueba-inicial",
+  "latest_task_id": "20261123-prueba-v2",
   "origin_mode": "reply_to_handoff",
   "project": "biopeat",
   "repo_url": "https://github.com/BioPeat/biopeat.git",
+  "branch": "main",
   "source_commit": "1c21adb8a651c19771ea4ebe6ee49def9243971b",
-  "updated_at": "2026-11-23T13:35:23.572796+00:00",
+  "objective": "Traspaso de prueba v2.0.0 autocontenido sin modificar BioPeat",
+  "para_copilot_txt": "ultimo/PARA_COPILOT.txt",
+  "task_para_copilot_txt": "handoffs/20261123-prueba-v2/PARA_COPILOT.txt",
+  "updated_at": "2026-11-23T16:59:11.000296+00:00",
   "status": "ready_for_copilot"
 }

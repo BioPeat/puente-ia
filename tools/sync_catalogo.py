@@ -203,6 +203,10 @@ def refresh_portal(bridge: Path) -> None:
     )
     (bridge / "START.md").write_text(start_md, encoding="utf-8")
 
+    index_path = bridge / "index.html"
+    if index_path.is_file() and "<!-- PUENTE_IA_PANEL -->" in index_path.read_text(encoding="utf-8", errors="ignore"):
+        return
+
     cat_table_html = (
         "<table><thead><tr><th>Proyecto</th><th>Visibilidad</th><th>Commit actual</th><th>Enlaces</th></tr></thead><tbody>"
         + ("".join(cat_rows_html) if cat_rows_html else "<tr><td colspan='4'>Sin proyectos sincronizados todavía.</td></tr>")
@@ -332,17 +336,74 @@ def run_sync(bridge: Path) -> int:
                 "branch": branch, "commit": commit, "dirty_local": False, "public": True,
                 "status": "synced", "synced_at": now.isoformat(),
                 "file_count": len(files_out), "omitted_count": len(omitted_out),
+                "estado_txt_path": f"catalogo/{slug}/ESTADO_{slug}.txt",
                 "files": files_out, "omitted": omitted_out,
                 "urls": {
                     "pages_summary": f"{pages_root}catalogo/{slug}/resumen.html",
                     "pages_state_json": f"{pages_root}catalogo/{slug}/estado.json",
+                    "pages_estado_txt": f"{pages_root}catalogo/{slug}/ESTADO_{slug}.txt",
                     "raw_state_md": f"{raw_root}catalogo/{slug}/ESTADO.md",
                     "raw_state_json": f"{raw_root}catalogo/{slug}/estado.json",
+                    "raw_estado_txt": f"{raw_root}catalogo/{slug}/ESTADO_{slug}.txt",
                     "raw_files_prefix": f"{raw_root}catalogo/{slug}/files/",
                     "pages_files_prefix": f"{pages_root}catalogo/{slug}/files/",
                 },
             }
             (stage_dir / "estado.json").write_text(json.dumps(entry, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+            estado_txt_lines = [
+                f"PUENTE IA · ESTADO AUTOCONTENIDO DE {name.upper()} ({slug})",
+                "=" * 70,
+                f"PROYECTO: {name} ({slug})",
+                f"REPOSITORIO: {repo_url}",
+                f"APP PUBLICADA: {pages_url or 'N/A'}",
+                f"RAMA: {branch}",
+                f"COMMIT ACTUAL (source_commit): {commit}",
+                f"SINCRONIZADO UTC: {now.isoformat()}",
+                f"PROTOCOLO DE VUELTA: {PROTOCOL}",
+                "",
+                "INDICE COMPLETO DE ARCHIVOS PUBLICOS:",
+                *[f"- {f['path']} | {f['size']} bytes | sha256: {f['sha256']}" for f in files_out],
+                "",
+                "ARCHIVOS OMITIDOS (binarios, minificados o >2 MB):",
+                *([f"- {o['path']} ({o['reason']})" for o in omitted_out] or ["- Ninguno"]),
+                "",
+                "REGLA OBLIGATORIA ANTI-SUPOSICIONES:",
+                "- Nunca inventes el contenido de un archivo que no esté completo aquí.",
+                f"- Si necesitas leer archivos concretos de código de {name}, PARA antes de programar y pídeselos a Diego (puede empaquetarlos en 1 clic desde el panel como ARCHIVOS_{slug}.txt).",
+                "",
+                "DOCUMENTACION CLAVE COMPLETA:",
+            ]
+            key_docs_all = [
+                f for f in files_out
+                if f["path"] in {"AGENTS.md", "README.md", "GEMINI.md"}
+                or f["path"].startswith(("CONTEXTO_", "MAPA_", "PROYECTO_"))
+            ]
+            if not key_docs_all:
+                estado_txt_lines.append("- Ningún documento clave detectado.")
+            else:
+                for kd in key_docs_all:
+                    if kd["size"] > 80 * 1024:
+                        estado_txt_lines.append(
+                            f"- {kd['path']} ({kd['size']} bytes, omitido por tamaño >80 KB; pídelo a Diego desde el panel si lo necesitas)"
+                        )
+                        continue
+                    kd_path = stage_files / Path(*PurePosixPath(kd["path"]).parts)
+                    kd_body = kd_path.read_text(encoding="utf-8", errors="replace").rstrip()
+                    estado_txt_lines.append(
+                        f"===== FILE: {kd['path']} | sha256: {kd['sha256']} =====\n{kd_body}\n===== END FILE: {kd['path']} ====="
+                    )
+            estado_txt_lines.extend([
+                "",
+                "INSTRUCCIONES DEL ZIP DE VUELTA (DESDE CERO):",
+                f"- Entrega un ZIP llamado: COPILOT_A_ANTIGRAVITY_YYYYMMDD-HHMMSS-{slug}-<6hex>.zip",
+                "- Incluye HANDOFF.json con:",
+                f'  - protocol_version: "{PROTOCOL}", direction: "copilot_to_antigravity", origin_mode: "copilot_from_scratch"',
+                f'  - project: "{name}", repo_url: "{repo_url}", branch: "{branch}", source_commit: "{commit}"',
+                '  - task_id único (>=8 chars), created_at, objective, files (con sha256 en minúsculas)',
+                "- Incluye RESPUESTA.md, PRUEBAS.md y, si hay cambios, PATCH.diff y/o files/ (deleted_files opcional).",
+                "- PROHIBIDO: ejecutables binarios, scripts no declarados, rutas .. o absolutas, secretos o rutas locales.",
+            ])
+            (stage_dir / f"ESTADO_{slug}.txt").write_text("\n".join(estado_txt_lines) + "\n", encoding="utf-8")
             file_rows = "\n".join(f"| [{f['path']}](files/{f['path']}) | {f['size']} | `{f['sha256'][:12]}` |" for f in files_out)
             omit_rows = "\n".join(f"- `{o['path']}` ({o['reason']})" for o in omitted_out) or "- Ninguno"
             key_docs = [f["path"] for f in files_out if f["path"] in {"AGENTS.md", "README.md"} or f["path"].startswith(("CONTEXTO_", "MAPA_"))]

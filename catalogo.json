@@ -1,6 +1,6 @@
 {
   "protocol_version": "1.1",
-  "updated_at": "2026-11-23T14:03:39.413704+00:00",
+  "updated_at": "2026-11-23T16:59:08.287049+00:00",
   "projects": [
     {
       "name": "biopeat",
@@ -12,14 +12,17 @@
       "dirty_local": false,
       "public": true,
       "status": "synced",
-      "synced_at": "2026-11-23T14:03:39.413704+00:00",
+      "synced_at": "2026-11-23T16:59:08.287049+00:00",
       "file_count": 21,
       "omitted_count": 3,
+      "estado_txt_path": "catalogo/biopeat/ESTADO_biopeat.txt",
       "urls": {
         "pages_summary": "https://biopeat.github.io/puente-ia/catalogo/biopeat/resumen.html",
         "pages_state_json": "https://biopeat.github.io/puente-ia/catalogo/biopeat/estado.json",
+        "pages_estado_txt": "https://biopeat.github.io/puente-ia/catalogo/biopeat/ESTADO_biopeat.txt",
         "raw_state_md": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/biopeat/ESTADO.md",
         "raw_state_json": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/biopeat/estado.json",
+        "raw_estado_txt": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/biopeat/ESTADO_biopeat.txt",
         "raw_files_prefix": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/biopeat/files/",
         "pages_files_prefix": "https://biopeat.github.io/puente-ia/catalogo/biopeat/files/"
       }
@@ -34,14 +37,17 @@
       "dirty_local": false,
       "public": true,
       "status": "synced",
-      "synced_at": "2026-11-23T14:03:39.413704+00:00",
+      "synced_at": "2026-11-23T16:59:08.287049+00:00",
       "file_count": 30,
       "omitted_count": 7,
+      "estado_txt_path": "catalogo/finanzas/ESTADO_finanzas.txt",
       "urls": {
         "pages_summary": "https://biopeat.github.io/puente-ia/catalogo/finanzas/resumen.html",
         "pages_state_json": "https://biopeat.github.io/puente-ia/catalogo/finanzas/estado.json",
+        "pages_estado_txt": "https://biopeat.github.io/puente-ia/catalogo/finanzas/ESTADO_finanzas.txt",
         "raw_state_md": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/finanzas/ESTADO.md",
         "raw_state_json": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/finanzas/estado.json",
+        "raw_estado_txt": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/finanzas/ESTADO_finanzas.txt",
         "raw_files_prefix": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/finanzas/files/",
         "pages_files_prefix": "https://biopeat.github.io/puente-ia/catalogo/finanzas/files/"
       }
@@ -56,14 +62,17 @@
       "dirty_local": false,
       "public": true,
       "status": "synced",
-      "synced_at": "2026-11-23T14:03:39.413704+00:00",
+      "synced_at": "2026-11-23T16:59:08.287049+00:00",
       "file_count": 35,
       "omitted_count": 12,
+      "estado_txt_path": "catalogo/estadisticas/ESTADO_estadisticas.txt",
       "urls": {
         "pages_summary": "https://biopeat.github.io/puente-ia/catalogo/estadisticas/resumen.html",
         "pages_state_json": "https://biopeat.github.io/puente-ia/catalogo/estadisticas/estado.json",
+        "pages_estado_txt": "https://biopeat.github.io/puente-ia/catalogo/estadisticas/ESTADO_estadisticas.txt",
         "raw_state_md": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/estadisticas/ESTADO.md",
         "raw_state_json": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/estadisticas/estado.json",
+        "raw_estado_txt": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/estadisticas/ESTADO_estadisticas.txt",
         "raw_files_prefix": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/estadisticas/files/",
         "pages_files_prefix": "https://biopeat.github.io/puente-ia/catalogo/estadisticas/files/"
       }

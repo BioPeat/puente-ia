@@ -8,9 +8,10 @@
   "dirty_local": false,
   "public": true,
   "status": "synced",
-  "synced_at": "2026-11-23T14:03:39.413704+00:00",
+  "synced_at": "2026-11-23T16:59:08.287049+00:00",
   "file_count": 35,
   "omitted_count": 12,
+  "estado_txt_path": "catalogo/estadisticas/ESTADO_estadisticas.txt",
   "files": [
     {
       "path": ".github/workflows/check.yml",
@@ -253,8 +254,10 @@
   "urls": {
     "pages_summary": "https://biopeat.github.io/puente-ia/catalogo/estadisticas/resumen.html",
     "pages_state_json": "https://biopeat.github.io/puente-ia/catalogo/estadisticas/estado.json",
+    "pages_estado_txt": "https://biopeat.github.io/puente-ia/catalogo/estadisticas/ESTADO_estadisticas.txt",
     "raw_state_md": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/estadisticas/ESTADO.md",
     "raw_state_json": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/estadisticas/estado.json",
+    "raw_estado_txt": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/estadisticas/ESTADO_estadisticas.txt",
     "raw_files_prefix": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/estadisticas/files/",
     "pages_files_prefix": "https://biopeat.github.io/puente-ia/catalogo/estadisticas/files/"
   }

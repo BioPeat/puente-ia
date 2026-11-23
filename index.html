@@ -1,49 +1,551 @@
-<!doctype html><html lang='es'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='robots' content='noindex,nofollow'><title>Puente IA · Portal único Copilot ↔ Antigravity</title><style>:root{color-scheme:dark light}body{font:15px/1.6 system-ui,sans-serif;max-width:960px;margin:28px auto;padding:0 18px;background:#111318;color:#e7e9ee}a{color:#7cc4ff}.card{background:#191d24;border:1px solid #2b3240;border-radius:12px;padding:16px 18px;margin:14px 0}pre{white-space:pre-wrap;word-break:break-word;background:#13161d;padding:14px;border-radius:8px;border:1px solid #262c38;margin:8px 0 0}table{border-collapse:collapse;width:100%;margin-top:8px}th,td{border:1px solid #2b3240;padding:8px 10px;text-align:left}.warn{color:#f5b971}.nav a{margin-right:12px;font-weight:600}.pill{display:inline-block;padding:2px 8px;border-radius:999px;background:#232a36;font-size:13px}</style></head><body><h1>Puente IA · Portal único (v1.2)</h1><nav class='nav'><a href='guia.html'>Guía visual para Diego</a><a href='START.md'>START.md (Markdown)</a><a href='ultimo.html'>Último traspaso</a><a href='catalogo.html'>Catálogo completo</a><a href='PARA_COPILOT_LEEME.md'>PARA_COPILOT_LEEME.md</a></nav><p class='warn'>Contenido técnico público. Prohibido incluir secretos, rutas locales o datos privados.</p><div class='card'><h2>Instrucciones para Copilot (Protocolo 1.1)</h2><pre>## INSTRUCCIONES OBLIGATORIAS PARA COPILOT (Protocolo 1.1)
+<!-- PUENTE_IA_PANEL -->
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Puente IA · Panel único (v2.0)</title>
+  <style>
+    :root {
+      --bg: #0f1217;
+      --surface: #171c24;
+      --surface-2: #11151b;
+      --border: #2a3242;
+      --text: #eef1f6;
+      --muted: #a6b0c3;
+      --accent: #68b5ff;
+      --ok: #38c184;
+      --warn: #f5b971;
+      --btn-sec: #252d3b;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f6f4ef;
+        --surface: #ffffff;
+        --surface-2: #f1eee7;
+        --border: #dcd6ca;
+        --text: #1c2026;
+        --muted: #5b6472;
+        --accent: #0b63ce;
+        --ok: #137a4b;
+        --warn: #9a5b00;
+        --btn-sec: #e6e1d6;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0 auto;
+      max-width: 960px;
+      padding: 24px 16px 56px;
+      font: 15.5px/1.55 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    h1 { margin: 0; font-size: 1.55rem; letter-spacing: -0.02em; }
+    h2 { margin: 0 0 10px; font-size: 1.15rem; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .sub { margin: 4px 0 0; color: var(--muted); font-size: 0.92rem; }
+    .pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .pill.live { color: var(--ok); }
+    .pill.warn { color: var(--warn); }
+    .nav { display: flex; flex-wrap: wrap; gap: 12px; font-size: 0.9rem; margin-bottom: 16px; }
+    .nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
+    .nav a:hover { text-decoration: underline; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 8px 14px;
+      margin: 10px 0 14px;
+      font-size: 0.9rem;
+    }
+    .meta-item span { display: block; color: var(--muted); font-size: 0.78rem; }
+    .meta-item strong, .meta-item code { word-break: break-word; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 10px; }
+    button {
+      border: 0;
+      border-radius: 9px;
+      padding: 9px 14px;
+      font: 600 0.88rem system-ui, sans-serif;
+      cursor: pointer;
+      background: var(--btn-sec);
+      color: var(--text);
+    }
+    button.primary { background: var(--accent); color: #fff; }
+    button.done { background: var(--ok); color: #fff; }
+    button:disabled { opacity: 0.55; cursor: wait; }
+    .hint { font-size: 0.88rem; color: var(--muted); margin: 8px 0 0; }
+    .app-row {
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      border-radius: 11px;
+      padding: 12px 14px;
+      margin-top: 10px;
+    }
+    .app-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+    .app-title { font-weight: 700; font-size: 1rem; }
+    .app-meta { font-size: 0.84rem; color: var(--muted); }
+    details { margin-top: 10px; }
+    summary { cursor: pointer; font-weight: 600; font-size: 0.9rem; color: var(--accent); }
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 0.82rem;
+      max-height: 360px;
+      overflow: auto;
+      margin: 8px 0 0;
+    }
+    .picker-list {
+      max-height: 240px;
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: var(--surface);
+      margin-top: 8px;
+      display: grid;
+      gap: 4px;
+    }
+    .picker-item { display: flex; gap: 8px; align-items: center; font-size: 0.85rem; }
+    .picker-item code { flex: 1; }
+    .filter-input {
+      width: 100%;
+      max-width: 320px;
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.86rem;
+    }
+    .cmd-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 8px 12px;
+      margin-top: 8px;
+    }
+    .cmd-row code { font-size: 0.88rem; word-break: break-word; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Puente IA · Panel de Diego</h1>
+      <p class="sub">Copilot ↔ Antigravity sin depender de que Copilot abra enlaces.</p>
+    </div>
+    <div class="actions">
+      <span id="source-pill" class="pill">Cargando...</span>
+      <button id="refresh-btn" type="button">Actualizar ahora</button>
+    </div>
+  </header>
 
-1. **Si Diego continúa una tarea de Antigravity:** lee el bloque **Último traspaso / estado actual** de abajo y los archivos enlazados en `handoffs/&lt;ID&gt;/context/`. Usa `origin_mode: &quot;reply_to_handoff&quot;`.
-2. **Si Diego empieza una tarea desde cero:** abre el proyecto en la tabla **Catálogo actual** (`ESTADO.md`, `estado.json`), lee obligatoriamente su `AGENTS.md` y todos los archivos reales afectados en `catalogo/&lt;slug&gt;/files/`. Usa el `commit` exacto de la tabla como `source_commit` y `origin_mode: &quot;copilot_from_scratch&quot;`.
-3. **PROHIBIDO SUPONER O INVENTAR:** si algún enlace da error, no puedes leer un archivo o falta un requisito, **PARA antes de empezar** y pídele a Diego exactamente lo que te falta.
-4. **Formato de entrega:** devuelve un ZIP `COPILOT_A_ANTIGRAVITY_&lt;ID&gt;.zip` con `HANDOFF.json` (`protocol_version` `1.1`, `task_id`, `direction: &quot;copilot_to_antigravity&quot;`, `origin_mode`, `project`, `repo_url`, `branch`, `source_commit`, `created_at`, `objective`, `files` con SHA-256 minúsculas), `RESPUESTA.md`, `PRUEBAS.md` y, si hay cambios, `PATCH.diff` y/o `files/` (`deleted_files` opcional). Prohibidos ejecutables binarios, scripts no declarados, `..`, rutas absolutas o secretos.
-</pre></div><div class='card'><h2>Último traspaso / estado <span class='pill'>20261123-prueba-inicial · ready_for_copilot</span></h2><pre># Traspaso a Copilot
+  <nav class="nav">
+    <a href="guia.html">Guía rápida (paso a paso)</a>
+    <a href="ultimo/PARA_COPILOT.txt">Ver último PARA_COPILOT.txt</a>
+    <a href="PARA_COPILOT_LEEME.md">PARA_COPILOT_LEEME.md</a>
+    <a href="HISTORIAL.md">Historial</a>
+  </nav>
 
-- **ID:** 20261123-prueba-inicial
-- **Modo:** `reply_to_handoff`
-- **Proyecto:** biopeat
-- **Repositorio:** https://github.com/BioPeat/biopeat.git
-- **Rama:** main
-- **Commit de origen:** `1c21adb8a651c19771ea4ebe6ee49def9243971b`
-- **Creado:** 2026-11-23T13:35:23.572796+00:00
-- **Estado:** listo_para_copilot
+  <section class="card">
+    <h2>
+      1. Pasar tarea de Antigravity a Copilot
+      <span id="handoff-status-pill" class="pill">...</span>
+    </h2>
+    <div class="meta-grid">
+      <div class="meta-item"><span>ID</span><strong id="h-id">-</strong></div>
+      <div class="meta-item"><span>App</span><strong id="h-app">-</strong></div>
+      <div class="meta-item"><span>Commit</span><code id="h-commit">-</code></div>
+      <div class="meta-item"><span>Tamaño</span><strong id="h-size">-</strong></div>
+    </div>
+    <p id="h-obj" class="sub"></p>
+    <div class="actions">
+      <button id="btn-copy-handoff" type="button">Copiar texto</button>
+      <button id="btn-dl-handoff" type="button">Descargar PARA_COPILOT.txt</button>
+    </div>
+    <p id="h-advice" class="hint"></p>
+    <details>
+      <summary>Ver texto completo de PARA_COPILOT.txt</summary>
+      <pre id="h-preview">Cargando...</pre>
+    </details>
+  </section>
 
-## Objetivo
+  <section class="card">
+    <h2>2. Empezar desde cero en Copilot (elegir app)</h2>
+    <p class="sub">Descarga o copia el estado actual de una app para pegarlo o soltarlo en Copilot. Si Copilot te pide archivos de código concretos, márcalos abajo en un clic.</p>
+    <div id="apps-container">Cargando catálogo...</div>
+  </section>
 
-Traspaso de prueba inicial v1.1.0 sin modificar BioPeat
+  <section class="card">
+    <h2>3. Órdenes cortas en Antigravity</h2>
+    <div class="cmd-row">
+      <div><strong>Mandar tarea a Copilot:</strong> <code>PUENTE: pásalo a Copilot</code></div>
+      <button type="button" class="mini-copy" data-text="PUENTE: pásalo a Copilot">Copiar</button>
+    </div>
+    <div class="cmd-row">
+      <div><strong>Aplicar ZIP de Copilot (tras pasarlo por PairDrop):</strong> <code>PUENTE: aplica lo de Copilot</code></div>
+      <button type="button" class="mini-copy" data-text="PUENTE: aplica lo de Copilot">Copiar</button>
+    </div>
+    <div class="cmd-row">
+      <div><strong>Añadir una app nueva:</strong> <code>PUENTE: añade https://github.com/BioPeat/NUEVO_REPO.git</code></div>
+      <button type="button" class="mini-copy" data-text="PUENTE: añade https://github.com/BioPeat/NUEVO_REPO.git">Copiar</button>
+    </div>
+  </section>
 
-## Qué se ha hecho
+  <script>
+    const API_COMMIT = 'https://api.github.com/repos/BioPeat/puente-ia/commits/main';
+    const RAW_ROOT = 'https://raw.githubusercontent.com/BioPeat/puente-ia/';
+    let activeBase = './';
+    let useBust = true;
+    let handoffText = '';
 
-Instalacion de copilot-bridge v1.1.0, catalogo sincronizado y puente inicializado.
+    function urlFor(rel) {
+      return useBust ? `${activeBase}${rel}?t=${Date.now()}` : `${activeBase}${rel}`;
+    }
 
-## Qué falta
+    async function fetchText(rel) {
+      const r = await fetch(urlFor(rel), { cache: 'no-store' });
+      if (!r.ok) throw new Error(`HTTP ${r.status} en ${rel}`);
+      return await r.text();
+    }
 
-Leer PARA_COPILOT_LEEME.md y confirmar lectura desde Microsoft Copilot.
+    async function fetchJson(rel) {
+      return JSON.parse(await fetchText(rel));
+    }
 
-## Archivos de contexto
+    async function copyString(text, btn) {
+      const prev = btn.textContent;
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      }
+      btn.textContent = 'Copiado';
+      btn.classList.add('done');
+      setTimeout(() => { btn.textContent = prev; btn.classList.remove('done'); }, 1500);
+    }
 
-- [context/README.md](context/README.md) — `f4b78c8f993e0b2c171e93348809f554ea2d9d13482433beffdfeea5ae5315f2`
-- [context/AGENTS.md](context/AGENTS.md) — `9b91fb1b0d76d72974b47d62cb65f185bbff430b3bba858c8fbb14599c8defe4`
+    function downloadText(filename, text) {
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
 
-## Pruebas ejecutadas y resultado
+    function isMainCodeFile(path) {
+      if (path.startsWith('tests/') || path.startsWith('.github/') || path.startsWith('.agents/')) return false;
+      if (path.endsWith('.md') && path !== 'AGENTS.md') return false;
+      return /\.(html|js|mjs|css|json|py|sql)$/i.test(path) || path === 'AGENTS.md';
+    }
 
-self_test.py 26/26 superadas.
+    async function resolveSource() {
+      const pill = document.getElementById('source-pill');
+      try {
+        const res = await fetch(`${API_COMMIT}?t=${Date.now()}`, { cache: 'no-store' });
+        if (!res.ok) throw new Error('API GitHub no disponible');
+        const info = await res.json();
+        const sha = info.sha;
+        activeBase = `${RAW_ROOT}${sha}/`;
+        useBust = false;
+        const when = (info.commit && info.commit.committer && info.commit.committer.date) || '';
+        pill.textContent = `En vivo · ${sha.slice(0, 7)}${when ? ' · ' + when.slice(11, 16) + 'Z' : ''}`;
+        pill.className = 'pill live';
+      } catch {
+        activeBase = './';
+        useBust = true;
+        pill.textContent = 'Modo Pages (respaldo)';
+        pill.className = 'pill warn';
+      }
+    }
 
-## Decisiones y restricciones
+    function buildAppRow(proj) {
+      const row = document.createElement('div');
+      row.className = 'app-row';
 
-No modificar codigo de biopeat, Finanzas ni estadisticas en esta prueba inicial.
+      const head = document.createElement('div');
+      head.className = 'app-head';
 
-## Pregunta concreta para Copilot
+      const infoWrap = document.createElement('div');
+      const title = document.createElement('div');
+      title.className = 'app-title';
+      title.textContent = proj.name;
+      const meta = document.createElement('div');
+      meta.className = 'app-meta';
+      if (proj.public) {
+        meta.textContent = `Commit ${(proj.commit || '').slice(0, 10)} · ${proj.file_count || 0} archivos públicos`;
+      } else {
+        meta.textContent = 'Repositorio privado (no se publica aquí; usa PairDrop si hace falta)';
+      }
+      infoWrap.appendChild(title);
+      infoWrap.appendChild(meta);
+      head.appendChild(infoWrap);
 
-Confirma ID, proyecto, commit de origen y que puedes abrir los archivos del catalogo.
+      if (proj.public) {
+        const btns = document.createElement('div');
+        btns.className = 'actions';
+        const estadoPath = proj.estado_txt_path || `catalogo/${proj.slug}/ESTADO_${proj.slug}.txt`;
+        const dlName = `ESTADO_${proj.slug}.txt`;
 
-## Regla de entrega
+        const btnDl = document.createElement('button');
+        btnDl.className = 'primary';
+        btnDl.type = 'button';
+        btnDl.textContent = `Descargar ${dlName}`;
+        btnDl.addEventListener('click', async () => {
+          btnDl.disabled = true;
+          try {
+            const txt = await fetchText(estadoPath);
+            downloadText(dlName, txt);
+          } catch (err) {
+            alert(`No se pudo descargar ${dlName}: ${err.message}`);
+          } finally {
+            btnDl.disabled = false;
+          }
+        });
 
-Responder con `COPILOT_A_ANTIGRAVITY_20261123-prueba-inicial.zip` incluyendo `HANDOFF.json` (`protocol_version`: `1.1`, `direction`: `copilot_to_antigravity`, `origin_mode`: `reply_to_handoff`, `source_commit`: `1c21adb8a651c19771ea4ebe6ee49def9243971b`), `RESPUESTA.md`, `PRUEBAS.md` y, si hay cambios, `PATCH.diff` y `files/`.</pre></div><div class='card'><h2>Catálogo actual de apps públicas</h2><table><thead><tr><th>Proyecto</th><th>Visibilidad</th><th>Commit actual</th><th>Enlaces</th></tr></thead><tbody><tr><td><strong>biopeat</strong></td><td>Público</td><td><code title='1c21adb8a651c19771ea4ebe6ee49def9243971b'>1c21adb8a6</code></td><td><a href='catalogo/biopeat/resumen.html'>resumen</a> · <a href='catalogo/biopeat/ESTADO.md'>ESTADO.md</a> · <a href='catalogo/biopeat/estado.json'>estado.json</a> · <a href='catalogo/biopeat/files/AGENTS.md'>AGENTS.md</a></td></tr><tr><td><strong>Finanzas</strong></td><td>Público</td><td><code title='9cb8b81621da18cfbf4a558c5cd64fb7bb1e3b47'>9cb8b81621</code></td><td><a href='catalogo/finanzas/resumen.html'>resumen</a> · <a href='catalogo/finanzas/ESTADO.md'>ESTADO.md</a> · <a href='catalogo/finanzas/estado.json'>estado.json</a> · <a href='catalogo/finanzas/files/AGENTS.md'>AGENTS.md</a></td></tr><tr><td><strong>estadisticas</strong></td><td>Público</td><td><code title='fb7a56a4efaeae13c9f73518518f73388ceb6a98'>fb7a56a4ef</code></td><td><a href='catalogo/estadisticas/resumen.html'>resumen</a> · <a href='catalogo/estadisticas/ESTADO.md'>ESTADO.md</a> · <a href='catalogo/estadisticas/estado.json'>estado.json</a> · <a href='catalogo/estadisticas/files/AGENTS.md'>AGENTS.md</a></td></tr></tbody></table></div></body></html>
+        const btnCp = document.createElement('button');
+        btnCp.type = 'button';
+        btnCp.textContent = 'Copiar estado';
+        btnCp.addEventListener('click', async () => {
+          btnCp.disabled = true;
+          try {
+            const txt = await fetchText(estadoPath);
+            await copyString(txt, btnCp);
+          } catch (err) {
+            alert(`No se pudo copiar ${dlName}: ${err.message}`);
+          } finally {
+            btnCp.disabled = false;
+          }
+        });
+
+        btns.appendChild(btnDl);
+        btns.appendChild(btnCp);
+        head.appendChild(btns);
+      }
+
+      row.appendChild(head);
+
+      if (proj.public) {
+        const det = document.createElement('details');
+        const sum = document.createElement('summary');
+        sum.textContent = 'Si Copilot te pide archivos concretos, selecciónalos aquí en 1 clic';
+        det.appendChild(sum);
+
+        const body = document.createElement('div');
+        body.className = 'hint';
+        body.textContent = 'Abre para cargar la lista de archivos...';
+        det.appendChild(body);
+
+        let loaded = false;
+        det.addEventListener('toggle', async () => {
+          if (!det.open || loaded) return;
+          loaded = true;
+          try {
+            const st = await fetchJson(`catalogo/${proj.slug}/estado.json`);
+            const files = st.files || [];
+            body.textContent = '';
+
+            const toolbar = document.createElement('div');
+            toolbar.className = 'actions';
+            const filter = document.createElement('input');
+            filter.type = 'search';
+            filter.className = 'filter-input';
+            filter.placeholder = 'Filtrar archivo (ej. index.html, worker.js)...';
+
+            const btnMain = document.createElement('button');
+            btnMain.type = 'button';
+            btnMain.textContent = 'Marcar código principal';
+            const btnNone = document.createElement('button');
+            btnNone.type = 'button';
+            btnNone.textContent = 'Limpiar';
+            const btnPack = document.createElement('button');
+            btnPack.type = 'button';
+            btnPack.className = 'primary';
+            btnPack.textContent = `Descargar ARCHIVOS_${proj.slug}.txt`;
+
+            toolbar.appendChild(filter);
+            toolbar.appendChild(btnMain);
+            toolbar.appendChild(btnNone);
+            toolbar.appendChild(btnPack);
+            body.appendChild(toolbar);
+
+            const list = document.createElement('div');
+            list.className = 'picker-list';
+            const boxes = [];
+            for (const f of files) {
+              const lbl = document.createElement('label');
+              lbl.className = 'picker-item';
+              const cb = document.createElement('input');
+              cb.type = 'checkbox';
+              cb.value = f.path;
+              cb.dataset.sha = f.sha256 || '';
+              const code = document.createElement('code');
+              code.textContent = f.path;
+              const sz = document.createElement('span');
+              sz.className = 'hint';
+              sz.textContent = `${Math.max(1, Math.round((f.size || 0) / 1024))} KB`;
+              lbl.appendChild(cb);
+              lbl.appendChild(code);
+              lbl.appendChild(sz);
+              list.appendChild(lbl);
+              boxes.push({ cb, lbl, path: f.path });
+            }
+            body.appendChild(list);
+
+            filter.addEventListener('input', () => {
+              const q = filter.value.trim().toLowerCase();
+              for (const b of boxes) {
+                b.lbl.style.display = !q || b.path.toLowerCase().includes(q) ? 'flex' : 'none';
+              }
+            });
+            btnMain.addEventListener('click', () => {
+              for (const b of boxes) b.cb.checked = isMainCodeFile(b.path);
+            });
+            btnNone.addEventListener('click', () => {
+              for (const b of boxes) b.cb.checked = false;
+            });
+            btnPack.addEventListener('click', async () => {
+              const chosen = boxes.filter((b) => b.cb.checked);
+              if (!chosen.length) {
+                alert('Marca al menos un archivo.');
+                return;
+              }
+              btnPack.disabled = true;
+              const prev = btnPack.textContent;
+              btnPack.textContent = 'Empaquetando...';
+              try {
+                const chunks = [
+                  `PUENTE IA · ARCHIVOS SOLICITADOS DE ${proj.name.toUpperCase()}`,
+                  '='.repeat(70),
+                  `PROYECTO: ${proj.name} (${proj.slug})`,
+                  `REPOSITORIO: ${proj.repo_url}`,
+                  `COMMIT EXACTO (source_commit): ${st.commit}`,
+                  `ARCHIVOS INCLUIDOS: ${chosen.length}`,
+                  '',
+                ];
+                for (const item of chosen) {
+                  const content = await fetchText(`catalogo/${proj.slug}/files/${item.path}`);
+                  chunks.push(`===== FILE: ${item.path} | sha256: ${item.cb.dataset.sha} =====\n${content.trimEnd()}\n===== END FILE: ${item.path} =====`);
+                }
+                downloadText(`ARCHIVOS_${proj.slug}.txt`, chunks.join('\n\n') + '\n');
+              } catch (err) {
+                alert(`Error al empaquetar archivos: ${err.message}`);
+              } finally {
+                btnPack.disabled = false;
+                btnPack.textContent = prev;
+              }
+            });
+          } catch (err) {
+            body.textContent = `No se pudo cargar la lista de archivos: ${err.message}`;
+          }
+        });
+        row.appendChild(det);
+      }
+      return row;
+    }
+
+    async function loadAll() {
+      const btnRefresh = document.getElementById('refresh-btn');
+      btnRefresh.disabled = true;
+      await resolveSource();
+      try {
+        const [st, cat, txt] = await Promise.all([
+          fetchJson('estado.json'),
+          fetchJson('catalogo.json'),
+          fetchText('ultimo/PARA_COPILOT.txt').catch(() => ''),
+        ]);
+        handoffText = txt;
+        document.getElementById('h-id').textContent = st.latest_task_id || 'Ninguno';
+        document.getElementById('h-app').textContent = st.project || '-';
+        document.getElementById('h-commit').textContent = (st.final_commit || st.source_commit || '-').slice(0, 12);
+        const kb = txt ? `${(new Blob([txt]).size / 1024).toFixed(1)} KB` : '0 KB';
+        document.getElementById('h-size').textContent = kb;
+        document.getElementById('h-obj').textContent = st.objective ? `Objetivo: ${st.objective}` : '';
+        const statusPill = document.getElementById('handoff-status-pill');
+        statusPill.textContent = st.status || 'empty';
+        statusPill.className = st.status === 'ready_for_copilot' ? 'pill live' : 'pill';
+
+        const bytesLen = txt ? new Blob([txt]).size : 0;
+        const btnCopy = document.getElementById('btn-copy-handoff');
+        const btnDl = document.getElementById('btn-dl-handoff');
+        const advice = document.getElementById('h-advice');
+        if (bytesLen > 20480) {
+          btnDl.className = 'primary';
+          btnCopy.className = '';
+          advice.textContent = `Recomendado (${kb}): pulsa "Descargar PARA_COPILOT.txt" y arrastra el archivo al chat de Copilot para que no se corte.`;
+        } else {
+          btnCopy.className = 'primary';
+          btnDl.className = '';
+          advice.textContent = `Recomendado (${kb}): pulsa "Copiar texto" y pégalo directo en Copilot (o descárgalo como .txt).`;
+        }
+        document.getElementById('h-preview').textContent = txt || 'Todavía no hay PARA_COPILOT.txt.';
+
+        const appsBox = document.getElementById('apps-container');
+        appsBox.textContent = '';
+        for (const proj of (cat.projects || [])) {
+          appsBox.appendChild(buildAppRow(proj));
+        }
+      } catch (err) {
+        document.getElementById('h-preview').textContent = `Error cargando estado: ${err.message}`;
+      } finally {
+        btnRefresh.disabled = false;
+      }
+    }
+
+    document.getElementById('refresh-btn').addEventListener('click', loadAll);
+    document.getElementById('btn-copy-handoff').addEventListener('click', (e) => {
+      if (!handoffText) return;
+      copyString(handoffText, e.currentTarget);
+    });
+    document.getElementById('btn-dl-handoff').addEventListener('click', () => {
+      if (!handoffText) return;
+      downloadText('PARA_COPILOT.txt', handoffText);
+    });
+    document.querySelectorAll('.mini-copy').forEach((btn) => {
+      btn.addEventListener('click', () => copyString(btn.dataset.text, btn));
+    });
+    loadAll();
+  </script>
+</body>
+</html>

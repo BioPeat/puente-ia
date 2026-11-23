@@ -14,26 +14,26 @@
 
 # Traspaso a Copilot
 
-- **ID:** 20261123-prueba-inicial
+- **ID:** 20261123-prueba-v2
 - **Modo:** `reply_to_handoff`
 - **Proyecto:** biopeat
 - **Repositorio:** https://github.com/BioPeat/biopeat.git
 - **Rama:** main
 - **Commit de origen:** `1c21adb8a651c19771ea4ebe6ee49def9243971b`
-- **Creado:** 2026-11-23T13:35:23.572796+00:00
+- **Creado:** 2026-11-23T16:59:11.000296+00:00
 - **Estado:** listo_para_copilot
 
 ## Objetivo
 
-Traspaso de prueba inicial v1.1.0 sin modificar BioPeat
+Traspaso de prueba v2.0.0 autocontenido sin modificar BioPeat
 
 ## Qué se ha hecho
 
-Instalacion de copilot-bridge v1.1.0, catalogo sincronizado y puente inicializado.
+Panel web anti-cache (index.html), PARA_COPILOT.txt y ESTADO_<app>.txt generados.
 
 ## Qué falta
 
-Leer PARA_COPILOT_LEEME.md y confirmar lectura desde Microsoft Copilot.
+Confirmar desde Microsoft Copilot la lectura del archivo PARA_COPILOT.txt (y/o ESTADO_<app>.txt) sin necesidad de abrir enlaces.
 
 ## Archivos de contexto
 
@@ -42,7 +42,7 @@ Leer PARA_COPILOT_LEEME.md y confirmar lectura desde Microsoft Copilot.
 
 ## Pruebas ejecutadas y resultado
 
-self_test.py 26/26 superadas.
+self_test.py 30/30 superadas.
 
 ## Decisiones y restricciones
 
@@ -50,11 +50,11 @@ No modificar codigo de biopeat, Finanzas ni estadisticas en esta prueba inicial.
 
 ## Pregunta concreta para Copilot
 
-Confirma ID, proyecto, commit de origen y que puedes abrir los archivos del catalogo.
+Confirma el ID, proyecto, commit de origen y que recibiste tanto PARA_COPILOT_LEEME.md como los archivos completos con sus SHA-256.
 
 ## Regla de entrega
 
-Responder con `COPILOT_A_ANTIGRAVITY_20261123-prueba-inicial.zip` incluyendo `HANDOFF.json` (`protocol_version`: `1.1`, `direction`: `copilot_to_antigravity`, `origin_mode`: `reply_to_handoff`, `source_commit`: `1c21adb8a651c19771ea4ebe6ee49def9243971b`), `RESPUESTA.md`, `PRUEBAS.md` y, si hay cambios, `PATCH.diff` y `files/`.
+Responder con `COPILOT_A_ANTIGRAVITY_20261123-prueba-v2.zip` incluyendo `HANDOFF.json` (`protocol_version`: `1.1`, `direction`: `copilot_to_antigravity`, `origin_mode`: `reply_to_handoff`, `source_commit`: `1c21adb8a651c19771ea4ebe6ee49def9243971b`), `RESPUESTA.md`, `PRUEBAS.md` y, si hay cambios, `PATCH.diff` y `files/`.
 
 ## Catálogo actual de repositorios públicos
 

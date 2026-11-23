@@ -1,0 +1,146 @@
+{
+  "name": "biopeat",
+  "slug": "biopeat",
+  "repo_url": "https://github.com/BioPeat/biopeat.git",
+  "pages_url": "https://biopeat.github.io/biopeat/",
+  "branch": "main",
+  "commit": "1c21adb8a651c19771ea4ebe6ee49def9243971b",
+  "dirty_local": false,
+  "public": true,
+  "status": "synced",
+  "synced_at": "2026-11-23T13:35:20.895641+00:00",
+  "file_count": 21,
+  "omitted_count": 3,
+  "files": [
+    {
+      "path": ".agents/skills/revisar-sugerencias/SKILL.md",
+      "size": 1899,
+      "sha256": "74c5ff01d0839be81c35976cf51214ade77a06a6101ee7601ac3bd9785ccfb04"
+    },
+    {
+      "path": ".github/dependabot.yml",
+      "size": 118,
+      "sha256": "883b95e3be554fbadd92b315e4a8c6ea6ca688b64924e22dd61222b07f683507"
+    },
+    {
+      "path": ".github/workflows/check.yml",
+      "size": 1189,
+      "sha256": "c56dee73363f0ed364615b9c877af452479e291f55c6f2ebbee3c8cb887c5d96"
+    },
+    {
+      "path": ".gitignore",
+      "size": 74,
+      "sha256": "d7bf38035f09071bb2f47e901987c34846fa2d530627c1938be4c3e1202d0cf0"
+    },
+    {
+      "path": "AGENTS.md",
+      "size": 13487,
+      "sha256": "9b91fb1b0d76d72974b47d62cb65f185bbff430b3bba858c8fbb14599c8defe4"
+    },
+    {
+      "path": "CONTEXTO_BIOPEAT.md",
+      "size": 22141,
+      "sha256": "bb2a8898e76822bcb34734d82795e429f53c219b5cd6025f39e78f39e5a83122"
+    },
+    {
+      "path": "MAPA_DEL_CODIGO.md",
+      "size": 27892,
+      "sha256": "f732344dba0ef15dcfd530b70bee3bc864fa08000e7e7ba0b23f929ab18ad50a"
+    },
+    {
+      "path": "README.md",
+      "size": 2018,
+      "sha256": "f4b78c8f993e0b2c171e93348809f554ea2d9d13482433beffdfeea5ae5315f2"
+    },
+    {
+      "path": "actualizar.html",
+      "size": 35428,
+      "sha256": "f07f36aee6467661ff5d51ed681aaeee29aabf0df3138898fffbdc67cf88021d"
+    },
+    {
+      "path": "cloudflare/config.json",
+      "size": 323,
+      "sha256": "585093498f7646a334ff7c60c76e98325b27b9ce6fc9f54c479d59e25e50c40e"
+    },
+    {
+      "path": "cloudflare/schema.sql",
+      "size": 1566,
+      "sha256": "9fa7e8e05ed202bbf4d2c59c84b84b97497b0c41ad0f7fdc7bffe8e754e3640a"
+    },
+    {
+      "path": "cloudflare/worker.js",
+      "size": 37700,
+      "sha256": "66f558073c3a9ab2ff478a94bf502e53feac9da2146ac1906ad72baff6f9f165"
+    },
+    {
+      "path": "index.html",
+      "size": 1038661,
+      "sha256": "dc7027822233c67f239247388e438c7c596771ceba59a0391dbd980142c428b4"
+    },
+    {
+      "path": "inicio.html",
+      "size": 44234,
+      "sha256": "f5a000fb4a76cf9f64ad196165e2905ad389548e5ff4e6bd4116ed4c7f7f48d5"
+    },
+    {
+      "path": "manifest.json",
+      "size": 1340,
+      "sha256": "7452c4433948dc279f2e234b15935a995c03bbee7a51e427ed36d97c48571b0a"
+    },
+    {
+      "path": "sw.js",
+      "size": 1342,
+      "sha256": "bedc7c20bbfb9891d91f35a58b8b66d48fb0d8b5dc247ddaaa08a8484cfa3ad3"
+    },
+    {
+      "path": "tests/datos_prueba.json",
+      "size": 52526,
+      "sha256": "db66997bbe34b71ef063326547139fd179332eecc0e56f1480cd956ff68d3e70"
+    },
+    {
+      "path": "tests/smoke.py",
+      "size": 60320,
+      "sha256": "aeedf82d207600931969480dc8b52f64215e75a7e3ceadbf73907b8c0450d643"
+    },
+    {
+      "path": "tools/mapa.py",
+      "size": 2027,
+      "sha256": "e2677b635de714e4ae18d9d2e18783db7eee277331c8b431c1ab14edc52749e8"
+    },
+    {
+      "path": "tools/security_check.py",
+      "size": 5092,
+      "sha256": "953dd917274ececd1be18664ba171da08d8ea8f231fc0782a6b2b41f17f444da"
+    },
+    {
+      "path": "tools/sincronizar_version.py",
+      "size": 1895,
+      "sha256": "71d096c3338f20ad40fff45fe9bfb95c50449eae5d7d930dabe78838baa101e3"
+    }
+  ],
+  "omitted": [
+    {
+      "path": "icon-192.png",
+      "reason": "binario o minificado",
+      "size": 23615
+    },
+    {
+      "path": "icon-512.png",
+      "reason": "binario o minificado",
+      "size": 84758
+    },
+    {
+      "path": "icon-maskable-512.png",
+      "reason": "binario o minificado",
+      "size": 63931
+    }
+  ],
+  "urls": {
+    "pages_summary": "https://biopeat.github.io/puente-ia/catalogo/biopeat/resumen.html",
+    "pages_state_json": "https://biopeat.github.io/puente-ia/catalogo/biopeat/estado.json",
+    "raw_state_md": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/biopeat/ESTADO.md",
+    "raw_state_json": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/biopeat/estado.json",
+    "raw_files_prefix": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/biopeat/files/",
+    "pages_files_prefix": "https://biopeat.github.io/puente-ia/catalogo/biopeat/files/"
+  }
+}

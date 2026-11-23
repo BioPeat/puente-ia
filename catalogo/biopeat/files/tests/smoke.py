@@ -1,0 +1,623 @@
+#!/usr/bin/env python3
+"""Prueba completa de BioPeat en un navegador real (Chromium sin ventana).
+
+Uso (desde la raíz del repositorio):
+    pip install playwright && python -m playwright install --with-deps chromium
+    python tests/smoke.py
+
+Termina con «TODO OK» (código 0) o con la lista de fallos (código 1).
+No necesita internet: la IA se simula. Usa tests/datos_prueba.json (datos inventados, formato antiguo v29).
+"""
+import asyncio, functools, http.server, json, os, re, sys, threading
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+FIXTURE = ROOT / 'tests' / 'datos_prueba.json'
+DAY = '2026-10-14'          # miércoles con comidas en los datos de prueba
+NOW = '2026-10-14T13:00:00'
+FAILS = []
+
+def fail(msg):
+    FAILS.append(msg)
+    print('  ✗', msg)
+
+def ok(msg):
+    print('  ✓', msg)
+
+# ---------- 1. Comprobaciones estáticas (sin navegador) ----------
+ALLOWED = {'index.html', 'manifest.json', 'sw.js', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png',
+           'AGENTS.md', 'CONTEXTO_BIOPEAT.md', 'MAPA_DEL_CODIGO.md', 'README.md', 'tools/sincronizar_version.py',
+           'tools/security_check.py', 'tests/smoke.py', 'tests/datos_prueba.json', 'tools/mapa.py',
+           '.github/workflows/check.yml', '.github/dependabot.yml', '.gitignore',
+           '.agents/skills/revisar-sugerencias/SKILL.md',
+           'cloudflare/schema.sql', 'cloudflare/config.json', 'cloudflare/worker.js',
+           'actualizar.html', 'inicio.html'}
+
+def static_checks():
+    print('1. Comprobaciones del código')
+    html = (ROOT / 'index.html').read_text(encoding='utf-8')
+    a = html.index('<script id="app">')
+    page, js = html[:a], html[a:]
+    ids = set(re.findall(r'id="([^"$]+)"', page)) | set(re.findall(r'id="([^"$]+)"', js)) | set(re.findall(r"\.id\s*=\s*'([^']+)'", js))
+    used = set(re.findall(r"\$\('([^']+)'\)", js))
+    missing = sorted(u for u in used if u not in ids)
+    fail('IDs usados en el JS que no existen en el HTML: ' + ', '.join(missing)) if missing else ok('Todos los $(id) existen')
+    names = re.findall(r'\bfunction\s+([A-Za-z_$][\w$]*)\s*\(', js)
+    dups = sorted({n for n in names if names.count(n) > 1})
+    fail('Funciones definidas dos veces: ' + ', '.join(dups)) if dups else ok('Ninguna función duplicada')
+    if re.search(r'\balert\(', js): fail('Hay alert(): usa toast()')
+    # Un solo script de la app: nada de bloques añadidos al final ni de funciones «envueltas» (rompió v54).
+    extra = [m for m in re.findall(r'<script([^>]*)>([\s\S]*?)</script>', html) if len(m[1]) > 400 and 'id="app"' not in m[0] and 'biopeat-seed' not in m[0]]
+    fail('Hay otro <script> con código además de <script id="app">: intégralo en el principal') if extra else ok('Un solo script de la app')
+    reas = sorted({n for n in set(names) if re.search(r'(?<![\w$.])(?:window\.)?' + re.escape(n) + r'\s*=\s*(?:async\s+)?(?:function\b|\([^)]*\)\s*=>)', js)})
+    fail('Funciones reasignadas (parches): ' + ', '.join(reas) + '. Cambia la función original en su sitio') if reas else ok('Ninguna función reasignada')
+    if re.search(r'window\.\$\s*=', js): fail('No reasignes window.$')
+    ver = re.search(r"APP_VERSION='(v\d+)'", js)
+    rev = re.search(r"APP_REVISION=(\d+)", js)
+    if not ver or not rev: fail('No encuentro APP_VERSION o APP_REVISION en index.html')
+    else:
+        ctx = (ROOT / 'CONTEXTO_BIOPEAT.md').read_text(encoding='utf-8') if (ROOT / 'CONTEXTO_BIOPEAT.md').exists() else ''
+        m = re.search(r'Versión actual:\s*\*?\*?(v\d+)', ctx)
+        mr = re.search(r'revisión de datos\s*(\d+)', ctx)
+        if not m or m.group(1) != ver.group(1): fail(f'CONTEXTO_BIOPEAT.md dice «Versión actual: {m.group(1) if m else "?"}» pero index.html es {ver.group(1)}')
+        elif not mr or mr.group(1) != rev.group(1): fail(f'CONTEXTO_BIOPEAT.md dice revisión de datos {mr.group(1) if mr else "?"} pero index.html tiene APP_REVISION={rev.group(1)}')
+        else: ok(f'Versión {ver.group(1)} (revisión de datos {rev.group(1)}) coherente con CONTEXTO')
+        ups = [int(x) for x in re.findall(r'function upgradeTo(\d+)\(', js)]
+        if ups and max(ups) > int(rev.group(1)): fail(f'Existe upgradeTo{max(ups)} pero APP_REVISION={rev.group(1)}: súbelo')
+    for f in ['CONTEXTO_BIOPEAT.md', 'MAPA_DEL_CODIGO.md', 'AGENTS.md']:
+        p = ROOT / f
+        if p.exists() and p.stat().st_size > 60000: fail(f'{f} pesa {p.stat().st_size//1000} KB: resúmelo (Gemini lo necesita pequeño, < 60 KB)')
+    if (ROOT / '.git').exists():
+        import subprocess
+        tracked = subprocess.run(['git', 'ls-files'], cwd=ROOT, capture_output=True, text=True).stdout.split()
+        extra = sorted(t for t in tracked if t not in ALLOWED)
+        print('  ⚠ Archivos que sobran en el repositorio (puedes borrarlos): ' + ', '.join(extra)) if extra else ok('Repositorio limpio')
+
+# ---------- 2. Pruebas en navegador ----------
+def serve(port):
+    class Quiet(http.server.SimpleHTTPRequestHandler):
+        def log_message(self, *a): pass
+        def handle(self):
+            try: super().handle()
+            except (BrokenPipeError, ConnectionResetError): pass
+    h = functools.partial(Quiet, directory=str(ROOT))
+    srv = http.server.ThreadingHTTPServer(('127.0.0.1', port), h)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    return srv
+
+async def ai_mock(route):
+    body = json.loads(route.request.post_data or '{}')
+    txt = body['contents'][0]['parts'][0]['text'] if 'contents' in body else body['input'][0]['text']
+    if 'Responde solo con la palabra OK' in txt: out = 'OK'
+    elif 'BIOPEAT_CONFIG' in txt: out = '{"profile":{"weight":78},"summary":"Peso 78"}'
+    elif 'BIOPEAT:' in txt: out = 'BIOPEAT:[{"meal":"Comida","name":"Lentejas prueba","grams":300,"kcal":350,"p":20,"c":50,"f":6,"pufa":1.2}]'
+    else: out = 'Un vaso de leche y un plátano.'
+    await route.fulfill(status=200, content_type='application/json', body=json.dumps({'candidates': [{'content': {'parts': [{'text': out}]}}], 'outputs': [{'type': 'text', 'text': out}]}))
+
+async def browser_checks():
+    from playwright.async_api import async_playwright
+    port = 8000 + os.getpid() % 900
+    serve(port)
+    url = f'http://127.0.0.1:{port}/index.html'
+    async with async_playwright() as p:
+        exe = os.environ.get('CHROMIUM_PATH')
+        b = await p.chromium.launch(**({'executable_path': exe} if exe else {}))
+        ctx = await b.new_context(viewport={'width': 400, 'height': 850}, reduced_motion='reduce', locale='es-ES')
+        pg = await ctx.new_page()
+        await pg.clock.set_fixed_time(NOW)
+        errs = []
+        pg.on('pageerror', lambda e: errs.append(str(e)))
+        pg.on('dialog', lambda d: asyncio.ensure_future(d.accept()))
+        await pg.route('https://generativelanguage.googleapis.com/**', ai_mock)
+        fb_posts = []
+        vaults = {}
+        async def api_mock(route):
+            u = route.request.url
+            m = route.request.method
+            if '/api/feedback' in u and m == 'POST':
+                fb_posts.append(json.loads(route.request.post_data or '{}'))
+                await route.fulfill(status=201, content_type='application/json', body='{"ok":true,"id":42}')
+                return
+            if '/api/ping' in u:
+                await route.fulfill(status=204, body='')
+                return
+            if '/api/vault/' in u:
+                vid = u.rsplit('/', 1)[-1]
+                auth = route.request.headers.get('x-biopeat-auth', '')
+                if not re.match(r'^[a-f0-9]{64}$', auth):
+                    await route.fulfill(status=401, content_type='application/json', body='{"error":"Unauthorized"}'); return
+                row = vaults.get(vid)
+                if m == 'GET':
+                    if not row:
+                        await route.fulfill(status=404, content_type='application/json', body='{"error":"Not found"}'); return
+                    if row['auth'] != auth:
+                        await route.fulfill(status=403, content_type='application/json', body='{"error":"Forbidden"}'); return
+                    await route.fulfill(status=200, content_type='application/json', body=json.dumps({
+                        'iv': row['iv'], 'ciphertext': row['ciphertext'], 'compressed': row['compressed'],
+                        'rev': row['rev'], 'updated_at': row['updated_at']
+                    })); return
+                if m == 'PUT':
+                    b = json.loads(route.request.post_data or '{}')
+                    if row and row['auth'] != auth:
+                        await route.fulfill(status=403, content_type='application/json', body='{"error":"Forbidden"}'); return
+                    if row and (b.get('baseRev') is None or row['rev'] > int(b['baseRev'])):
+                        await route.fulfill(status=409, content_type='application/json', body=json.dumps({
+                            'conflict': True, 'rev': row['rev'], 'iv': row['iv'],
+                            'ciphertext': row['ciphertext'], 'compressed': row['compressed'], 'updated_at': row['updated_at']
+                        })); return
+                    rev = (row['rev'] + 1) if row else 1
+                    vaults[vid] = {
+                        'auth': auth, 'iv': b['iv'], 'ciphertext': b['ciphertext'],
+                        'compressed': bool(b.get('compressed')), 'rev': rev, 'updated_at': 1700000000000
+                    }
+                    await route.fulfill(status=200, content_type='application/json', body=json.dumps({'ok': True, 'rev': rev, 'updated_at': 1700000000000})); return
+                if m == 'DELETE':
+                    if row and row['auth'] != auth:
+                        await route.fulfill(status=403, content_type='application/json', body='{"error":"Forbidden"}'); return
+                    vaults.pop(vid, None)
+                    await route.fulfill(status=200, content_type='application/json', body='{"ok":true}'); return
+            await route.fulfill(status=404, body='{}')
+        await pg.route('https://biopeat-api.dramirezcp7.workers.dev/**', api_mock)
+        async def chat_mock(route):
+            if route.request.method == 'GET':
+                await route.fulfill(status=200, content_type='application/json', body=json.dumps({'data': [{'id': 'text-embedding-x'}, {'id': 'modelo-mini'}]})); return
+            body = json.loads(route.request.post_data or '{}')
+            content = body['messages'][0]['content']
+            txt = content if isinstance(content, str) else ' '.join(c.get('text', '') for c in content)
+            out = 'OK' if 'Responde solo con la palabra OK' in txt else 'Un vaso de leche.'
+            payload = {'content': [{'type': 'text', 'text': out}]} if 'anthropic' in route.request.url else {'choices': [{'message': {'content': out}}]}
+            await route.fulfill(status=200, content_type='application/json', body=json.dumps(payload))
+        await pg.route('https://api.openai.com/**', chat_mock)
+        await pg.route('https://api.anthropic.com/**', chat_mock)
+        ev = pg.evaluate
+        async def go_url():
+            # Cerrar una ventana hace «Atrás» en el historial; si coincide con una recarga, se reintenta.
+            await pg.wait_for_timeout(250)
+            for k in range(3):
+                try:
+                    await pg.goto(url); return
+                except Exception as ex:
+                    if 'ERR_ABORTED' not in str(ex) or k == 2: raise
+                    await pg.wait_for_timeout(500)
+        toast = lambda: ev("document.getElementById('toast').hidden?'':document.getElementById('toast-text').textContent")
+
+        async def clear_storage():
+            await ev("""async()=>{ready=false;try{db?.close();db=null;}catch(e){}try{clearTimeout(deferredSaveTimer);deferredSaveTimer=null;}catch(e){}try{clearTimeout(cloudState?.timer);}catch(e){}localStorage.clear();sessionStorage.clear();await new Promise(r=>{try{const q=indexedDB.deleteDatabase('biopeat_v10');q.onsuccess=q.onerror=q.onblocked=r;setTimeout(r,200);}catch(e){r();}});}""")
+
+        async def load(seed):
+            await go_url()
+            await clear_storage()
+            if seed:
+                await ev("r=>localStorage.setItem('biopeat_pro_v10', r)", seed)
+            await pg.reload()
+            try:
+                await pg.wait_for_function("document.body.dataset.ready==='true'", timeout=10000)
+            except Exception:
+                raise RuntimeError('la app no termina de arrancar. Errores: ' + (' | '.join(e[:200] for e in errs[:3]) or 'ninguno visible'))
+            await pg.wait_for_timeout(300)
+
+        def check_errs(where):
+            if errs:
+                fail(f'Error de JavaScript en {where}: ' + ' | '.join(e[:200] for e in errs[:3]))
+                errs.clear()
+                return False
+            return True
+
+        print('2. App vacía (usuario nuevo)')
+        await load(None)
+        if check_errs('arranque vacío'): ok('Arranca sin errores')
+
+        print('3. Datos antiguos (v29) y lectura de macros')
+        await load(FIXTURE.read_text(encoding='utf-8'))
+        await ev(f"goDate('{DAY}')")
+        r = await ev("({kcal:totals().all.kcal,g:dayGoal(),txt:$('energy-current').textContent,ring:$('macro-progress-grid').innerText})")
+        if not r['g'] or not r['g'].get('kcal'): fail('dayGoal() no devuelve metas del día')
+        elif r['kcal'] <= 0 or r['txt'] in ('', '0'): fail('Hoy no muestra las calorías del día')
+        else: ok(f"Hoy lee comidas y metas: {r['txt']} kcal de {round(r['g']['kcal'])}")
+        if abs(r['g']['p'] - 145) > 0.5 or abs(r['g']['f'] - 75) > 0.5: fail(f"Plan por defecto de miércoles debería ser 145P/75G y es {r['g']['p']}/{r['g']['f']}")
+        else: ok('Plan por defecto correcto (miércoles 145P/75G)')
+        if abs(await ev("dayGoal('2026-10-13').p") - 130) > .5: fail('Plan por defecto de martes debería ser 130 g de proteína')
+        check_errs('carga de datos antiguos')
+
+        print('4. Guardar y recargar')
+        await ev("document.querySelector('[data-preset=breakfast]').click()")
+        n = await ev("day().entries.filter(e=>e.kind==='food').length")
+        await ev("editTargets()"); await ev("$('target-mode').value='split';$('target-mode').onchange()")
+        await ev("(()=>{const f=$('targets-form');f.m_w_p.value=150;f.m_w_f.value=70;f.m_r_p.value=120;f.m_r_f.value=60;f.requestSubmit();})()")
+        await pg.wait_for_timeout(400)
+        await pg.reload(); await pg.wait_for_function("document.body.dataset.ready==='true'"); await ev(f"goDate('{DAY}')")
+        n2 = await ev("day().entries.filter(e=>e.kind==='food').length")
+        g = await ev("[state.targetMode,dayGoal().p,dayGoal('2026-10-13').p]")
+        fail(f'Las comidas no se guardan al recargar ({n} → {n2})') if n2 != n else ok('Las comidas se guardan al recargar')
+        fail(f'Las metas no se guardan al recargar: {g}') if g != ['split', 150, 120] else ok('Las metas se guardan al recargar')
+        await ev("$('target-kcal').value=2800;$('target-p').value=140;$('target-f').value=70;$('macro-target-form').requestSubmit()")
+        if await ev("dayGoal().kcal") != 2800 or await ev("dayGoal('2026-10-13').p") != 120: fail('El ajuste «solo este día» no funciona')
+        else: ok('Ajuste de un solo día correcto')
+        await ev("$('target-reset').click()")
+        check_errs('guardar/recargar')
+
+        print('5. Añadir comida')
+        await ev("$('smart-input').value='200 ml de leche y 2 platanos';$('smart-add').click()"); await pg.wait_for_timeout(300)
+        s = await ev("$('meal-ai-status').textContent")
+        ok('Texto sin IA reconocido') if 'sin IA' in s else fail('No reconoce «200 ml de leche y 2 platanos» sin IA: ' + s)
+        await ev("""$('bp-paste').value='BIOPEAT:{"meal":"Cena","name":"Tortilla","grams":200,"kcal":300,"p":20,"c":5,"f":22,"pufa":2}';$('bp-paste-add').click()""")
+        ok('Pegar respuesta de Gemini') if 'Tortilla' in await ev("$('bp-paste-msg').textContent") else fail('No añade la respuesta BIOPEAT pegada')
+        await ev("$('ai-mode').value='direct';$('gemini-key').value='CLAVE_DE_PRUEBA';syncAI()")
+        await ev("$('smart-input').value='un plato de lentejas';$('smart-add').click()"); await pg.wait_for_timeout(800)
+        ok('Texto con IA (simulada)') if 'Guardado' in await ev("$('meal-ai-status').textContent") else fail('El análisis con IA no guarda la comida')
+        await ev("document.getElementById('coach-ai-btn').click()"); await pg.wait_for_timeout(600)
+        ok('Sugerencia de la IA') if 'leche' in await ev("$('day-coach').innerText") else fail('«Pedir sugerencia a la IA» no muestra nada')
+        check_errs('añadir comida')
+
+        print('5b. Equilibrio del día')
+        await ev(f"goDate('{DAY}')")
+        nr = await ev("document.querySelectorAll('#ratio-summary [data-ratio-key]').length")
+        ok('5 equilibrios en Hoy') if nr == 5 else fail(f'Equilibrio del día debería tener 5 tarjetas y tiene {nr}')
+        await ev("document.querySelector('[data-ratio-key=c]').click()")
+        body = await ev("$('modal-body').innerText")
+        ok('Detalle del equilibrio con porqué y cómo') if '¿Por qué importa?' in body and ('Cómo llegar' in body or 'Para mantenerlo' in body) else fail('El detalle del equilibrio no explica el porqué o el cómo')
+        fx = await ev("document.querySelectorAll('#modal-body [data-ratio-add]').length")
+        if fx:
+            n0 = await ev("day().entries.length"); await ev("document.querySelector('#modal-body [data-ratio-add]').click()")
+            ok('Añadir la sugerencia del equilibrio') if await ev("day().entries.length") == n0 + 1 else fail('El botón de sugerencia no añade el alimento')
+        await ev("$('modal').open&&$('modal').close()")
+        check_errs('equilibrio del día')
+
+        print('6. Pauta, gimnasio, semana')
+        n0 = await ev("effectiveEntries().filter(e=>e.kind!=='food').length")
+        await ev("document.querySelector('[data-supp-skip]').click()")
+        n1 = await ev("effectiveEntries().filter(e=>e.kind!=='food').length")
+        await ev("document.querySelector('[data-supp-back]').click()")
+        n2 = await ev("effectiveEntries().filter(e=>e.kind!=='food').length")
+        ok('Quitar y recuperar una toma de hoy') if (n1 == n0 - 1 and n2 == n0) else fail(f'Quitar/recuperar toma no funciona ({n0} → {n1} → {n2})')
+        ok('Lo que aporta la pauta') if len(await ev("$('supp-impact').innerHTML")) > 50 else fail('«Lo que te aporta tu pauta» vacío')
+        grp = await ev("[...document.querySelectorAll('.supp-slot h3')].map(h=>h.textContent)")
+        ok('Pauta agrupada por momentos') if 'Desayuno' in grp and 'Antes de dormir' in grp else fail(f'La pauta no se agrupa por momentos: {grp}')
+        csv = 'title,start_time,end_time,exercise_title,set_index,set_type,weight_kg,reps\n"Full body","2026-10-15 18:00:00","2026-10-15 19:00:00","Press de banca",0,normal,80,8\n'
+        await pg.set_input_files('#hevy-file', files=[{'name': 'h.csv', 'mimeType': 'text/csv', 'buffer': csv.encode()}]); await pg.wait_for_timeout(300)
+        await ev("$('hevy-validate').click()"); await pg.wait_for_timeout(100)
+        nw = await ev("state.workouts18.length")
+        await ev("$('hevy-commit').click()"); await pg.wait_for_timeout(100)
+        ok('Importar CSV de HEVY') if await ev("state.workouts18.length") == nw + 1 else fail('No importa el CSV de HEVY: ' + await ev("$('hevy-status').textContent+' '+$('hevy-previewtext').textContent"))
+        await ev("go('exercise')"); await pg.wait_for_timeout(300)
+        ok('Gimnasio se dibuja') if len(await ev("$('gp-kpis').innerHTML")) > 50 else fail('Gimnasio vacío')
+        await ev("go('week')"); await pg.wait_for_timeout(300)
+        ok('Semana se dibuja') if len(await ev("$('week-rings').innerHTML")) > 50 else fail('Semana vacía')
+        ok('Día a día con 7 días') if await ev("document.querySelectorAll('#week-strip [data-week-day]').length") == 7 else fail('«Día a día» no tiene 7 días')
+        await ev(f"calendarMonth='{DAY[:7]}';calendarSelected='{DAY}';calendarPicked=true;renderCalendar()")
+        cal = await ev("({n:document.querySelectorAll('#calendar-grid [data-calday]').length,d:$('calendar-detail').innerText,s:$('calendar-summary').innerHTML.length})")
+        ok('Calendario con resumen y ficha del día') if cal['n'] >= 28 and 'Energía' in cal['d'] and cal['s'] > 100 else fail(f'Calendario incompleto: {cal}')
+        await ev("document.querySelector('[data-calmetric=p]').click()")
+        ok('Calendario cambia de métrica') if 'Proteína' in await ev("$('calendar-summary').innerText") else fail('El selector del calendario no cambia la métrica')
+        check_errs('pauta/gimnasio/semana')
+        print('6b. v43: IA saturada, restaurar copia, aviso de versión')
+        busy = {'n': 0}
+        async def busy_mock(route):
+            busy['n'] += 1
+            if busy['n'] <= 2 or busy['n'] < 0: await route.fulfill(status=503, content_type='application/json', body='{"error":{"message":"The model is overloaded. Please try again later."}}')
+            else: await ai_mock(route)
+        await pg.unroute('https://generativelanguage.googleapis.com/**')
+        await pg.route('https://generativelanguage.googleapis.com/**', busy_mock)
+        r = await ev("requestAI('Responde solo con la palabra OK.').then(x=>x).catch(e=>'ERR '+e.message)")
+        ok(f'Reintenta sola si Gemini está saturado ({busy["n"]} intentos)') if r == 'OK' and busy['n'] == 3 else fail(f'Reintentos con IA saturada: {r} ({busy["n"]} intentos)')
+        busy['n'] = -99
+        r = await ev("requestAI('Responde solo con la palabra OK.').then(x=>x).catch(e=>'ERR '+e.message)")
+        ok('Mensaje claro si sigue saturada') if 'saturado' in r else fail('Mensaje final con IA saturada: ' + r[:150])
+        await pg.unroute('https://generativelanguage.googleapis.com/**')
+        await pg.route('https://generativelanguage.googleapis.com/**', ai_mock)
+        await ev("confirmImport(migrate(JSON.parse(JSON.stringify(storableState()))),'prueba.json')")
+        t = await ev("$('modal-body').innerText")
+        ok('Resumen antes de restaurar') if 'Días con comidas' in t and 'Restaurar' in t else fail('No aparece el resumen de la copia')
+        await ev("$('import-ok').click()"); await pg.wait_for_timeout(100)
+        ok('Restaurar copia') if 'restaurada' in await toast() else fail('Restaurar copia no funciona')
+        await ev("showUpdate(99)")
+        ok('Aviso de versión nueva') if await ev("!!document.querySelector('.update-bar #update-now')") else fail('No aparece el aviso de versión nueva')
+        await ev("$('update-later').click()")
+        check_errs('v43')
+        print('6c. v49-v50: grasa saturada, zonas ideales, ¿Qué me falta?, depósitos')
+        await ev("goDate('" + DAY + "')")
+        r = await ev("(()=>{const t=totals();return {f:t.all.f,sat:t.all.satFat,fc:t.all.fc,w:SAT_W,ring:$('macro-progress-grid').innerText}})()")
+        ok('La grasa saturada cuenta menos: %.1f g en total → %.1f g para la meta' % (r['f'], r['fc'])) if r['sat'] > 0 and abs(r['fc'] - (r['f'] - (1 - r['w']) * r['sat'])) < 0.01 and r['fc'] < r['f'] else fail('Grasa que cuenta incorrecta: ' + str(r))
+        ok('El anillo de grasa avisa del total') if 'en total' in r['ring'] else fail('El anillo de grasa no explica el total: ' + r['ring'][:120])
+        z = await ev("(()=>({se:[optState('se',57,150),optState('se',150,150),optState('se',250,150)],phos:optState('phos',1500,1200),fe:[optState('fe',10,14),optState('fe',20,14)],ca:[optState('ca',1000,2000),optState('ca',2100,2000)],i:optInfo('i',150),a:optInfo('vitA',3000)}))()")
+        ok('Zonas ideales: selenio, hierro, calcio y fósforo se valoran bien') if z['se'] == ['low', 'ok', 'high'] and z['phos'] == 'ref' and z['fe'] == ['ok', 'high'] and z['ca'] == ['low', 'ok'] and z['i']['lo'] == 150 and z['i']['hi'] == 225 and z['a']['hi'] == 3800 else fail('Zonas ideales incorrectas: ' + str(z))
+        await ev("go('micros')")
+        c = await ev("(()=>{const q=k=>document.querySelector('#micros-grid [data-micro=\"'+k+'\"]');return {se:!!q('se')?.querySelector('.mc-zone'),seTxt:q('se')?.innerText||'',phosCls:q('phos')?.className||'',phosTxt:q('phos')?.innerText||'',n:document.querySelectorAll('#micros-grid .mc-opt').length}})()")
+        ok('Cada tarjeta enseña su zona ideal y su fuente') if c['se'] and 'Zona 100-200' in c['seTxt'] and c['n'] > 15 else fail('Tarjetas sin zona ideal: ' + str(c))
+        ok('El fósforo es solo referencia (sin verde ni rojo)') if 'ok' not in c['phosCls'].split() and 'bad' not in c['phosCls'].split() and 'referencia' in c['phosTxt'] else fail('El fósforo se valora como meta: ' + str(c))
+        await ev("renderWeekly()")
+        g = await ev("(()=>{const b=$('week-gaps');return {chips:b.querySelectorAll('.gap-chip').length,rows:b.querySelectorAll('.gap-card').length,phos:!!b.querySelector('[data-gap-toggle=phos]'),na:!!b.querySelector('[data-gap-toggle=na]'),open:b.querySelectorAll('.gap-body').length,cls:[...new Set([...document.querySelectorAll('#week-micros .week-micro-card')].map(x=>x.className.replace('week-micro-card','').trim()))],ratios:$('week-ratios').innerText}})()")
+        ok('¿Qué me falta? se dibuja con 4 filtros y una fila abierta') if g['chips'] == 4 and (g['rows'] > 0 or 'Vas bien' in await ev("$('week-gaps').innerText")) and g['open'] <= 1 else fail('¿Qué me falta? mal dibujado: ' + str(g))
+        ok('Fósforo y sodio nunca salen como «te falta»') if not g['phos'] and not g['na'] else fail('Fósforo o sodio aparecen en «te faltan»')
+        ok('Las tarjetas de la semana usan colores de la zona (sin clases inventadas)') if all(c in ('met', 'below', 'above', '') for c in g['cls']) else fail('Clases raras en las tarjetas de la semana: ' + str(g['cls']))
+        ok('Calcio : fósforo de la semana usa tu referencia real (no «1,10»)') if '1,10' not in g['ratios'] else fail('Sigue saliendo la referencia 1,10')
+        await ev("document.querySelector('[data-gap-tab=ok]').click()")
+        ok('Los filtros de ¿Qué me falta? cambian la lista') if await ev("!!$('week-gaps').querySelector('.gap-okgrid')") else fail('El filtro «en zona» no cambia la lista')
+        await ev("document.querySelector('[data-gap-tab=low]').click()")
+        n0 = await ev("day().entries.length")
+        clicked = await ev("(()=>{for(const r of gapRows(lastGap.sum).filter(r=>r.st==='low')){gapOpen=r.m.k;renderGaps(lastGap.sum,lastGap.s);const b=document.querySelector('#week-gaps .gap-fix');if(b){b.click();return true;}}return false;})()")
+        if clicked:
+            await pg.wait_for_timeout(150)
+            ok('Un alimento de ¿Qué me falta? se añade con un toque') if await ev("day().entries.length") == n0 + 1 else fail('El alimento sugerido no se añadió')
+        else: ok('¿Qué me falta? sin sugerencias para estos datos (nada que añadir)')
+        t1 = await ev("(()=>{const m=document.querySelectorAll('#week-gaps [data-gap-toggle]');if(m.length<2)return null;const k=m[1].dataset.gapToggle;m[1].click();return {k,open:!!document.querySelector('#week-gaps .gap-card.open [data-gap-toggle=\"'+k+'\"]')}})()")
+        ok('Al tocar un micro se abre y se ven los alimentos') if t1 is None or t1['open'] else fail('Tocar un micro no lo abre')
+        r = await ev("(()=>{const d=localDate(),a=rollingMicro('vitD',d);return {open:a.open,closed:!!state.days[d]?.complete,days:a.foodDays,unlogged:a.unlogged}})()")
+        ok('Hoy sin cerrar no cuenta en el depósito de 7 días') if (r['open'] and not r['closed']) or (not r['open'] and r['closed']) else fail('Depósito de 7 días: día abierto mal detectado: ' + str(r))
+        ok('Los días sin registro del depósito se cuentan aparte (no «parcial»)') if r['days'] + r['unlogged'] == 7 else fail('Depósito: días registrados + sin registro no suman 7: ' + str(r))
+        check_errs('v50')
+
+        print('6f. v57/v76: sugerencias al buzón API, IA de cualquier proveedor, gimnasio de cualquier app')
+        await ev("openFeedback()")
+        await ev("$('fb-title').value='Recetas';$('fb-text').value='Poder guardar recetas con varios ingredientes';$('fb-send').click()"); await pg.wait_for_timeout(500)
+        ok_form = bool(fb_posts) and fb_posts[-1].get('title') == 'Recetas' and fb_posts[-1].get('category') == 'idea' and fb_posts[-1].get('app_version') == await ev("APP_VERSION")
+        ok('Sugerencia enviada al buzón API (Cloudflare D1)') if ok_form and await ev("!!$('fb-again')") else fail('La sugerencia no llega a /api/feedback: ' + str(fb_posts[-1:])[:200])
+        await ev("$('modal').close()")
+        await ev("$('ai-mode').value='openai';$('ai-mode').dispatchEvent(new Event('change'));$('gemini-key').value='sk-prueba';$('gemini-model').value='';syncAI()")
+        await ev("$('ai-test').click()"); await pg.wait_for_timeout(800)
+        r = await ev("({m:$('gemini-model').value,st:$('ai-test-status').textContent,lab:$('ai-key-label').textContent})")
+        ok('ChatGPT: elige un modelo de la cuenta y conecta') if r['m'] == 'modelo-mini' and 'correcta' in r['st'] and 'OpenAI' in r['lab'] else fail('Conexión con OpenAI: ' + str(r))
+        r = await ev("requestAI('Dime algo').then(x=>x).catch(e=>'ERR '+e.message)")
+        ok('ChatGPT responde a través de requestAI') if r == 'Un vaso de leche.' else fail('requestAI con OpenAI: ' + str(r))
+        await ev("$('ai-mode').value='anthropic';$('ai-mode').dispatchEvent(new Event('change'));$('gemini-model').value='claude-prueba'")
+        r = await ev("requestAI('Responde solo con la palabra OK.').then(x=>x).catch(e=>'ERR '+e.message)")
+        ok('Claude responde a través de requestAI') if r == 'OK' else fail('requestAI con Anthropic: ' + str(r))
+        await ev("$('ai-mode').value='direct';$('ai-mode').dispatchEvent(new Event('change'));$('gemini-key').value='CLAVE_DE_PRUEBA';syncAI()")
+        ok('Gemini sigue siendo la opción por defecto') if await ev("$('gemini-model').value") == 'gemini-4-hydrogen' else fail('Al volver a Gemini el modelo no se restaura')
+        n0 = await ev("state.workouts18.length")
+        strong = 'Date,Workout Name,Duration,Exercise Name,Set Order,Weight,Reps,Distance,Seconds,Notes,Workout Notes,RPE\n2026-10-16 18:00:00,Pierna,1h 5m,Squat (Barbell),1,100,5,0,0,,,8\n2026-10-16 18:00:00,Pierna,1h 5m,Squat (Barbell),2,100,5,0,0,,,8.5\n'
+        await pg.set_input_files('#hevy-file', files=[{'name': 'strong.csv', 'mimeType': 'text/csv', 'buffer': strong.encode()}]); await pg.wait_for_timeout(300)
+        st = await ev("$('hevy-status').textContent")
+        await ev("$('hevy-commit').click()"); await pg.wait_for_timeout(150)
+        ok('CSV de Strong reconocido e importado solo') if 'Strong' in st and await ev("state.workouts18.length") == n0 + 1 else fail('Strong: ' + st + ' · ' + str(await ev("$('hevy-previewtext').textContent")))
+        fitbod = 'Date,Exercise,Reps,Weight(kg),Duration(s),Distance(m),Incline,Resistance,isWarmup,Note,multiplier\n2026-10-17 10:00:00 +0000,Dumbbell Bench Press,10,30,0,0,0,0,false,,1\n2026-10-17 10:00:00 +0000,Dumbbell Bench Press,8,32.5,0,0,0,0,false,,1\n2026-10-17 10:00:00 +0000,Running,0,0,600,1500,0,0,false,,1\n'
+        await pg.set_input_files('#hevy-file', files=[{'name': 'fitbod.csv', 'mimeType': 'text/csv', 'buffer': fitbod.encode()}]); await pg.wait_for_timeout(300)
+        st = await ev("$('hevy-status').textContent")
+        await ev("$('hevy-commit').click()"); await pg.wait_for_timeout(150)
+        w = await ev("(()=>{const s=state.workouts18.find(x=>x.date==='2026-10-17');return s?{n:s.sets.length,km:s.sets.find(x=>x.exercise==='Running')?.distance}:null})()")
+        ok('CSV de Fitbod reconocido (metros pasados a km)') if 'Fitbod' in st and w and w['n'] == 3 and abs(w['km'] - 1.5) < 1e-6 else fail('Fitbod: ' + st + ' · ' + str(w))
+        generic = 'fecha;ejercicio;peso;repeticiones;series\n18/10/2026;Press militar;40;8;3\n'
+        await pg.set_input_files('#hevy-file', files=[{'name': 'mio.csv', 'mimeType': 'text/csv', 'buffer': generic.encode()}]); await pg.wait_for_timeout(300)
+        await ev("$('hevy-commit').click()"); await pg.wait_for_timeout(150)
+        w = await ev("(()=>{const s=state.workouts18.find(x=>x.date==='2026-10-18');return s?s.sets.length:0})()")
+        ok('CSV genérico en español (DD/MM, series) importado') if w == 3 else fail('CSV genérico: ' + str(await ev("$('hevy-status').textContent")) + ' · ' + str(w))
+        check_errs('v57')
+        print('6g. v58: referencias oficiales, chat del menú, catálogo de suplementos')
+        await ev("$('micro-mode').value='eu';$('micro-mode').onchange()")
+        r = await ev("(()=>{go('micros');const c=document.querySelector('#micros-grid [data-micro=\"vitC\"]');return {t:c?c.innerText:'',note:$('micro-mode-note').textContent}})()")
+        ok('Nutrientes comparables con la referencia de la UE') if 'UE (EFSA)' in r['t'] and 'Meta 110' in r['t'] and 'UE' in r['note'] else fail('Modo UE: ' + str(r)[:300])
+        await ev("$('micro-mode').value='us';$('micro-mode').onchange()")
+        r = await ev("document.querySelector('#micros-grid [data-micro=\"vitC\"]').innerText")
+        ok('… y con la de EE. UU.') if 'EE. UU.' in r and 'Meta 90' in r else fail('Modo EE. UU.: ' + r[:200])
+        await ev("$('micro-mode').value='personal';$('micro-mode').onchange()")
+        ok('Al volver a «mis metas» se usan tus metas') if 'Tu meta' in await ev("document.querySelector('#micros-grid [data-micro=\"k\"]').innerText") else fail('No vuelve a las metas personales')
+        await ev("toggleLeftDrawer(true)")
+        r = await ev("(()=>{const i=$('bp-chat-input'),rc=i.getBoundingClientRect();return {vis:rc.height>0&&rc.bottom<=innerHeight+1,inAcc:!!i.closest('details')}})()")
+        ok('El chat de IA se ve nada más abrir el menú') if r['vis'] and not r['inAcc'] else fail('El chat del menú no se ve al abrirlo: ' + str(r))
+        await ev("toggleLeftDrawer(false)")
+        r = await ev("({g:[...new Set(SUPP_CATALOG.map(c=>c.g))],n:SUPP_CATALOG.length})")
+        ok(f"Catálogo de suplementos con Peat y habituales ({r['n']})") if r['g'] == ['peat', 'comun'] and r['n'] >= 18 else fail('Catálogo de suplementos: ' + str(r))
+        check_errs('v58')
+        print('6h. v59: inglés, mudanza de datos')
+        await load(FIXTURE.read_text(encoding='utf-8'))
+        await ev("setLang('en')"); await ev(f"goDate('{DAY}')"); await pg.wait_for_timeout(200)
+        r = await ev("({nav:document.querySelector('.nav-item[data-view=today]').innerText,meal:$('meal-select').value,opt:$('meal-select').selectedOptions[0].textContent,lang:document.documentElement.lang,num:fmt(1234.5,1)})")
+        ok('Inglés: menú, comidas y números en inglés') if 'Today' in r['nav'] and r['meal'] in ('Comida','Desayuno','Merienda','Cena','Media mañana') and r['opt'] in ('Lunch','Breakfast','Snack','Dinner','Mid-morning') and r['lang'] == 'en' and r['num'] == '1,234.5' else fail('Inglés: ' + str(r))
+        n0 = await ev("day().entries.length")
+        await ev("$('smart-input').value='200 ml de leche';$('smart-add').click()"); await pg.wait_for_timeout(300)
+        ok('En inglés se sigue guardando el momento en español (los datos no cambian)') if await ev("day().entries.length") == n0 + 1 and await ev("day().entries.at(-1).meal") in ('Comida','Desayuno','Merienda','Cena','Media mañana') else fail('En inglés el momento de la comida se guarda traducido')
+        SP = r"""(()=>{let a=0,b=0;const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode()){const p=n.parentElement;if(!p||p.closest('script,style,textarea,[hidden]')||p.offsetParent===null)continue;const t=n.nodeValue.trim();if(!/[a-z]{3}/i.test(t))continue;a++;if(/\b(los|las|tus|para|qué|días|semana|añadir|hoy|está|aquí)\b/i.test(t))b++;}return [a,b];})()"""
+        await ev("document.querySelectorAll('details').forEach(d=>d.open=true);renderWeekly();renderGym()"); await pg.wait_for_timeout(300)
+        tot, sp = await ev(SP)
+        ok(f'Inglés: {round(100*(1-sp/max(1,tot)))} % de los textos visibles traducidos ({sp} quedan en español)') if sp / max(1, tot) < 0.06 else fail(f'Inglés: quedan muchos textos en español ({sp} de {tot})')
+        await ev("setLang('es')"); await pg.wait_for_timeout(150)
+        ok('Vuelve al español sin recargar') if 'Hoy' in await ev("document.querySelector('.nav-item[data-view=today]').innerText") and await ev("$('meal-select').selectedOptions[0].textContent") in ('Comida','Desayuno','Merienda','Cena','Media mañana') else fail('No vuelve al español')
+        code = await ev("packMove()")
+        await clear_storage()
+        await pg.goto('about:blank'); await pg.goto(url + '#bp-move=' + code); await pg.wait_for_function("document.body.dataset.ready==='true'"); await pg.wait_for_timeout(700)
+        if await ev("!!$('move-ok')"):
+            await ev("$('move-ok').click()"); await pg.wait_for_timeout(300)
+        r = await ev("({d:Object.values(state.days).filter(d=>d.entries.some(e=>e.kind==='food')).length,h:location.hash,w:state.workouts18.length})")
+        ok(f"Mudanza: llegan los datos ({r['d']} días, {r['w']} entrenos)") if r['d'] >= 3 and r['w'] >= 5 and not r['h'] else fail('Mudanza de datos: ' + str(r))
+        check_errs('v59')
+        print('6i. v68: zona aceptable, meta visible, gimnasio por semanas y días, primera vez')
+        r = await ev("(()=>{const i={key:'ca',v:1.01,ok:false,zone:[1.2,2]},j={key:'ca',v:.6,ok:false,zone:[1.2,2]},k={key:'pufa',v:4.6,ok:false,zone:[0,4]};return [ratioTone(i),ratioTone(j),ratioTone(k),ratioZones(i).goal];})()")
+        ok('Calcio : fósforo 1,01 con meta 1,2 sale como «aceptable»') if r[0] == 'near' and r[1] == 'warn' and r[2] == 'near' and '1,2' in r[3] else fail('Zona aceptable: ' + str(r))
+        r = await ev("(()=>{go('today');return [...document.querySelectorAll('#ratio-summary .rg-meta b')].map(b=>b.textContent)})()")
+        ok('Cada equilibrio enseña su meta en la tarjeta') if len(r) == 5 and all(x for x in r) else fail('Metas en las tarjetas: ' + str(r))
+        await ev("go('exercise')"); await pg.wait_for_timeout(300)
+        r = await ev("({w:document.querySelectorAll('#gp-weekly .gp-vb').length,c:document.querySelectorAll('#gp-heat .gp-heat>div').length,on:document.querySelectorAll('#gp-heat .gp-heat button').length,ch:document.querySelectorAll('#gp-weekly [data-gp-wmus]').length})")
+        ok(f"Gimnasio: {r['w']} semanas apiladas por músculo y mapa de {r['c']} semanas") if r['w'] == 12 and r['c'] == 26 and r['on'] > 0 and r['ch'] > 1 else fail('Gimnasio: ' + str(r))
+        await ev("document.querySelectorAll('#gp-weekly .gp-vb')[10].click()")
+        ok('Tocar una semana enseña su detalle debajo') if await ev("document.querySelectorAll('#gp-weekly .gp-vb')[10].classList.contains('sel')&&!!document.querySelector('#gp-weekly .gp-wdet .gp-mrow')") else fail('El detalle de la semana no se abre')
+        await ev("document.querySelectorAll('#gp-weekly [data-gp-wmus]')[1].click()")
+        ok('Filtrar por un músculo') if await ev("document.querySelectorAll('#gp-weekly .gp-mchip.on').length===1&&!document.querySelector('#gp-weekly .gp-mchip[data-gp-wmus=\\\"\\\"].on')") else fail('El filtro por músculo no funciona')
+        await ev("document.querySelector('#gp-heat .gp-heat button').click()")
+        ok('Tocar un día del mapa enseña lo que entrenaste') if await ev("!!document.querySelector('#gp-heat .gp-wdet .gp-ses')") else fail('El mapa de constancia no enseña el día')
+        await ev("document.querySelector('[data-gp-hr=\\\"3m\\\"]').click()")
+        ok('El mapa cambia a 3 meses') if await ev("document.querySelectorAll('#gp-heat .gp-heat>div').length") == 13 else fail('El mapa no cambia a 3 meses')
+        r = await ev("(()=>{const t=buildAIExportText('7');return [t.includes('MARCO DE REFERENCIA'),t.includes('Calcio : fósforo: meta'),t.includes('Vitamina D (µg)')]})()")
+        ok('El informe para IA explica las metas y zonas para una IA sin contexto') if all(r) else fail('Informe para IA sin marco de referencia: ' + str(r))
+        await go_url(); await clear_storage(); await ev("localStorage.setItem('biopeat_pro_v10',JSON.stringify({version:10,profile:{weight:70,height:170,age:30},days:{},plan:[],v54:{onboardingDone:true}}))")
+        await pg.goto(url + '?empezar=1'); await pg.wait_for_function("document.body.dataset.ready==='true'"); await pg.wait_for_timeout(400)
+        ok('Desde la web («Empezar») sale el asistente si no hay datos') if await ev("$('modal').open&&!!$('bp-wiz')&&!location.search") else fail('El enlace de la web no abre el asistente')
+        await ev("$('modal').close()")
+        check_errs('v68')
+        print('6e. v56: app pública, guía, Más, sugerencias')
+        await go_url(); await clear_storage(); await pg.reload(); await pg.wait_for_function("document.body.dataset.ready==='true'"); await pg.wait_for_timeout(250)
+        r = await ev("({plan:state.plan.length,ctx:state.context,nes:!!state.foods.nesquik,bk:profV().breakfast.enabled,help:!!document.querySelector('#bp-wiz .bp-wiz-help'),welcome:!!document.querySelector('#bp-wiz .bp-welcome'),name:activeProfileName()})")
+        await ev("$('modal').open&&$('modal').close()")
+        ok('Usuario nuevo: «Para llegar a tus metas» no sugiere nada todavía') if await ev("$('day-coach').innerHTML.trim()===''") else fail('El usuario nuevo ve sugerencias que no ha comido: ' + (await ev("$('day-coach').innerText"))[:120])
+        await ev("wizOpen({mode:'first'})")
+        ok('Usuario nuevo sin datos de Diego (sin pauta, sin contexto, sin Nesquik, sin desayuno fijo)') if r['plan'] == 0 and r['ctx'] == '' and not r['nes'] and not r['bk'] and r['name'] != 'Diego' else fail('El usuario nuevo arranca con datos de Diego: ' + str(r))
+        ok('El asistente da la bienvenida y explica cada paso') if r['help'] and r['welcome'] else fail('Falta la bienvenida o la ayuda del asistente')
+        await ev("document.querySelector('[data-wiz-goto=\"4\"]').click()")
+        nc = await ev("document.querySelectorAll('#bp-wiz [data-wiz-cat]').length")
+        ok(f'Sugerencias de suplementos genéricas ({nc})') if nc >= 8 else fail('Faltan sugerencias de suplementos en el asistente')
+        await ev("document.querySelector('#bp-wiz [data-wiz-cat=\"s_d3\"]').click()")
+        await ev("$('wiz-c-name').value='Vitamina B6';$('wiz-c-dose').value='10';$('wiz-c-key').value='b6';$('wiz-c-val').value='10';document.querySelector('[data-wiz-custom]').click()")
+        await ev("(()=>{const b=[...document.querySelectorAll('#bp-wiz [data-wiz-supp]')].pop();b.click();})()")
+        await ev("document.querySelector('[data-wiz-goto=\"5\"]').click()"); await ev("document.querySelector('[data-wiz-save]').click()"); await pg.wait_for_timeout(600)
+        r = await ev("({tour:!!$('bp-tour'),plan:state.plan.filter(p=>p.enabled).map(p=>p.name),vitD:totals().supp.vitD,custom:state.plan.some(p=>p.name==='Vitamina B6'&&p.key==='b6'&&p.value===10)})")
+        ok('Al terminar el asistente sale la guía de uso') if r['tour'] else fail('No sale la guía de uso al terminar')
+        ok('La sugerencia elegida se suma sola y se puede añadir uno a mano') if r['plan'] == ['Vitamina D3'] and r['vitD'] > 0 and r['custom'] else fail('La sugerencia de suplemento no se guarda: ' + str(r))
+        for _ in range(8):
+            await ev("(()=>{const b=document.querySelector('#bp-tour [data-tour]:last-child');if(b)b.click();})()")
+        ok('La guía se recorre hasta el final y se cierra') if not await ev("$('modal').open") else fail('La guía no se cierra al terminar')
+        await ev("$('nav-more').click()")
+        nt = await ev("document.querySelectorAll('#modal [data-hub]').length")
+        ok(f'«Más» muestra {nt} accesos sin repetir el menú') if nt == 7 and await ev("!!document.querySelector('[data-hub=\"@menu\"]')&&!document.querySelector('[data-hub=\"@chat\"]')") else fail(f'El centro «Más» no tiene los accesos esperados ({nt})')
+        await ev("$('modal').close()"); await ev("openFeedback()")
+        f = await ev("(()=>{$('fb-title').value='Recetas';$('fb-text').value='Poder guardar recetas con varios ingredientes';const x=feedbackText();return x.title+'|'+x.body.slice(0,40)})()")
+        ok('El formulario de sugerencias prepara el texto') if f.startswith('[BioPeat]') and 'Recetas' in f else fail('Sugerencias: ' + f)
+        await ev("$('modal').close()")
+        await ev("document.querySelector('#bp-acc-feedback') && 1")
+        ok('Sugerencias también en el menú lateral') if await ev("!!$('bp-fb-open')") else fail('Falta «Sugerir una mejora» en el menú lateral')
+        ok('B1 normal (tiamina) en usuarios sin benfotiamina') if await ev("metric(MICRO.find(m=>m.k==='b1')).name") == 'B1 · Tiamina' else fail('B1 sigue tratándose como benfotiamina')
+        check_errs('v56')
+        print('6d. Perfiles y asistente')
+        await go_url(); await clear_storage(); await pg.reload(); await pg.wait_for_function("document.body.dataset.ready==='true'"); await pg.wait_for_timeout(250)
+        ok('Primera vez: se abre el asistente') if await ev("$('modal').open&&!!$('bp-wiz')") else fail('Al empezar de cero no sale el asistente')
+        await ev("$('wiz-name').value='Ana';document.querySelector('[data-wiz-sex=female]').click();document.querySelector('[data-wiz-goto=\"5\"]').click()")
+        await ev("document.querySelector('[data-wiz-save]').click()"); await pg.wait_for_timeout(200)
+        await pg.reload(); await pg.wait_for_function("document.body.dataset.ready==='true'"); await pg.wait_for_timeout(250)
+        r = await ev("({n:activeProfileName(),sex:state.profile.sex,open:$('modal').open,p:dayGoal().p})")
+        ok('Perfil de mujer se conserva al cerrar y abrir la app') if r['sex'] == 'female' and r['n'] == 'Ana' and not r['open'] else fail('Perfil de mujer tras recargar: ' + str(r))
+        ok('Mujer: al menos 80 g de proteína') if r['p'] >= 80 else fail('Mujer con menos de 80 g de proteína: ' + str(r['p']))
+        await load(FIXTURE.read_text(encoding='utf-8'))
+        before = await ev("JSON.stringify([state.plan,targetFor('" + DAY + "')])")
+        await ev("document.getElementById('open-wizard-settings').click()")
+        await ev("document.querySelector('[data-wiz-goto=\"5\"]').click()"); await ev("document.querySelector('[data-wiz-save]').click()"); await pg.wait_for_timeout(200)
+        ok('Guardar el perfil sin cambios no toca la pauta ni las metas') if before == await ev("JSON.stringify([state.plan,targetFor('" + DAY + "')])") else fail('Guardar el asistente sin cambios modifica la pauta o las metas')
+        await ev("document.getElementById('open-wizard-settings').click()"); await ev("document.querySelector('[data-wiz-goto=\"4\"]').click()")
+        await ev("$('modal').scrollTop=250"); y0 = await ev("$('modal').scrollTop")
+        await ev("document.querySelector('[data-wiz-supp=\"2\"]').click()")
+        y1 = await ev("$('modal').scrollTop")
+        ok('El asistente no vuelve arriba al tocar') if y0 > 0 and abs(y1 - y0) < 5 else fail(f'El asistente salta de {y0} a {y1}')
+        await ev("$('modal-close').click()"); await pg.wait_for_timeout(120)
+        await ev("(()=>{[...$('modal').querySelectorAll('button')].slice(0,6).forEach(x=>{try{x.click()}catch(e){}})})()"); await pg.wait_for_timeout(250)
+        ok('Tocar el asistente ya cerrado no hace nada') if await ev("typeof $==='function'&&!$('modal').open") else fail('Tras cerrar el asistente, sus botones siguen actuando')
+        n_foods = await ev("Object.keys(state.foods).length"); n_plan = await ev("state.plan.filter(p=>p.enabled).length")
+        await ev("wizOpen({mode:'new'})"); await ev("$('wiz-name').value='Laura';document.querySelector('[data-wiz-sex=female]').click();document.querySelector('[data-wiz-start=peat]').click();document.querySelector('[data-wiz-goto=\"5\"]').click()")
+        await ev("document.querySelector('[data-wiz-save]').click()"); await pg.wait_for_timeout(200)
+        r = await ev("({n:activeProfileName(),sex:state.profile.sex,pl:state.plan.filter(p=>p.enabled).map(p=>p.name),d:Object.keys(state.days).length,bk:profV().breakfast.enabled,sh:profV().shake.items.map(i=>i.id),nes:!!state.foods.nesquik})")
+        ok('Nuevo perfil con «Lo básico de Peat» (sin nada del perfil activo)') if r['n'] == 'Laura' and r['sex'] == 'female' and len(r['pl']) == 5 and r['bk'] and 'gelatina' in r['sh'] and r['d'] <= 1 and not r['nes'] else fail('Nuevo perfil «Lo básico de Peat»: ' + str(r))
+        await ev("$('weight').value='61';$('profile-form').requestSubmit()"); await pg.wait_for_timeout(120)
+        ok('Guardar «Mi perfil» no cambia el sexo') if await ev("state.profile.sex") == 'female' else fail('Guardar «Mi perfil» pone el perfil en hombre')
+        await ev("switchProfile(ensureProfilesStore().order[0])")
+        ok('Al volver al primer perfil vuelve a hombre') if await ev("state.profile.sex==='male'&&OPT.fe.src==='tuya'") else fail('El cambio de perfil no restaura las referencias de hombre')
+        r = await ev("(()=>{const o=JSON.parse(JSON.stringify(storableState()));o.appRevision=24;const m=o.plan.find(p=>p.key==='mg'&&p.unit==='g');if(!m)return 'sin';m.value=2;return migrate(o).plan.find(p=>p.id===m.id).value;})()")
+        ok('Repara el magnesio estropeado por v54') if r == 'sin' or r > 100 else fail('No repara el magnesio de la pauta: ' + str(r))
+        r = await ev("(()=>{const o=JSON.parse(JSON.stringify(storableState()));o.appRevision=25;o.v54={...o.v54,useDiegoPlan:true,goalType:'performance'};o.targetMode='all';o.macroGoals={all:{p:null,f:null},split:{workout:{p:null,f:null},rest:{p:null,f:null}}};const s=migrate(o);return [s.targetMode,s.macroGoals.split.workout.p,s.macroGoals.split.rest.f,s.v54.goalType,'useDiegoPlan' in s.v54];})()")
+        ok('El antiguo plan personal pasa a metas guardadas (una vez)') if r[0] == 'split' and r[1] > 0 and r[2] > 0 and r[3] == 'prometabolic' and not r[4] else fail('Migración del plan personal: ' + str(r))
+        check_errs('perfiles')
+        await load(FIXTURE.read_text(encoding='utf-8'))
+        await ev(f"goDate('{DAY}')")
+        print('6j. v76: E2EE, EN parser, recomp IMC, A:D, bio y fluidez')
+        r = await ev("""async()=>{
+          const parsedEn = parseSmart('200 ml whole milk and 2 bananas');
+          const okEn = parsedEn.length === 2 && parsedEn[0].amount === 200 && parsedEn[0].unit === 'ml' && parsedEn[1].amount === 240 && parsedEn.every(x=>x.kind==='food' && x.nutrients?.kcal>0);
+          const prevW = state.profile.weight, prevH = state.profile.height, prevG = state.v54.goalType, prevMg = state.macroGoals, prevTm = state.targetMode, prevFaf = state.v54.faf[2];
+          state.profile.weight = 95; state.profile.height = 178; state.v54.goalType = 'recomp'; state.macroGoals = null; state.targetMode = null; state.v54.faf[2] = FAF[2];
+          const tg = targetFor('2026-10-14');
+          state.profile.weight = prevW; state.profile.height = prevH; state.v54.goalType = prevG; state.macroGoals = prevMg; state.targetMode = prevTm; state.v54.faf[2] = prevFaf;
+          localStorage.setItem('biopeat_ai24', JSON.stringify({key:'SECRET_API_KEY_999'}));
+          const key = ensureSyncKey();
+          const b = buildCloudBundle();
+          const enc = await encryptVaultPayload(b, key);
+          const pushed = await cloudPush({force:true});
+          const leaked = enc.ciphertext.includes('SECRET_API_KEY') || enc.ciphertext.includes('Tortilla') || JSON.stringify(b).includes('SECRET_API_KEY');
+          return {okEn, recompKcal:tg.kcal, recompP:tg.p, recompF:tg.f, adRatio:(NEW_PROFILE_MICRO.male.vitA*3.33)/(NEW_PROFILE_MICRO.male.vitD*40), keyLen:key.length, pushed, leaked, key};
+        }""")
+        ok('Parser EN reconoce varios alimentos sin IA') if r['okEn'] else fail('parseSmart EN falló: ' + str(r))
+        ok(f"Recomp 95 kg ajusta por IMC sin disparar calorías ({r['recompKcal']} kcal, P {r['recompP']}g)") if 1800 <= r['recompKcal'] <= 2850 and r['recompP'] < 180 else fail('targetFor recomp 95kg: ' + str(r))
+        ok(f"Perfil nuevo arranca con A:D en zona verde ({r['adRatio']:.2f}:1)") if 2.0 <= r['adRatio'] <= 4.0 else fail('NEW_PROFILE_MICRO A:D: ' + str(r))
+        ok('E2EE cifra sin filtrar comidas ni claves de IA y sube a bóveda') if r['pushed'] and not r['leaked'] and r['keyLen'] >= 40 else fail('E2EE push/aislamiento: ' + str(r))
+        sync_key = r['key']
+        await clear_storage()
+        restored = await ev("async(k)=>{const res=await cloudPull(k,{apply:true,forceApply:true});return {found:res.found,applied:res.applied,kcal:totals().all.kcal,days:Object.keys(state.days).length};}", sync_key)
+        ok('Recuperación desde nube E2EE tras borrado completo') if restored['found'] and restored['applied'] and restored['days'] >= 3 else fail('E2EE pull falló: ' + str(restored))
+        c409 = await ev("""async(k)=>{
+          ready = true;
+          syncSet(SYNC_KEY_STORE, k);
+          const {vaultId,authToken}=await deriveSyncCreds(k);
+          const remoteBundle=buildCloudBundle();
+          remoteBundle.updated=Date.now()+60000;
+          remoteBundle.main.context='REMOTE_409_WIN';
+          const enc=await encryptVaultPayload(remoteBundle,k);
+          const curRev=getSyncRev();
+          await fetch(CLOUD_API+'/api/vault/'+vaultId,{method:'PUT',headers:{'Content-Type':'application/json','X-BioPeat-Auth':authToken},body:JSON.stringify({iv:enc.iv,ciphertext:enc.ciphertext,compressed:enc.compressed,baseRev:curRev,appVersion:APP_VERSION}),credentials:'omit',mode:'cors'});
+          state.context='LOCAL_STALE'; state.updated=Date.now()-5000;
+          const ps=ensureProfilesStore(); for(const it of Object.values(ps.items||{}))if(it)it.updated=Date.now()-5000; saveProfilesStore(ps);
+          const okPush=await cloudPush({force:true});
+          return {okPush, ctx:state.context, rev:getSyncRev(), err:cloudState.err};
+        }""", sync_key)
+        ok('E2EE resuelve conflicto 409 aplicando copia remota más reciente') if c409['okPush'] and c409['ctx'] == 'REMOTE_409_WIN' and c409['rev'] >= 2 else fail('E2EE 409 conflicto falló: ' + str(c409))
+        await clear_storage()
+        await pg.goto('about:blank')
+        await pg.goto(f'{url}#bp-sync={sync_key}')
+        await pg.wait_for_selector("body[data-ready='true']")
+        for _ in range(40):
+            if await ev("Object.keys(state.days).some(d=>(state.days[d].entries||[]).some(e=>e.kind==='food'))"): break
+            await pg.wait_for_timeout(150)
+        magic = await ev("({hash:location.hash, days:Object.keys(state.days).length, key:getSyncKey()})")
+        ok('Enlace mágico #bp-sync= recupera datos y limpia el hash') if magic['hash'] == '' and magic['days'] >= 3 and magic['key'] == sync_key else fail('Enlace mágico #bp-sync= falló: ' + str(magic))
+        await ev("""async()=>{flushDeferredSave();const r=localStorage.getItem(STORE),p=localStorage.getItem(PROFILES_KEY)||'';const d=await openDB();db=d;await idbReadWrite('readwrite',r,'current');if(p)await idbReadWrite('readwrite',p,'profiles');}""")
+        await ev("localStorage.removeItem(STORE);localStorage.removeItem(PROFILES_KEY);")
+        await pg.reload()
+        await pg.wait_for_selector("body[data-ready='true']")
+        idb_rec = await ev("({days:Object.keys(state.days).length, lsRestored:!!localStorage.getItem(STORE)})")
+        ok('Recuperación desde espejo IndexedDB si localStorage se borra') if idb_rec['days'] >= 3 and idb_rec['lsRestored'] else fail('IDB recovery falló: ' + str(idb_rec))
+        await load(FIXTURE.read_text(encoding='utf-8'))
+        await ev(f"goDate('{DAY}')")
+        await ev("$('bio-temp').value='98.6';$('bio-temp').dispatchEvent(new Event('change'));$('bio-temp').value='36.8';$('bio-temp').dispatchEvent(new Event('change'));$('bio-pulse').value='78';$('bio-pulse').dispatchEvent(new Event('change'));$('bio-energy').value='4';$('bio-energy').dispatchEvent(new Event('change'));flushDeferredSave()")
+        await pg.wait_for_timeout(150)
+        await pg.reload(); await pg.wait_for_function("document.body.dataset.ready==='true'"); await ev(f"goDate('{DAY}')")
+        bio_f = await ev("(()=>{ $('bio-temp').value='98.6'; $('bio-temp').dispatchEvent(new Event('change')); return day().bio?.temp; })()")
+        await ev("$('bio-temp').value='36.8';$('bio-temp').dispatchEvent(new Event('change'));flushDeferredSave()")
+        bio_r = await ev("({b:day().bio,exp:buildAIExportText('7'),fConv:arguments[0]})") if False else await ev("(f=>({b:day().bio,exp:buildAIExportText('7'),fConv:f}))", bio_f)
+        ok('Bio (temp/°F->°C/pulso/energía) persiste y entra en el informe IA') if bio_r['b'] and abs(bio_r['b']['temp'] - 36.8) < 0.01 and abs((bio_r['fConv'] or 0) - 37.0) < 0.15 and bio_r['b']['pulse'] == 78 and '36,8' in bio_r['exp'] else fail('Bio persistencia/export: ' + str(bio_r)[:200])
+        ms_per_tap = await ev("""()=>{const id=day().entries.find(e=>e.kind==='food')?.id;if(!id)return -1;const t0=performance.now();for(let i=0;i<5;i++)stepQuantity(id,i%2?1:-1);return (performance.now()-t0)/5;}""")
+        ok(f'Fluidez de respuesta al pulsar ({ms_per_tap:.1f} ms/toque)') if 0 <= ms_per_tap < 80 else fail(f'Latencia excesiva en toques: {ms_per_tap:.1f} ms')
+        check_errs('v76')
+
+        await load(FIXTURE.read_text(encoding='utf-8'))
+        await ev(f"goDate('{DAY}')"); await ev("renderWeekly();renderGym();go('micros')"); await pg.wait_for_timeout(200)
+        print('7. Pulsar todos los botones')
+        await ev("document.querySelectorAll('details').forEach(d=>d.open=true)")
+        n = await ev("""()=>{let i=0;document.querySelectorAll('button').forEach(b=>{if(b.closest('dialog')||b.offsetParent===null)return;b.dataset.t=i++;});return i;}""")
+        skip = re.compile(r'export|backup|forget|import|clear-foods|bp-clip|menu-backup|fb-send|fb-share|cloud-delete|cloud-passmgr|cloud-magic|cloud-link')
+        bad = 0
+        for i in range(n):
+            info = await ev(f"(()=>{{const b=document.querySelector('[data-t=\"{i}\"]');return b?(b.id||'')+' '+b.textContent.trim().slice(0,30):null}})()")
+            if not info or skip.search(info): continue
+            try:
+                await ev(f"document.querySelector('[data-t=\"{i}\"]').click()")
+                await pg.wait_for_timeout(60)
+                if await ev("$('modal').open"):
+                    await ev("(()=>{const m=$('modal');const bs=[...m.querySelectorAll('button')].filter(x=>!/eliminar|delete|borrar/i.test(x.textContent+(x.dataset.deleteworkout||'')+(x.dataset.deletePlan||'')+(x.dataset.deleteFood||'')));for(const x of bs.slice(0,4)){try{x.click()}catch(e){}}})()")
+                    await pg.wait_for_timeout(60)
+                    await ev("$('modal').open&&$('modal').close()")
+            except Exception as ex:
+                bad += 1; fail(f'Botón «{info}»: {str(ex)[:120]}')
+            if not await ev("typeof $==='function'"):
+                bad += 1; fail(f'Botón «{info}» saca de la app (historial): {pg.url}'); await go_url(); await pg.wait_for_function("document.body.dataset.ready==='true'"); await ev("document.querySelectorAll('details').forEach(d=>d.open=true)"); n2=await ev("""()=>{let i=0;document.querySelectorAll('button').forEach(b=>{if(b.closest('dialog')||b.offsetParent===null)return;b.dataset.t=i++;});return i;}""")
+            if errs:
+                bad += 1; fail(f'Botón «{info}» provoca error: {errs[0][:200]}'); errs.clear()
+        ok(f'{n} botones pulsados sin errores') if not bad else None
+        await b.close()
+
+async def main():
+    static_checks()
+    try:
+        await browser_checks()
+    except ModuleNotFoundError:
+        fail('Falta Playwright: pip install playwright && python -m playwright install --with-deps chromium')
+    except Exception as ex:
+        fail('La prueba en el navegador se detuvo: ' + str(ex).split('\n')[0][:300])
+    print()
+    if FAILS:
+        print(f'FALLOS ({len(FAILS)}):'); [print(' -', f) for f in FAILS]; sys.exit(1)
+    print('TODO OK'); sys.exit(0)
+
+asyncio.run(main())

@@ -1,0 +1,17 @@
+# Nunca publicar configuración local ni paquetes de vuelta
+config.json
+*.zip
+inbox/
+private/
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+*.sqlite
+*.sqlite3
+*.db
+*backup*
+*extracto*
+__pycache__/

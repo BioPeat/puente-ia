@@ -1,0 +1,18 @@
+# Datos y secretos personales
+*.env
+.env*
+Finanzas_copia_*.json
+*_privado.json
+TOKEN*
+secrets*
+
+# Generados localmente
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+playwright-report/
+test-results/
+
+# Copias de seguridad locales de configuración Antigravity
+.agents/backups/

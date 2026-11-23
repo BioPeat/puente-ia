@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>Finanzas v12 · arquitectura modular</title>
+<style>
+:root{--bg:#f2f5f9;--panel:#fff;--line:#dfe5e9;--ink:#0f172a;--ink2:#475569;--brand:#2563eb}
+@media (prefers-color-scheme:dark){:root{--bg:#080b10;--panel:#131a24;--line:rgba(255,255,255,.1);--ink:#f1f5f9;--ink2:#9aa7b8;--brand:#3b82f6}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,Segoe UI,Roboto,Arial,sans-serif}
+main{max-width:780px;margin:0 auto;padding:32px 18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;margin:16px 0}
+.muted{color:var(--ink2)}
+.btn{display:inline-flex;align-items:center;min-height:40px;padding:8px 16px;border-radius:12px;background:var(--brand);color:#fff;text-decoration:none;font-weight:600}
+code{font:12.5px ui-monospace,Menlo,Consolas,monospace;padding:2px 6px;border-radius:6px;border:1px solid var(--line)}
+</style></head><body><main>
+<h1>Finanzas v12 · Arquitectura modular</h1>
+<p class="muted">Desde la versión v12, la aplicación está organizada en módulos separados para mayor claridad y mantenimiento.</p>
+<div class="card">
+<h2>Archivos principales</h2>
+<ul>
+<li><code>index.html</code> — estructura de la app (PC y móvil).</li>
+<li><code>css/app.css</code> — sistema visual unificado (claro y oscuro).</li>
+<li><code>js/state.js</code> — almacenamiento local, migración y sincronización cifrada E2E.</li>
+<li><code>js/finance.js</code> — cálculos patrimoniales, derivados, previsión y fiscalidad FIFO.</li>
+<li><code>js/charts.js</code> — velas OHLCV, líneas de evolución y calendario de gastos.</li>
+<li><code>js/importers.js</code> — lectores XLSX/CSV/OFX/QIF y extractor con Gemini IA.</li>
+<li><code>js/live.js</code> — WebSocket en directo, precios, alertas y TradingView.</li>
+<li><code>js/connectors.js</code> — KuCoin, Kraken, Binance, Open Banking PSD2 y wallets on-chain.</li>
+<li><code>js/ai.js</code> — chat Copiloto (Gemini + Local) y autocategorización.</li>
+<li><code>js/views-desktop.js</code> y <code>js/views-mobile.js</code> — vistas dedicadas para PC y móvil.</li>
+<li><code>worker.js</code> — Cloudflare Worker <code>w6</code>.</li>
+</ul>
+<p><a class="btn" href="./">Volver a Finanzas</a></p>
+</div>
+</main></body></html>

@@ -1,0 +1,36 @@
+name: Sincronizar catalogo publico
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 4 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout puente-ia
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Sincronizar catalogo desde repos publicos y validar seguridad
+        run: python3 tools/sync_catalogo.py --bridge .
+
+      - name: Publicar cambios si hubo nuevos commits
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add CATALOGO.md catalogo.json catalogo.html catalogo/
+            git commit -m "chore: sincronizar catalogo de repositorios publicos"
+            git push
+          else
+            echo "Sin cambios que publicar."
+          fi

@@ -1,0 +1,31 @@
+{
+  "protocol_version": "1.1",
+  "bridge_repo_url": "https://github.com/BioPeat/puente-ia.git",
+  "pages_root_url": "https://biopeat.github.io/puente-ia/",
+  "sources": [
+    {
+      "name": "biopeat",
+      "slug": "biopeat",
+      "repo_url": "https://github.com/BioPeat/biopeat.git",
+      "pages_url": "https://biopeat.github.io/biopeat/",
+      "branch": "main",
+      "public": true
+    },
+    {
+      "name": "Finanzas",
+      "slug": "finanzas",
+      "repo_url": "https://github.com/BioPeat/Finanzas.git",
+      "pages_url": "https://biopeat.github.io/Finanzas/",
+      "branch": "main",
+      "public": true
+    },
+    {
+      "name": "estadisticas",
+      "slug": "estadisticas",
+      "repo_url": "https://github.com/BioPeat/estadisticas.git",
+      "pages_url": "https://biopeat.github.io/estadisticas/",
+      "branch": "main",
+      "public": true
+    }
+  ]
+}

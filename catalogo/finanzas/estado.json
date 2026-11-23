@@ -1,0 +1,210 @@
+{
+  "name": "Finanzas",
+  "slug": "finanzas",
+  "repo_url": "https://github.com/BioPeat/Finanzas.git",
+  "pages_url": "https://biopeat.github.io/Finanzas/",
+  "branch": "main",
+  "commit": "9cb8b81621da18cfbf4a558c5cd64fb7bb1e3b47",
+  "dirty_local": false,
+  "public": true,
+  "status": "synced",
+  "synced_at": "2026-11-23T13:35:20.895641+00:00",
+  "file_count": 30,
+  "omitted_count": 7,
+  "files": [
+    {
+      "path": ".agents/skills/verificar-cambios/SKILL.md",
+      "size": 3458,
+      "sha256": "135620ec4f86abccc7124641dfcb5b19cb2ec8c5e87254c8837c3de3538ed11d"
+    },
+    {
+      "path": ".agents/skills/verificar-cambios/scripts/check-static.mjs",
+      "size": 4675,
+      "sha256": "71484783f1ed61d91c8f1b2a9e3c05862f64db8b515c9090a52caa63a7fd9b25"
+    },
+    {
+      "path": ".github/workflows/check.yml",
+      "size": 1144,
+      "sha256": "ed171fd9a9ac911cca35b84a0f5d79b5b3bc143dd83e18ccff53aea7c58cac18"
+    },
+    {
+      "path": ".gitignore",
+      "size": 269,
+      "sha256": "aa309fc1076e6ccdc97f9261274437f6322caca06b74ebc1105f6cc4e8bad0c5"
+    },
+    {
+      "path": "AGENTS.md",
+      "size": 4782,
+      "sha256": "f9ecaa131c55432b39cc7f5d10ee5632799c49eb8bbf3a5331036682963454f4"
+    },
+    {
+      "path": "CONTEXTO_FINANZAS.md",
+      "size": 2587,
+      "sha256": "979a4e18fb7ef0ce458f4c2cf6eb194459996a7c8babd4ef489d05fc90b20ec5"
+    },
+    {
+      "path": "MAPA_DEL_CODIGO.md",
+      "size": 12567,
+      "sha256": "3c20309bb941b41268c51b3b89ae6a7cb52a5d05adc02e4e7490eb86c9779553"
+    },
+    {
+      "path": "README.md",
+      "size": 2329,
+      "sha256": "62a67b11436feddca7b6720f673a72a021fb7829f8735e0876c9e0994d4c2f16"
+    },
+    {
+      "path": "actualizar.html",
+      "size": 2455,
+      "sha256": "3dcfe8a490fdec298f11708559d963ac911af6c898f4c3bd9c8ce5937c43b844"
+    },
+    {
+      "path": "css/app.css",
+      "size": 54929,
+      "sha256": "2d8ed2d759e93179a60a3d416211a8a57614b7d320eefd2b4996caef8fe0548e"
+    },
+    {
+      "path": "index.html",
+      "size": 5823,
+      "sha256": "8b36926531b5c361148636f22a9ccf82cedad26f851a2b393b07d2764b049c0c"
+    },
+    {
+      "path": "js/ai.js",
+      "size": 16524,
+      "sha256": "ef9f14cac1af2d3614b2ed4bd3acc62e6973e930b1f90e613f9dbccb101dfe79"
+    },
+    {
+      "path": "js/app.js",
+      "size": 62753,
+      "sha256": "03d475da2a16f0c1cc1577551465fd9c20a8ab53a79fcef9e5be9b485e567a38"
+    },
+    {
+      "path": "js/charts.js",
+      "size": 24116,
+      "sha256": "a57327d0eeb70d48632c8d8267b2e4dc4e54de912a78d0d954d1c075ee91d821"
+    },
+    {
+      "path": "js/connectors.js",
+      "size": 37064,
+      "sha256": "71d65059bb071f83904c40cd2a57e8694e957994390a599b222cfaf3c523388d"
+    },
+    {
+      "path": "js/finance.js",
+      "size": 38098,
+      "sha256": "1b81c3f4772185880f8e2ec9d6f737050da1ecdfee4660eb45419a6b845bb2af"
+    },
+    {
+      "path": "js/importers.js",
+      "size": 29193,
+      "sha256": "03459f927b70f30fce5c92b6c16088db783a877ca7bbf71fd4f080ef08205a96"
+    },
+    {
+      "path": "js/live.js",
+      "size": 13096,
+      "sha256": "3621a0207a43a6f5e3a1273195a5deb9f002f1aedc1803cb3c2fe9ba3b1a12c3"
+    },
+    {
+      "path": "js/state.js",
+      "size": 28541,
+      "sha256": "f7ede7c221d989b5bd08aa0fa2f79174fabfb61e730a987d839ce4ae6a0ef168"
+    },
+    {
+      "path": "js/views-desktop.js",
+      "size": 72305,
+      "sha256": "3c820f6e302a065a8a5cd67b1ddbcf749f4c99d29e1a0e2355ce9c5adb6f494e"
+    },
+    {
+      "path": "js/views-mobile.js",
+      "size": 23177,
+      "sha256": "826f95bef679568f3890b64ca371fd1f897d76db4a57a15286fd77879ef09aff"
+    },
+    {
+      "path": "manifest.json",
+      "size": 1790,
+      "sha256": "80bd694d4b57ba56dd836a6439f7c06bf24a01ec3b09b0fc2eecd4f3dd3e04e1"
+    },
+    {
+      "path": "sw.js",
+      "size": 1449,
+      "sha256": "5cb295adcbf7ed2c040a305b0af39674cbd62cc9014e674fc4d4d2ebd9d72988"
+    },
+    {
+      "path": "tests/smoke.py",
+      "size": 18132,
+      "sha256": "036f75c4cd191e5f6a85a17d17076a1ac4cc9c6289eb3689a843d6a53594a161"
+    },
+    {
+      "path": "tests/worker_smoke.mjs",
+      "size": 17375,
+      "sha256": "88d394a65e874b683f65e08369433d772331b8c74f9179d082aef6f103723c12"
+    },
+    {
+      "path": "tools/generar_capturas.py",
+      "size": 6030,
+      "sha256": "df6106b0d14ab771c76507f651937fa56c7b76d6a7b1fec6f140f3d542e8cc7b"
+    },
+    {
+      "path": "tools/generar_guia_pdf.py",
+      "size": 23187,
+      "sha256": "549827a53a3c93d9a86d2723b2f8a55883f70fff54835a787858bba2e1f74f7b"
+    },
+    {
+      "path": "tools/mapa.py",
+      "size": 1159,
+      "sha256": "cb63ebc32bb15d5c189e881928ed2e00e84db0205a7583182ba9c315174f3335"
+    },
+    {
+      "path": "tools/sincronizar_version.py",
+      "size": 837,
+      "sha256": "066a867b2f3003c20bfb6e06b1ec7a44f74257ce3fc4bbf65355357d481b5005"
+    },
+    {
+      "path": "worker.js",
+      "size": 59157,
+      "sha256": "477a1d5951646a7f3f4e6e6dc082503f8efd02315b486d8e877d41f1b7978815"
+    }
+  ],
+  "omitted": [
+    {
+      "path": ".agents/REGISTRO_CONFIG_ANTIGRAVITY.md",
+      "reason": "metadato o carpeta interna excluida"
+    },
+    {
+      "path": "icon-192.png",
+      "reason": "binario o minificado",
+      "size": 16888
+    },
+    {
+      "path": "icon-512.png",
+      "reason": "binario o minificado",
+      "size": 59201
+    },
+    {
+      "path": "icon-maskable-512.png",
+      "reason": "binario o minificado",
+      "size": 37053
+    },
+    {
+      "path": "tests/binance_ejemplo.csv",
+      "reason": "binario o minificado",
+      "size": 1006
+    },
+    {
+      "path": "tests/kraken_ejemplo.csv",
+      "reason": "binario o minificado",
+      "size": 466
+    },
+    {
+      "path": "tests/santander_ejemplo.xlsx",
+      "reason": "binario o minificado",
+      "size": 13199
+    }
+  ],
+  "urls": {
+    "pages_summary": "https://biopeat.github.io/puente-ia/catalogo/finanzas/resumen.html",
+    "pages_state_json": "https://biopeat.github.io/puente-ia/catalogo/finanzas/estado.json",
+    "raw_state_md": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/finanzas/ESTADO.md",
+    "raw_state_json": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/finanzas/estado.json",
+    "raw_files_prefix": "https://raw.githubusercontent.com/BioPeat/puente-ia/main/catalogo/finanzas/files/",
+    "pages_files_prefix": "https://biopeat.github.io/puente-ia/catalogo/finanzas/files/"
+  }
+}

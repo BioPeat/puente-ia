@@ -1,0 +1,34 @@
+# En cada subida: 1) pone en CONTEXTO_BIOPEAT.md la versión de index.html y regenera
+# MAPA_DEL_CODIGO.md (solo si cambian), 2) prueba la app entera.
+# ✓ verde = todo bien · ✗ rojo = algo se ha roto (abre la tarea para ver qué).
+name: Prueba BioPeat
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  prueba:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - name: Actualizar versión de CONTEXTO y MAPA automáticamente
+        run: |
+          python3 tools/sincronizar_version.py
+          python3 tools/mapa.py
+          if ! git diff --quiet; then
+            git config user.name "BioPeat bot"
+            git config user.email "bot@users.noreply.github.com"
+            git commit -am "CONTEXTO y MAPA actualizados solos"
+            git push
+          fi
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: pip install playwright && python -m playwright install --with-deps chromium
+      - run: python tools/security_check.py
+      - run: python tests/smoke.py

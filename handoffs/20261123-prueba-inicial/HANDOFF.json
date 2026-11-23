@@ -1,0 +1,22 @@
+{
+  "protocol_version": "1.1",
+  "task_id": "20261123-prueba-inicial",
+  "direction": "antigravity_to_copilot",
+  "origin_mode": "reply_to_handoff",
+  "project": "biopeat",
+  "repo_url": "https://github.com/BioPeat/biopeat.git",
+  "branch": "main",
+  "source_commit": "1c21adb8a651c19771ea4ebe6ee49def9243971b",
+  "created_at": "2026-11-23T13:35:23.572796+00:00",
+  "objective": "Traspaso de prueba inicial v1.1.0 sin modificar BioPeat",
+  "files": [
+    {
+      "path": "context/README.md",
+      "sha256": "f4b78c8f993e0b2c171e93348809f554ea2d9d13482433beffdfeea5ae5315f2"
+    },
+    {
+      "path": "context/AGENTS.md",
+      "sha256": "9b91fb1b0d76d72974b47d62cb65f185bbff430b3bba858c8fbb14599c8defe4"
+    }
+  ]
+}

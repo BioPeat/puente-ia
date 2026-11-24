@@ -1,0 +1,13 @@
+{
+  "protocol_version": "1.1",
+  "task_id": "reparto-puntos-ad1eddfd",
+  "direction": "copilot_to_antigravity",
+  "origin_mode": "copilot_from_scratch",
+  "project": "estadisticas",
+  "repo_url": "https://github.com/BioPeat/estadisticas.git",
+  "branch": "main",
+  "source_commit": "0c2fc471b076516b9ca44449c20c5fb85988e2f9",
+  "created_at": "2026-11-24T14:25:56.051938+00:00",
+  "objective": "Implementar en la ventana Reparto de puntos (Equipo) las mismas funciones y gráficos de la ventana Minutos, sin modificar Minutos.",
+  "files": []
+}

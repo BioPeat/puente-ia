@@ -4,8 +4,8 @@
 - **Repositorio:** https://github.com/BioPeat/estadisticas.git
 - **App publicada:** https://biopeat.github.io/estadisticas/
 - **Rama:** `main`
-- **Commit actual (`source_commit`):** `0c2fc471b076516b9ca44449c20c5fb85988e2f9`
-- **Sincronizado (UTC):** 2026-11-23T18:48:38.679036+00:00
+- **Commit actual (`source_commit`):** `42f6ecdfb20a067c4cdf4ee6e7b291347901ab3c`
+- **Sincronizado (UTC):** 2026-11-24T14:25:57.302854+00:00
 - **Archivos de texto legibles incluidos:** 35
 
 ## Lectura rápida recomendada (para empezar desde cero en Copilot)
@@ -23,7 +23,7 @@
 | [.gitignore](files/.gitignore) | 53 | `cca9f7e4b2ae` |
 | [AGENTS.md](files/AGENTS.md) | 1185 | `181b885ccc12` |
 | [AUDITORIA_v12.md](files/AUDITORIA_v12.md) | 2861 | `f3029da74179` |
-| [CHANGELOG.md](files/CHANGELOG.md) | 4426 | `58c9607402b9` |
+| [CHANGELOG.md](files/CHANGELOG.md) | 5015 | `3630e3ce4552` |
 | [CONTEXTO_ESTADISTICAS.md](files/CONTEXTO_ESTADISTICAS.md) | 810 | `ba922ceb46bb` |
 | [GEM_GEMINI.md](files/GEM_GEMINI.md) | 1232 | `c2139db3648d` |
 | [MAPA_DEL_CODIGO.md](files/MAPA_DEL_CODIGO.md) | 802 | `bccd2d4f2dfe` |
@@ -34,20 +34,20 @@
 | [README.md](files/README.md) | 2123 | `a1e86c197462` |
 | [REVISION_AUDITORIA_GPT.md](files/REVISION_AUDITORIA_GPT.md) | 5612 | `5f0d5df3507c` |
 | [actualizar.html](files/actualizar.html) | 23631 | `5037dd1b01b6` |
-| [app.js](files/app.js) | 208838 | `631bf08887dd` |
+| [app.js](files/app.js) | 211603 | `c2f187c01745` |
 | [config.js](files/config.js) | 173 | `8493b9a39e2c` |
 | [configurar.html](files/configurar.html) | 3687 | `d005e6f59049` |
 | [index.html](files/index.html) | 4492 | `5214a4f2ff2d` |
-| [instalar.html](files/instalar.html) | 25034 | `fd91b0435342` |
+| [instalar.html](files/instalar.html) | 42467 | `fdc0a0127b4e` |
 | [manifest.json](files/manifest.json) | 634 | `9a46d3f543b1` |
 | [styles.css](files/styles.css) | 95957 | `1e9adb91ab69` |
-| [sw.js](files/sw.js) | 1656 | `d8ea84621777` |
+| [sw.js](files/sw.js) | 1656 | `f3ff5aece8e0` |
 | [tests/fixtures/dehesa_directo_sanitizado.json](files/tests/fixtures/dehesa_directo_sanitizado.json) | 32494 | `b7379e1d3b02` |
 | [tests/fixtures/mapa_ensanche.json](files/tests/fixtures/mapa_ensanche.json) | 821 | `cf0b42111c2b` |
 | [tests/fixtures/mapa_las_rozas.json](files/tests/fixtures/mapa_las_rozas.json) | 743 | `29725452b1f2` |
 | [tests/fixtures/mapa_olimpico.json](files/tests/fixtures/mapa_olimpico.json) | 714 | `c856ee40097e` |
 | [tests/fixtures/real_3_partidos.json](files/tests/fixtures/real_3_partidos.json) | 50880 | `bdfa2205097c` |
-| [tests/smoke.py](files/tests/smoke.py) | 32697 | `3f4d2ead7ebc` |
+| [tests/smoke.py](files/tests/smoke.py) | 34053 | `fc5c96bedf7a` |
 | [tests/updater_e2e.py](files/tests/updater_e2e.py) | 7264 | `b486528dd216` |
 | [tests/worker_mock.mjs](files/tests/worker_mock.mjs) | 11203 | `2dbb002517ff` |
 | [tools/capture.py](files/tools/capture.py) | 4636 | `c2dab5a15854` |

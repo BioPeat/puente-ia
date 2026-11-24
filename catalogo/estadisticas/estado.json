@@ -4,11 +4,11 @@
   "repo_url": "https://github.com/BioPeat/estadisticas.git",
   "pages_url": "https://biopeat.github.io/estadisticas/",
   "branch": "main",
-  "commit": "0c2fc471b076516b9ca44449c20c5fb85988e2f9",
+  "commit": "42f6ecdfb20a067c4cdf4ee6e7b291347901ab3c",
   "dirty_local": false,
   "public": true,
   "status": "synced",
-  "synced_at": "2026-11-23T18:48:38.679036+00:00",
+  "synced_at": "2026-11-24T14:25:57.302854+00:00",
   "file_count": 35,
   "omitted_count": 12,
   "estado_txt_path": "catalogo/estadisticas/ESTADO_estadisticas.txt",
@@ -35,8 +35,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size": 4426,
-      "sha256": "58c9607402b9613d03dfd234ada94e689eeb68959cbcad47822233a58f317167"
+      "size": 5015,
+      "sha256": "3630e3ce4552b73a2fbd4db6d87bb484c20ce8e8ec83f14b731be2a4f3ab2722"
     },
     {
       "path": "CONTEXTO_ESTADISTICAS.md",
@@ -90,8 +90,8 @@
     },
     {
       "path": "app.js",
-      "size": 208838,
-      "sha256": "631bf08887dd72c26d08eff9c63414ce7de1b74b3dd11a60ca92529fe91851a5"
+      "size": 211603,
+      "sha256": "c2f187c0174551d087d9d64dfd226472124da66eb98cc4cd89d441be123b07e9"
     },
     {
       "path": "config.js",
@@ -110,8 +110,8 @@
     },
     {
       "path": "instalar.html",
-      "size": 25034,
-      "sha256": "fd91b04353424be7e7e1a6f392487d6ee823b351556064f9971871625e1f334d"
+      "size": 42467,
+      "sha256": "fdc0a0127b4e8a2be4f189be31a10332f4c0a4437b2ee86ce75e4d314d93e6ef"
     },
     {
       "path": "manifest.json",
@@ -126,7 +126,7 @@
     {
       "path": "sw.js",
       "size": 1656,
-      "sha256": "d8ea84621777fa6504a6fc91bff7dc606c583ea7bb7283edf7beb7dbb8406a81"
+      "sha256": "f3ff5aece8e0db5c8cc256e287a932d3d87ff5cb04017216f47c5d457c03d57f"
     },
     {
       "path": "tests/fixtures/dehesa_directo_sanitizado.json",
@@ -155,8 +155,8 @@
     },
     {
       "path": "tests/smoke.py",
-      "size": 32697,
-      "sha256": "3f4d2ead7ebc56cd0eafcf3d6de7ba6a5f3674cb94800a2dba4b2b2d0cf72ac9"
+      "size": 34053,
+      "sha256": "fc5c96bedf7a842f5761c9d6cde5d9ccafa164dec691b1b43ff383008098b064"
     },
     {
       "path": "tests/updater_e2e.py",
@@ -213,22 +213,22 @@
     {
       "path": "landing/compartir.webp",
       "reason": "binario o minificado",
-      "size": 13916
+      "size": 34512
     },
     {
       "path": "landing/directo.webp",
       "reason": "binario o minificado",
-      "size": 21926
+      "size": 37138
     },
     {
       "path": "landing/equipo.webp",
       "reason": "binario o minificado",
-      "size": 18538
+      "size": 64256
     },
     {
       "path": "landing/jugadora.webp",
       "reason": "binario o minificado",
-      "size": 11746
+      "size": 51162
     },
     {
       "path": "tests/fixtures/acta_ensanche.xlsx",

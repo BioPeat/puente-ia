@@ -1,14 +1,14 @@
 PUENTE IA · SIN TRASPASO ACTIVO PENDIENTE
 ======================================================================
-ULTIMA TAREA CERRADA: 20261123-173818-estadisticas-033ac0
+ULTIMA TAREA CERRADA: reparto-puntos-ad1eddfd
 PROYECTO: estadisticas
 REPOSITORIO: https://github.com/BioPeat/estadisticas.git
-COMMIT FINAL: 1c052b27c3c1dd6cba07f065e140981caae2a531
+COMMIT FINAL: 42f6ecdfb20a067c4cdf4ee6e7b291347901ab3c
 ESTADO: applied
-ACTUALIZADO UTC: 2026-11-23T18:02:56.220170+00:00
+ACTUALIZADO UTC: 2026-11-24T14:25:56.051938+00:00
 
 RESUMEN:
-Resuelto directamente en Antigravity: acta sin solape, selector Totales/Por partido en Reparto de puntos, graficas duales mas amplias, enlaces de editor individuales y lector compartible, boton Pegar del portapapeles, paletas nuevas sin rojo/azul fijos y Worker v4 desplegado en Cloudflare.
+Modal Reparto de puntos ampliado con resumen, mapa de puntos y evolución individual sin tocar Minutos; SW actualizado.
 
 SI QUIERES EMPEZAR UNA TAREA NUEVA DESDE CERO EN COPILOT:
 - Usa el archivo ESTADO_<app>.txt del catálogo de la app correspondiente en el panel.

@@ -5,7 +5,7 @@
 - **App publicada:** https://biopeat.github.io/Finanzas/
 - **Rama:** `main`
 - **Commit actual (`source_commit`):** `9cb8b81621da18cfbf4a558c5cd64fb7bb1e3b47`
-- **Sincronizado (UTC):** 2026-11-23T17:19:12.916636+00:00
+- **Sincronizado (UTC):** 2026-11-24T14:25:57.302854+00:00
 - **Archivos de texto legibles incluidos:** 30
 
 ## Lectura rápida recomendada (para empezar desde cero en Copilot)

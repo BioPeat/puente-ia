@@ -9,9 +9,9 @@
 <meta name="theme-color" content="#0f172a">
 <meta property="og:title" content="BioPeat · Tu nutrición al estilo Ray Peat">
 <meta property="og:description" content="Calcio : fósforo, PUFA, hidratos : proteína, temperatura/pulso y 25 micronutrientes con zonas Peat/Dinkov. Gratis, sin cuenta y con respaldo cifrado E2EE.">
-<meta property="og:image" content="icon-512.png">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-maskable-512.png">
+<meta property="og:image" content="icon-512.png?v=80">
+<link rel="icon" href="icon-192.png?v=80">
+<link rel="apple-touch-icon" href="icon-maskable-512.png?v=79">
 <link rel="manifest" href="manifest.json">
 <script>
 // Redirección si se abre instalada como PWA; y tema/idioma compartidos con index.html.
@@ -35,7 +35,16 @@ html[lang=es] [data-lang=en],html[lang=en] [data-lang=es]{display:none!important
 .top{position:sticky;top:0;z-index:20;backdrop-filter:saturate(1.5) blur(18px);-webkit-backdrop-filter:saturate(1.5) blur(18px);background:color-mix(in srgb,var(--bg) 82%,transparent);border-bottom:1px solid var(--line)}
 .top .w{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:62px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;color:var(--txt);text-decoration:none}
-.brand img{width:36px;height:36px;border-radius:10px;box-shadow:0 0 0 1px #e9bf5c55}
+.brand svg{width:36px;height:36px;border-radius:10px;box-shadow:0 0 0 1px #e9bf5c55;flex-shrink:0}
+html[data-theme=light] .brand svg,.s-head-l svg{box-shadow:0 2px 8px #0f172a18}
+.bp-logo-svg .bp-bg{fill:#060b15}
+.bp-logo-svg .bp-amb{opacity:1}
+.bp-logo-svg .bp-cradle{fill:#060b15;opacity:1}
+.bp-logo-svg .bp-rim{stroke:#E9BF5C;stroke-opacity:.42}
+html[data-theme=light] .bp-logo-svg .bp-bg{fill:#FFFDF7}
+html[data-theme=light] .bp-logo-svg .bp-amb{opacity:.38}
+html[data-theme=light] .bp-logo-svg .bp-cradle{opacity:0}
+html[data-theme=light] .bp-logo-svg .bp-rim{stroke:#D97706;stroke-opacity:.38}
 .tools{display:flex;align-items:center;gap:6px}
 .chip{min-height:44px;padding:0 12px;border-radius:12px;border:1px solid var(--line2);background:var(--surf);color:var(--txt);font-weight:750;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
 .chip svg{width:17px;height:17px;color:var(--gold)}
@@ -58,7 +67,7 @@ html[data-theme=light] .hero h1 span{background:linear-gradient(135deg,#d97706,#
 html[data-theme=light] .phone{background:linear-gradient(160deg,#e2e8f0,#cbd5e1);box-shadow:0 30px 70px #0f172a33}
 .screen{border-radius:32px;overflow:hidden;background:var(--bg);padding:14px 12px 12px;display:grid;gap:9px}
 .s-head{display:flex;align-items:center;justify-content:space-between;font-weight:800;font-size:14px}
-.s-head-l{display:flex;align-items:center;gap:8px}.s-head img{width:26px;height:26px;border-radius:8px}
+.s-head-l{display:flex;align-items:center;gap:8px}.s-head svg{width:26px;height:26px;border-radius:8px;flex-shrink:0}
 .s-e2ee{font-size:10px;font-weight:800;padding:3px 7px;border-radius:999px;background:#34d39920;color:var(--ok);border:1px solid #34d39955}
 .s-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:3px}
 .s-tab{min-height:40px;border:0;border-radius:9px;background:transparent;color:var(--mut);font-size:10.5px;font-weight:750;cursor:pointer;padding:0 4px}
@@ -138,7 +147,7 @@ footer{padding:30px 0 110px;border-top:1px solid var(--line);font-size:13px;colo
 </head>
 <body>
 <header class="top"><div class="w">
-<a class="brand" href="#"><img src="icon-192.png" alt="">BioPeat</a>
+<a class="brand" href="#"><svg class="bp-logo-svg" viewBox="0 0 1024 1024" aria-hidden="true"><defs><radialGradient id="sf1Amb" cx="49%" cy="52%" r="38%"><stop offset="0%" stop-color="#ffbf47" stop-opacity=".38"/><stop offset="55%" stop-color="#e08819" stop-opacity=".12"/><stop offset="100%" stop-color="#04070e" stop-opacity="0"/></radialGradient><linearGradient id="sf1Cr" x1="14%" y1="16%" x2="86%" y2="88%"><stop offset="0%" stop-color="#fff6cf"/><stop offset="22%" stop-color="#f8cd5c"/><stop offset="52%" stop-color="#dc881c"/><stop offset="82%" stop-color="#9c4c09"/><stop offset="100%" stop-color="#5e2803"/></linearGradient><linearGradient id="sf1CrIn" x1="18%" y1="78%" x2="82%" y2="22%"><stop offset="0%" stop-color="#522102"/><stop offset="40%" stop-color="#9e4d09"/><stop offset="80%" stop-color="#e89a25"/><stop offset="100%" stop-color="#ffd978"/></linearGradient><linearGradient id="sf1Fl" x1="22%" y1="4%" x2="84%" y2="96%"><stop offset="0%" stop-color="#fffbe6"/><stop offset="20%" stop-color="#ffe184"/><stop offset="48%" stop-color="#f2a829"/><stop offset="80%" stop-color="#c2630c"/><stop offset="100%" stop-color="#6b2c03"/></linearGradient><linearGradient id="sf1FlS" x1="0%" y1="12%" x2="100%" y2="88%"><stop offset="0%" stop-color="#cf7512"/><stop offset="50%" stop-color="#873a05"/><stop offset="100%" stop-color="#3b1501"/></linearGradient><radialGradient id="sf1Orb" cx="38%" cy="32%" r="68%"><stop offset="0%" stop-color="#fffef5"/><stop offset="25%" stop-color="#ffeb9c"/><stop offset="55%" stop-color="#f6ad2d"/><stop offset="85%" stop-color="#c4630a"/><stop offset="100%" stop-color="#8f3d04"/></radialGradient></defs><rect class="bp-bg" width="1024" height="1024" rx="232"/><circle class="bp-amb" cx="512" cy="526" r="395" fill="url(#sf1Amb)"/><rect class="bp-rim" x="12" y="12" width="1000" height="1000" rx="220" fill="none" stroke-width="6"/><g transform="translate(512 512) scale(1.06) translate(-512 -512)"><circle class="bp-cradle" cx="502" cy="548" r="220"/><path fill="url(#sf1Cr)" d="M450 322C324 366 252 488 278 620C304 750 426 830 560 810C670 794 750 710 770 594C730 676 648 734 548 738C420 744 330 648 330 520C330 432 378 360 450 322Z"/><path fill="url(#sf1CrIn)" d="M450 322C378 360 330 432 330 520C330 648 420 744 548 738C648 734 730 676 770 594C726 666 644 714 544 714C426 714 348 628 350 516C352 434 392 364 450 322Z"/><path fill="#fffbe8" opacity=".78" d="M446 326C328 370 260 488 284 614C306 724 404 798 520 804C412 790 326 716 304 608C282 496 342 384 446 326Z"/><circle cx="496" cy="574" r="95" fill="url(#sf1Orb)"/><ellipse cx="466" cy="540" rx="34" ry="22" transform="rotate(-32 466 540)" fill="#fff" opacity=".55"/><path fill="url(#sf1FlS)" d="M522 198C488 266 490 328 546 384C604 442 646 490 636 578C628 634 588 682 520 714C622 694 704 618 712 518C720 420 658 360 594 304C548 264 526 234 522 198Z"/><path fill="url(#sf1Fl)" d="M522 198C456 268 450 358 522 428C586 490 616 546 594 622C580 668 554 696 520 714C604 690 672 620 682 526C692 436 636 376 578 320C536 280 514 240 522 198Z"/><path fill="#fffbe8" opacity=".82" d="M522 206C472 270 470 344 534 408C596 470 634 522 624 606C642 532 610 466 548 400C492 342 488 272 522 206Z"/></g></svg>BioPeat</a>
 <div class="tools">
 <button type="button" class="chip" data-l="es" aria-pressed="false">ES</button><button type="button" class="chip" data-l="en" aria-pressed="false">EN</button>
 <button type="button" class="chip" id="theme" aria-label="Modo claro u oscuro"></button>
@@ -163,7 +172,7 @@ footer{padding:30px 0 110px;border-top:1px solid var(--line);font-size:13px;colo
 </div>
 <div style="position:relative">
 <div class="phone" aria-label="Vista previa interactiva de BioPeat"><div class="screen">
-<div class="s-head"><div class="s-head-l"><img src="icon-192.png" alt="">BioPeat</div><span class="s-e2ee">E2EE ✓</span></div>
+<div class="s-head"><div class="s-head-l"><svg class="bp-logo-svg" viewBox="0 0 1024 1024" aria-hidden="true"><rect class="bp-bg" width="1024" height="1024" rx="232"/><circle class="bp-amb" cx="512" cy="526" r="395" fill="url(#sf1Amb)"/><rect class="bp-rim" x="12" y="12" width="1000" height="1000" rx="220" fill="none" stroke-width="6"/><g transform="translate(512 512) scale(1.06) translate(-512 -512)"><circle class="bp-cradle" cx="502" cy="548" r="220"/><path fill="url(#sf1Cr)" d="M450 322C324 366 252 488 278 620C304 750 426 830 560 810C670 794 750 710 770 594C730 676 648 734 548 738C420 744 330 648 330 520C330 432 378 360 450 322Z"/><path fill="url(#sf1CrIn)" d="M450 322C378 360 330 432 330 520C330 648 420 744 548 738C648 734 730 676 770 594C726 666 644 714 544 714C426 714 348 628 350 516C352 434 392 364 450 322Z"/><circle cx="496" cy="574" r="95" fill="url(#sf1Orb)"/><path fill="url(#sf1FlS)" d="M522 198C488 266 490 328 546 384C604 442 646 490 636 578C628 634 588 682 520 714C622 694 704 618 712 518C720 420 658 360 594 304C548 264 526 234 522 198Z"/><path fill="url(#sf1Fl)" d="M522 198C456 268 450 358 522 428C586 490 616 546 594 622C580 668 554 696 520 714C604 690 672 620 682 526C692 436 636 376 578 320C536 280 514 240 522 198Z"/></g></svg>BioPeat</div><span class="s-e2ee">E2EE ✓</span></div>
 <div class="s-tabs" role="tablist">
 <button type="button" class="s-tab" role="tab" data-mview="today" aria-selected="true"><span data-lang="es">Hoy</span><span data-lang="en">Today</span></button>
 <button type="button" class="s-tab" role="tab" data-mview="bal" aria-selected="false"><span data-lang="es">Ratios</span><span data-lang="en">Balances</span></button>

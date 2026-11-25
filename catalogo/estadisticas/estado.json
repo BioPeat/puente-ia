@@ -4,11 +4,11 @@
   "repo_url": "https://github.com/BioPeat/estadisticas.git",
   "pages_url": "https://biopeat.github.io/estadisticas/",
   "branch": "main",
-  "commit": "42f6ecdfb20a067c4cdf4ee6e7b291347901ab3c",
+  "commit": "db41c40de31f744141c5f28b4b77fe9189659051",
   "dirty_local": false,
   "public": true,
   "status": "synced",
-  "synced_at": "2026-11-24T14:25:57.302854+00:00",
+  "synced_at": "2026-11-25T14:16:32.782539+00:00",
   "file_count": 35,
   "omitted_count": 12,
   "estado_txt_path": "catalogo/estadisticas/ESTADO_estadisticas.txt",
@@ -110,8 +110,8 @@
     },
     {
       "path": "instalar.html",
-      "size": 42467,
-      "sha256": "fdc0a0127b4e8a2be4f189be31a10332f4c0a4437b2ee86ce75e4d314d93e6ef"
+      "size": 41394,
+      "sha256": "e5977572bab3a5b58ac8998eae4a17fe511283ad8dba456e1e5767960618e295"
     },
     {
       "path": "manifest.json",
@@ -126,7 +126,7 @@
     {
       "path": "sw.js",
       "size": 1656,
-      "sha256": "f3ff5aece8e0db5c8cc256e287a932d3d87ff5cb04017216f47c5d457c03d57f"
+      "sha256": "229fd80e32eb01c484c922ab4e851c6fe396141fd20747a4a86f5fdcf9e0cb56"
     },
     {
       "path": "tests/fixtures/dehesa_directo_sanitizado.json",

@@ -4,8 +4,8 @@
 - **Repositorio:** https://github.com/BioPeat/biopeat.git
 - **App publicada:** https://biopeat.github.io/biopeat/
 - **Rama:** `main`
-- **Commit actual (`source_commit`):** `c6c0307eb2d81cef5bc2d57106db500814a7435d`
-- **Sincronizado (UTC):** 2026-11-25T14:16:32.782539+00:00
+- **Commit actual (`source_commit`):** `ffc06dffd33b35e2ab67e185582e8735984e641b`
+- **Sincronizado (UTC):** 2026-11-26T13:50:56.144175+00:00
 - **Archivos de texto legibles incluidos:** 21
 
 ## Lectura rápida recomendada (para empezar desde cero en Copilot)
@@ -32,7 +32,7 @@
 | [cloudflare/schema.sql](files/cloudflare/schema.sql) | 1566 | `9fa7e8e05ed2` |
 | [cloudflare/worker.js](files/cloudflare/worker.js) | 37700 | `66f558073c3a` |
 | [index.html](files/index.html) | 1038718 | `95816d14a320` |
-| [inicio.html](files/inicio.html) | 49105 | `ed8d47f231f7` |
+| [inicio.html](files/inicio.html) | 60324 | `27f3e9f2ba9e` |
 | [manifest.json](files/manifest.json) | 1340 | `c6b21ca859e2` |
 | [sw.js](files/sw.js) | 1343 | `6f2afad8b5f1` |
 | [tests/datos_prueba.json](files/tests/datos_prueba.json) | 52526 | `db66997bbe34` |

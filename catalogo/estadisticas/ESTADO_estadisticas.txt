@@ -4,8 +4,8 @@ PROYECTO: estadisticas (estadisticas)
 REPOSITORIO: https://github.com/BioPeat/estadisticas.git
 APP PUBLICADA: https://biopeat.github.io/estadisticas/
 RAMA: main
-COMMIT ACTUAL (source_commit): db41c40de31f744141c5f28b4b77fe9189659051
-SINCRONIZADO UTC: 2026-11-25T14:16:32.782539+00:00
+COMMIT ACTUAL (source_commit): d2b6ba9be4dec2cf0f4d5e158b78b089a8f61c80
+SINCRONIZADO UTC: 2026-11-26T13:50:56.144175+00:00
 PROTOCOLO DE VUELTA: 1.1
 
 INDICE COMPLETO DE ARCHIVOS PUBLICOS:
@@ -28,10 +28,10 @@ INDICE COMPLETO DE ARCHIVOS PUBLICOS:
 - config.js | 173 bytes | sha256: 8493b9a39e2ccd57c3cbbf0bb73055ecf858fe3c0f1d585e27297a9c705543d2
 - configurar.html | 3687 bytes | sha256: d005e6f59049ff9190a0ed5c013564b7f4cdca2ebdd759f4a75cb496154184e5
 - index.html | 4492 bytes | sha256: 5214a4f2ff2d39b2a01a381205f22245990cdaa5860ba06bcdd0a8f9613d593e
-- instalar.html | 41394 bytes | sha256: e5977572bab3a5b58ac8998eae4a17fe511283ad8dba456e1e5767960618e295
+- instalar.html | 42561 bytes | sha256: 3c6efba2a9c3faefceed494dcc24bcc6961843eb3da1ba7b37bb0eb84f50bcdb
 - manifest.json | 634 bytes | sha256: 9a46d3f543b1e68295f8a40fceed156ccc03099845eab656c8f70f81be237866
 - styles.css | 95957 bytes | sha256: 1e9adb91ab6944caea21ead1b0e641eaa82884c6ffdf34e31bd7e899165de3ef
-- sw.js | 1656 bytes | sha256: 229fd80e32eb01c484c922ab4e851c6fe396141fd20747a4a86f5fdcf9e0cb56
+- sw.js | 1656 bytes | sha256: 89e27371da61bcdd810d0e6338e71093c6e00e941ad708bcff5299d9c4283a0c
 - tests/fixtures/dehesa_directo_sanitizado.json | 32494 bytes | sha256: b7379e1d3b0243187747b8247762a63ed1215efab1a2a6d7d6148a4e4122aeb0
 - tests/fixtures/mapa_ensanche.json | 821 bytes | sha256: cf0b42111c2b934a0f8037c43362cff3827623d33548cbbc53b738c13d42e775
 - tests/fixtures/mapa_las_rozas.json | 743 bytes | sha256: 29725452b1f2b05887bcfcae9cf275181aec4daacd0734e97f7108736a72d6dd
@@ -159,7 +159,7 @@ INSTRUCCIONES DEL ZIP DE VUELTA (DESDE CERO):
 - Entrega un ZIP llamado: COPILOT_A_ANTIGRAVITY_YYYYMMDD-HHMMSS-estadisticas-<6hex>.zip
 - Incluye HANDOFF.json con:
   - protocol_version: "1.1", direction: "copilot_to_antigravity", origin_mode: "copilot_from_scratch"
-  - project: "estadisticas", repo_url: "https://github.com/BioPeat/estadisticas.git", branch: "main", source_commit: "db41c40de31f744141c5f28b4b77fe9189659051"
+  - project: "estadisticas", repo_url: "https://github.com/BioPeat/estadisticas.git", branch: "main", source_commit: "d2b6ba9be4dec2cf0f4d5e158b78b089a8f61c80"
   - task_id único (>=8 chars), created_at, objective, files (con sha256 en minúsculas)
 - Incluye RESPUESTA.md, PRUEBAS.md y, si hay cambios, PATCH.diff y/o files/ (deleted_files opcional).
 - PROHIBIDO: ejecutables binarios, scripts no declarados, rutas .. o absolutas, secretos o rutas locales.

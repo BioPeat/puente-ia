@@ -4,8 +4,8 @@
 - **Repositorio:** https://github.com/BioPeat/estadisticas.git
 - **App publicada:** https://biopeat.github.io/estadisticas/
 - **Rama:** `main`
-- **Commit actual (`source_commit`):** `db41c40de31f744141c5f28b4b77fe9189659051`
-- **Sincronizado (UTC):** 2026-11-25T14:16:32.782539+00:00
+- **Commit actual (`source_commit`):** `d2b6ba9be4dec2cf0f4d5e158b78b089a8f61c80`
+- **Sincronizado (UTC):** 2026-11-26T13:50:56.144175+00:00
 - **Archivos de texto legibles incluidos:** 35
 
 ## Lectura rápida recomendada (para empezar desde cero en Copilot)
@@ -38,10 +38,10 @@
 | [config.js](files/config.js) | 173 | `8493b9a39e2c` |
 | [configurar.html](files/configurar.html) | 3687 | `d005e6f59049` |
 | [index.html](files/index.html) | 4492 | `5214a4f2ff2d` |
-| [instalar.html](files/instalar.html) | 41394 | `e5977572bab3` |
+| [instalar.html](files/instalar.html) | 42561 | `3c6efba2a9c3` |
 | [manifest.json](files/manifest.json) | 634 | `9a46d3f543b1` |
 | [styles.css](files/styles.css) | 95957 | `1e9adb91ab69` |
-| [sw.js](files/sw.js) | 1656 | `229fd80e32eb` |
+| [sw.js](files/sw.js) | 1656 | `89e27371da61` |
 | [tests/fixtures/dehesa_directo_sanitizado.json](files/tests/fixtures/dehesa_directo_sanitizado.json) | 32494 | `b7379e1d3b02` |
 | [tests/fixtures/mapa_ensanche.json](files/tests/fixtures/mapa_ensanche.json) | 821 | `cf0b42111c2b` |
 | [tests/fixtures/mapa_las_rozas.json](files/tests/fixtures/mapa_las_rozas.json) | 743 | `29725452b1f2` |

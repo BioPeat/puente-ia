@@ -4,11 +4,11 @@
   "repo_url": "https://github.com/BioPeat/biopeat.git",
   "pages_url": "https://biopeat.github.io/biopeat/",
   "branch": "main",
-  "commit": "c6c0307eb2d81cef5bc2d57106db500814a7435d",
+  "commit": "ffc06dffd33b35e2ab67e185582e8735984e641b",
   "dirty_local": false,
   "public": true,
   "status": "synced",
-  "synced_at": "2026-11-25T14:16:32.782539+00:00",
+  "synced_at": "2026-11-26T13:50:56.144175+00:00",
   "file_count": 21,
   "omitted_count": 3,
   "estado_txt_path": "catalogo/biopeat/ESTADO_biopeat.txt",
@@ -80,8 +80,8 @@
     },
     {
       "path": "inicio.html",
-      "size": 49105,
-      "sha256": "ed8d47f231f739cfd98233042dde4b33c625797b0b3f6fd1722e54ce7389fc33"
+      "size": 60324,
+      "sha256": "27f3e9f2ba9e10ad476cbca8f1e10c1ff186bbb36d342b01daafd1b0b4b61ea6"
     },
     {
       "path": "manifest.json",

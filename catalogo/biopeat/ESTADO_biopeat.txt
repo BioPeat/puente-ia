@@ -4,8 +4,8 @@ PROYECTO: biopeat (biopeat)
 REPOSITORIO: https://github.com/BioPeat/biopeat.git
 APP PUBLICADA: https://biopeat.github.io/biopeat/
 RAMA: main
-COMMIT ACTUAL (source_commit): c6c0307eb2d81cef5bc2d57106db500814a7435d
-SINCRONIZADO UTC: 2026-11-25T14:16:32.782539+00:00
+COMMIT ACTUAL (source_commit): ffc06dffd33b35e2ab67e185582e8735984e641b
+SINCRONIZADO UTC: 2026-11-26T13:50:56.144175+00:00
 PROTOCOLO DE VUELTA: 1.1
 
 INDICE COMPLETO DE ARCHIVOS PUBLICOS:
@@ -22,7 +22,7 @@ INDICE COMPLETO DE ARCHIVOS PUBLICOS:
 - cloudflare/schema.sql | 1566 bytes | sha256: 9fa7e8e05ed202bbf4d2c59c84b84b97497b0c41ad0f7fdc7bffe8e754e3640a
 - cloudflare/worker.js | 37700 bytes | sha256: 66f558073c3a9ab2ff478a94bf502e53feac9da2146ac1906ad72baff6f9f165
 - index.html | 1038718 bytes | sha256: 95816d14a320153c9686b1c37b5be3c6c2230fc827f92432d32a216e868c60ad
-- inicio.html | 49105 bytes | sha256: ed8d47f231f739cfd98233042dde4b33c625797b0b3f6fd1722e54ce7389fc33
+- inicio.html | 60324 bytes | sha256: 27f3e9f2ba9e10ad476cbca8f1e10c1ff186bbb36d342b01daafd1b0b4b61ea6
 - manifest.json | 1340 bytes | sha256: c6b21ca859e24d9d861d899c722fe22b26a25ee4f1c452592db31b4d41fb1497
 - sw.js | 1343 bytes | sha256: 6f2afad8b5f1801dbadd1b436b6c48299930194caf071bdbd29e334163d93210
 - tests/datos_prueba.json | 52526 bytes | sha256: db66997bbe34b71ef063326547139fd179332eecc0e56f1480cd956ff68d3e70
@@ -929,7 +929,7 @@ INSTRUCCIONES DEL ZIP DE VUELTA (DESDE CERO):
 - Entrega un ZIP llamado: COPILOT_A_ANTIGRAVITY_YYYYMMDD-HHMMSS-biopeat-<6hex>.zip
 - Incluye HANDOFF.json con:
   - protocol_version: "1.1", direction: "copilot_to_antigravity", origin_mode: "copilot_from_scratch"
-  - project: "biopeat", repo_url: "https://github.com/BioPeat/biopeat.git", branch: "main", source_commit: "c6c0307eb2d81cef5bc2d57106db500814a7435d"
+  - project: "biopeat", repo_url: "https://github.com/BioPeat/biopeat.git", branch: "main", source_commit: "ffc06dffd33b35e2ab67e185582e8735984e641b"
   - task_id único (>=8 chars), created_at, objective, files (con sha256 en minúsculas)
 - Incluye RESPUESTA.md, PRUEBAS.md y, si hay cambios, PATCH.diff y/o files/ (deleted_files opcional).
 - PROHIBIDO: ejecutables binarios, scripts no declarados, rutas .. o absolutas, secretos o rutas locales.

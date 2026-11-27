@@ -1,12 +1,12 @@
 # Catálogo actual de repositorios públicos
 
-Actualizado (UTC): `2026-11-26T13:50:56.144175+00:00`
+Actualizado (UTC): `2026-11-27T13:48:05.465883+00:00`
 
 Usa este catálogo cuando pidas una tarea a Copilot **desde cero** (sin traspaso previo de Antigravity).
 
 | Proyecto | Visibilidad | Commit actual | Archivos | Enlaces |
 |---|---|---|---:|---|
-| biopeat | Público | `ffc06dffd3` | 21 | [ESTADO.md](catalogo/biopeat/ESTADO.md) · [resumen.html](catalogo/biopeat/resumen.html) · [estado.json](catalogo/biopeat/estado.json) |
+| biopeat | Público | `c79c4cb385` | 24 | [ESTADO.md](catalogo/biopeat/ESTADO.md) · [resumen.html](catalogo/biopeat/resumen.html) · [estado.json](catalogo/biopeat/estado.json) |
 | Finanzas | Público | `9cb8b81621` | 30 | [ESTADO.md](catalogo/finanzas/ESTADO.md) · [resumen.html](catalogo/finanzas/resumen.html) · [estado.json](catalogo/finanzas/estado.json) |
 | estadisticas | Público | `d2b6ba9be4` | 35 | [ESTADO.md](catalogo/estadisticas/ESTADO.md) · [resumen.html](catalogo/estadisticas/resumen.html) · [estado.json](catalogo/estadisticas/estado.json) |
 

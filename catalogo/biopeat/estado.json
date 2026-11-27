@@ -4,12 +4,12 @@
   "repo_url": "https://github.com/BioPeat/biopeat.git",
   "pages_url": "https://biopeat.github.io/biopeat/",
   "branch": "main",
-  "commit": "ffc06dffd33b35e2ab67e185582e8735984e641b",
+  "commit": "c79c4cb385cb05b753769a7a70eb56b43039c5bd",
   "dirty_local": false,
   "public": true,
   "status": "synced",
-  "synced_at": "2026-11-26T13:50:56.144175+00:00",
-  "file_count": 21,
+  "synced_at": "2026-11-27T13:48:05.465883+00:00",
+  "file_count": 24,
   "omitted_count": 3,
   "estado_txt_path": "catalogo/biopeat/ESTADO_biopeat.txt",
   "files": [
@@ -35,28 +35,43 @@
     },
     {
       "path": "AGENTS.md",
-      "size": 13487,
-      "sha256": "9b91fb1b0d76d72974b47d62cb65f185bbff430b3bba858c8fbb14599c8defe4"
+      "size": 13704,
+      "sha256": "c7aee38215ea878fec5b13291e6479677e97ad573bd9f8a223045812bb5a0070"
     },
     {
       "path": "CONTEXTO_BIOPEAT.md",
-      "size": 21672,
-      "sha256": "c80c3a85379e4a34f383ca85667c2f260c2184a7350c36f34fb404409437799a"
+      "size": 21922,
+      "sha256": "6e205bc1af04c7daadfdec96f4c67cec6785abb6b11bb4118be1a83cc9f931ab"
     },
     {
       "path": "MAPA_DEL_CODIGO.md",
-      "size": 27252,
-      "sha256": "1548afd356f78c903ad2d8792c807b9eefa6cf01de6491977243d82923ecf38f"
+      "size": 26092,
+      "sha256": "2f7174bb735d9fd567ed9b0571b3d7eeff58e5cab3b0668e7782f7e42818dd0a"
     },
     {
       "path": "README.md",
-      "size": 2018,
-      "sha256": "f4b78c8f993e0b2c171e93348809f554ea2d9d13482433beffdfeea5ae5315f2"
+      "size": 2113,
+      "sha256": "f5e5a1b342b351dfa236d8a9ffce6439650353c45ea7ffb0a7d056d43ab76074"
     },
     {
-      "path": "actualizar.html",
-      "size": 35428,
-      "sha256": "f07f36aee6467661ff5d51ed681aaeee29aabf0df3138898fffbdc67cf88021d"
+      "path": "assets/app.js",
+      "size": 527645,
+      "sha256": "bdc941411801241f0ebe9e133b04a2c1ac0b1ea569b066cdb133840038cc895e"
+    },
+    {
+      "path": "assets/data.js",
+      "size": 54290,
+      "sha256": "4be26c4f274f512bc52b2ba05a982fe7da5728e8cae78e62b370c21fd78c421a"
+    },
+    {
+      "path": "assets/i18n-en.js",
+      "size": 164841,
+      "sha256": "3e3b8142e306b975ebc091fd35b13452dcd84637654f321469b8fa154d7fd377"
+    },
+    {
+      "path": "assets/styles.css",
+      "size": 236763,
+      "sha256": "816a3e3bf72881399f009e652aba7f71ac2ebe29c134870e4fa1fddfb1e517ab"
     },
     {
       "path": "cloudflare/config.json",
@@ -70,28 +85,28 @@
     },
     {
       "path": "cloudflare/worker.js",
-      "size": 37700,
-      "sha256": "66f558073c3a9ab2ff478a94bf502e53feac9da2146ac1906ad72baff6f9f165"
+      "size": 37860,
+      "sha256": "a7e8c05a822f76e838e59865f00b50c47d180e8cdcfb2c8ff5300b49ade6d7ac"
     },
     {
       "path": "index.html",
-      "size": 1038718,
-      "sha256": "95816d14a320153c9686b1c37b5be3c6c2230fc827f92432d32a216e868c60ad"
+      "size": 67558,
+      "sha256": "e577c40d1315174db7d4f55855ed8f752b8b7b35e3e985b8621e7965c877e02c"
     },
     {
       "path": "inicio.html",
-      "size": 60324,
-      "sha256": "27f3e9f2ba9e10ad476cbca8f1e10c1ff186bbb36d342b01daafd1b0b4b61ea6"
+      "size": 75375,
+      "sha256": "a5b7e9676200af20201ee84f2a01745ded66745d816d87a01f91e95bfc68db32"
     },
     {
       "path": "manifest.json",
       "size": 1340,
-      "sha256": "c6b21ca859e24d9d861d899c722fe22b26a25ee4f1c452592db31b4d41fb1497"
+      "sha256": "30feb2e83eca6d7fdf1c69f111ad3fde7b2b71e97f8510650686135b7847ea65"
     },
     {
       "path": "sw.js",
-      "size": 1343,
-      "sha256": "6f2afad8b5f1801dbadd1b436b6c48299930194caf071bdbd29e334163d93210"
+      "size": 1881,
+      "sha256": "ae479518f08e8dfcf47ba2a72593f165fb27d6467172854ab9a0f685db696b36"
     },
     {
       "path": "tests/datos_prueba.json",
@@ -100,40 +115,40 @@
     },
     {
       "path": "tests/smoke.py",
-      "size": 60320,
-      "sha256": "aeedf82d207600931969480dc8b52f64215e75a7e3ceadbf73907b8c0450d643"
+      "size": 64214,
+      "sha256": "5b80c098e2dd3486cdcf977959d8735966cea931de880a53579e83a76dba1b86"
     },
     {
       "path": "tools/mapa.py",
-      "size": 2027,
-      "sha256": "e2677b635de714e4ae18d9d2e18783db7eee277331c8b431c1ab14edc52749e8"
+      "size": 2152,
+      "sha256": "bf5c48cd9a35777bd0084f57421fcfb454ab8b3df5d6769c3fd875a4ebcdaed4"
     },
     {
       "path": "tools/security_check.py",
-      "size": 5092,
-      "sha256": "953dd917274ececd1be18664ba171da08d8ea8f231fc0782a6b2b41f17f444da"
+      "size": 5273,
+      "sha256": "fd18e4b6b26f8eddc9d793c294dbe49489cc761dd40aac1491a2cda1dbd057a9"
     },
     {
       "path": "tools/sincronizar_version.py",
-      "size": 1895,
-      "sha256": "71d096c3338f20ad40fff45fe9bfb95c50449eae5d7d930dabe78838baa101e3"
+      "size": 1974,
+      "sha256": "43d0e20400e47a62718326df5507e7078db2f7ecff1f5ff430223d0544a541b4"
     }
   ],
   "omitted": [
     {
       "path": "icon-192.png",
       "reason": "binario o minificado",
-      "size": 27891
+      "size": 31018
     },
     {
       "path": "icon-512.png",
       "reason": "binario o minificado",
-      "size": 145032
+      "size": 155340
     },
     {
       "path": "icon-maskable-512.png",
       "reason": "binario o minificado",
-      "size": 138347
+      "size": 144454
     }
   ],
   "urls": {

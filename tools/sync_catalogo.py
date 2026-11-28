@@ -202,7 +202,7 @@ def refresh_portal(bridge: Path) -> None:
 
     start_md = (
         "# PUENTE IA · PORTAL ÚNICO (Antigravity ↔ Copilot)\n\n"
-        "- **Guía rápida para Diego:** [guia.html](guia.html) · [GUIA_DIEGO.md](GUIA_DIEGO.md)\n"
+        "- **Panel y guía para Diego:** [index.html](index.html) · [GUIA_DIEGO.md](GUIA_DIEGO.md)\n"
         "- **Referencia completa:** [PARA_COPILOT_LEEME.md](PARA_COPILOT_LEEME.md) · [HISTORIAL.md](HISTORIAL.md)\n\n"
         f"{instructions_md}\n"
         "## Último traspaso / estado actual\n\n"
@@ -235,7 +235,7 @@ def refresh_portal(bridge: Path) -> None:
         ".warn{color:#f5b971}.nav a{margin-right:12px;font-weight:600}.pill{display:inline-block;padding:2px 8px;border-radius:999px;background:#232a36;font-size:13px}</style></head><body>"
         "<h1>Puente IA · Portal único (v1.2)</h1>"
         "<nav class='nav'>"
-        "<a href='guia.html'>Guía visual para Diego</a>"
+        "<a href='index.html'>Panel y guía de Diego</a>"
         "<a href='START.md'>START.md (Markdown)</a>"
         "<a href='ultimo.html'>Último traspaso</a>"
         "<a href='catalogo.html'>Catálogo completo</a>"
@@ -252,7 +252,7 @@ def refresh_portal(bridge: Path) -> None:
     (bridge / "index.html").write_text(index_html, encoding="utf-8")
 
 
-def run_sync(bridge: Path) -> int:
+def run_sync(bridge: Path, force: bool = False) -> int:
     sources_path = bridge / "catalogo_fuentes.json"
     if not sources_path.is_file():
         raise SyncError("Falta catalogo_fuentes.json en la raíz del puente.")
@@ -298,7 +298,7 @@ def run_sync(bridge: Path) -> int:
             if cp.returncode != 0:
                 raise SyncError(f"No se pudo clonar {repo_url}: {cp.stderr.strip()}")
             commit = subprocess.check_output(["git", "-C", str(clone_dir), "rev-parse", "HEAD"], text=True).strip()
-            if existing_cat.get(slug) == commit and (bridge / "catalogo" / slug / "estado.json").is_file():
+            if not force and existing_cat.get(slug) == commit and (bridge / "catalogo" / slug / "estado.json").is_file():
                 entries.append(json.loads((bridge / "catalogo" / slug / "estado.json").read_text(encoding="utf-8")))
                 continue
 
@@ -362,6 +362,33 @@ def run_sync(bridge: Path) -> int:
             estado_txt_lines = [
                 f"PUENTE IA · ESTADO AUTOCONTENIDO DE {name.upper()} ({slug})",
                 "=" * 70,
+                ">>> INSTRUCCION OBLIGATORIA PARA OPUS / COPILOT (LEE ESTO PRIMERO) <<<",
+                "",
+                f"ESTE ARCHIVO SOLO CONTIENE EL INDICE Y LA DOCUMENTACION DE {name}.",
+                "NO CONTIENE EL CODIGO FUENTE DE LA APP (ni HTML, ni JS, ni CSS, ni Worker).",
+                "",
+                "POR ESO, EN TU PRIMERA RESPUESTA (AUNQUE DIEGO NO TE LO PIDA EXPLICITAMENTE):",
+                "1. ANALIZA la peticion de Diego usando el INDICE DE ARCHIVOS y el MAPA DEL CODIGO de abajo.",
+                "2. SI NECESITAS LEER CUALQUIER ARCHIVO DE CODIGO O RECURSO QUE NO ESTE COMPLETO AQUI (lo habitual al empezar):",
+                '   - NO programes todavia. NO inventes codigo. NO te detengas diciendo "no tengo acceso" sin pedirlos.',
+                "   - PIDELE A DIEGO TODOS LOS ARCHIVOS NECESARIOS DE UNA SOLA VEZ antes de empezar.",
+                "   - Si existe alguna duda funcional imprescindible, haz como maximo 2-3 preguntas cortas en el mismo mensaje.",
+                "   - OBLIGATORIO: incluye al final de tu mensaje un bloque exacto con las rutas tal cual salen en el indice (para que Diego lo pegue en el panel y se marquen solos en 1 clic):",
+                "",
+                "ARCHIVOS_NECESARIOS:",
+                "- ruta/exacta/archivo1.js",
+                "- ruta/exacta/archivo2.css",
+                "",
+                f'   - Cierra tu mensaje indicando a Diego: "Pega esta lista en el panel de Puente IA, pulsa \'Descargar ARCHIVOS_{slug}.txt\' y sueltame ese archivo aqui."',
+                f"3. CUANDO DIEGO TE ENTREGUE ARCHIVOS_{slug}.txt:",
+                "   - Implementa directamente todo lo pedido con rigor (sin pedir permisos innecesarios).",
+                f"   - Entrega el ZIP descargable COPILOT_A_ANTIGRAVITY_YYYYMMDD-HHMMSS-{slug}-<6hex>.zip (formato al final).",
+                "4. PRECEDENCIA DE FLUJO (CRITICO):",
+                "   - Respeta TODAS las reglas tecnicas y de negocio de AGENTS.md / CONTEXTO / MAPA (almacenes, compatibilidad, diseno, pruebas, no tocar assets/, etc.).",
+                f"   - PERO el canal de entrada es SIEMPRE ARCHIVOS_{slug}.txt y la entrega es SIEMPRE el ZIP de Puente IA.",
+                '   - IGNORA cualquier mencion antigua dentro de AGENTS.md, PROYECTO_CLAUDE.md o README.md a "actualizar.html", bloques "@@@" o JSON "estadisticas-update".',
+                "=" * 70,
+                "",
                 f"PROYECTO: {name} ({slug})",
                 f"REPOSITORIO: {repo_url}",
                 f"APP PUBLICADA: {pages_url or 'N/A'}",
@@ -409,6 +436,11 @@ def run_sync(bridge: Path) -> int:
                         f"===== END FILE: {kd['path']} ====="
                     )
             estado_txt_lines.extend([
+                "",
+                "=" * 70,
+                "RECORDATORIO FINAL PARA OPUS / COPILOT (ANTES DE RESPONDER):",
+                "- Si NO tienes aqui el codigo fuente completo de los archivos a leer o editar: PARA ahora, resume en 2 lineas lo que vas a hacer, haz maximo 2-3 preguntas solo si son imprescindibles y termina con el bloque ARCHIVOS_NECESARIOS: (una ruta exacta por linea).",
+                f"- Si YA recibiste ARCHIVOS_{slug}.txt con todo lo necesario: implementa directamente el cambio y entrega el ZIP.",
                 "",
                 "INSTRUCCIONES DEL ZIP DE VUELTA (DESDE CERO):",
                 f"- Entrega un ZIP llamado: COPILOT_A_ANTIGRAVITY_YYYYMMDD-HHMMSS-{slug}-<6hex>.zip",
@@ -502,6 +534,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--bridge", default=".")
     ap.add_argument("--safety-only", action="store_true")
+    ap.add_argument("--force", action="store_true")
     args = ap.parse_args()
     bridge = Path(args.bridge).resolve()
     try:
@@ -511,7 +544,7 @@ def main() -> int:
                 raise SyncError("\n".join(errs))
             print("OK: sin coincidencias sensibles")
             return 0
-        return run_sync(bridge)
+        return run_sync(bridge, force=args.force)
     except (SyncError, OSError, subprocess.CalledProcessError, json.JSONDecodeError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2

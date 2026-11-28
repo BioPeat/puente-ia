@@ -62,22 +62,31 @@ let balBusy = false;
 async function syncBalances(manual = false) {
   if (!workerEndpoints().length || balBusy) return; balBusy = true;
   try {
-    const before = clone(state), r = await api('/balances', { timeout: 30000 }), errs = []; let structural = false;
-    const derivs = [];
-    for (const [ex, data] of Object.entries(r.exchanges || {})) {
-      let a = state.accounts.find(x => x.api === ex);
-      if (!a) { a = { id: 'a_api_' + ex, name: EXCH[ex] || ex, kind: 'exchange', inst: EXCH[ex] || ex, currency: 'EUR', api: ex, reportsSpain: ex === 'binance' }; state.accounts.push(a); structural = true; }
-      const assets = {}; for (const [k, v] of Object.entries(data.assets || {})) { const s = normAsset(k); assets[s] = (assets[s] || 0) + (+v || 0); ensureAsset(s); }
-      state.apiBal[a.id] = { ts: Date.now(), assets };
-      for (const p of data.positions || []) derivs.push({ ...p, acc: a.id, exchange: p.exchange || ex });
-      for (const w of data.warnings || []) errs.push((EXCH[ex] || ex) + ': ' + w);
+    const before = clone(state), errs = []; let structural = false;
+    try {
+      const r = await api('/balances', { timeout: 30000 });
+      const derivs = [];
+      for (const [ex, data] of Object.entries(r.exchanges || {})) {
+        let a = state.accounts.find(x => x.api === ex);
+        if (!a) { a = { id: 'a_api_' + ex, name: EXCH[ex] || ex, kind: 'exchange', inst: EXCH[ex] || ex, currency: 'EUR', api: ex, reportsSpain: ex === 'binance' }; state.accounts.push(a); structural = true; }
+        const assets = {}; for (const [k, v] of Object.entries(data.assets || {})) { const s = normAsset(k); assets[s] = (assets[s] || 0) + (+v || 0); ensureAsset(s); }
+        state.apiBal[a.id] = { ts: Date.now(), assets };
+        for (const p of data.positions || []) derivs.push({ ...p, acc: a.id, exchange: p.exchange || ex });
+        for (const w of data.warnings || []) errs.push((EXCH[ex] || ex) + ': ' + w);
+      }
+      for (const [ex, e] of Object.entries(r.errors || {})) errs.push((EXCH[ex] || ex) + ': ' + e);
+      state.apiDerivs = derivs;
+    } catch (exErr) {
+      errs.push(exErr.message);
     }
-    for (const [ex, e] of Object.entries(r.errors || {})) errs.push((EXCH[ex] || ex) + ': ' + e);
-    state.apiDerivs = derivs; state.apiErrors = errs; state.apiTs = Date.now();
+    state.apiTs = Date.now();
     if (structural) { stampChanges(before); save(); } else save(false);
     await syncOnChainWallets(false);
-    await syncConnectedBanks(false);
+    const bankRes = await syncConnectedBanks(false, { force: manual });
+    if (bankRes?.errors?.length) errs.push(...bankRes.errors);
+    state.apiErrors = errs;
     await refreshPrices();
+    snapshot();
     if (manual) toast(errs.length ? 'Actualizado con avisos: ' + errs.join(' · ') : 'Saldos y derivados actualizados');
   } catch (e) { state.apiErrors = [e.message]; if (manual) toast(e.message); }
   finally { balBusy = false; if (ready) render(); }
@@ -128,7 +137,86 @@ async function syncOnChainWallets(manual = false) {
 }
 
 // ===== Open Banking PSD2 gratuito (Enable Banking) =====
-async function openBankConnectModal() {
+function isFileImportSrc(src) {
+  const s = String(src || '');
+  return !!s && s !== 'enablebanking' && s !== 'manual' && (/\.(xlsx?|csv|ofx|qfx|qif)$/i.test(s) || s === 'gemini-ia');
+}
+function hasUploadedBankExcel(accId) {
+  return state.tx.some(t => t.acc === accId && isFileImportSrc(t.src));
+}
+function purgeBankExcelForAccount(acc, opts = { removeSiblingExcelAccounts: true }) {
+  if (!acc) return { removedTx: 0, removedAccs: 0 };
+  const beforeTx = state.tx.length;
+  state.tx = state.tx.filter(t => !(t.acc === acc.id && isFileImportSrc(t.src)));
+  let removedTx = beforeTx - state.tx.length, removedAccs = 0;
+  delete acc.fmt;
+  delete acc.ebPending;
+  acc.manualBal = 0;
+  if (acc.ebUid) acc.useApi = true;
+  const targetInst = instKey(acc);
+  if (opts.removeSiblingExcelAccounts !== false && targetInst) {
+    const siblings = state.accounts.filter(other =>
+      other.id !== acc.id && other.kind === 'bank' && !other.ebUid && instKey(other) === targetInst
+      && (other.fmt === targetInst || state.tx.some(t => t.acc === other.id && isFileImportSrc(t.src)) || !state.tx.some(t => t.acc === other.id && t.src === 'manual'))
+    );
+    if (siblings.length) {
+      const sibIds = new Set(siblings.map(x => x.id));
+      const b2 = state.tx.length;
+      state.tx = state.tx.filter(t => !sibIds.has(t.acc));
+      removedTx += b2 - state.tx.length;
+      state.accounts = state.accounts.filter(a => !sibIds.has(a.id));
+      for (const sid of sibIds) delete state.apiBal[sid];
+      removedAccs = siblings.length;
+      if (typeof activeAccId === 'string' && sibIds.has(activeAccId)) activeAccId = acc.id;
+    }
+  }
+  return { removedTx, removedAccs };
+}
+async function purgeBankExcelByAccId(accId) {
+  const acc = accById(accId);
+  if (!acc) return;
+  let removed = 0;
+  change(() => {
+    const res = purgeBankExcelForAccount(acc, { removeSiblingExcelAccounts: true });
+    removed = res.removedTx;
+    if (!acc.ebUid) acc.ebPending = true;
+  }, removed ? 'Excel eliminado (' + removed + ' movimientos)' : 'Datos de Excel limpiados');
+  if (acc.ebUid) await syncConnectedBanks(true, { force: true, fullHistory: true });
+}
+function reconcileEnableBankingAccounts() {
+  const ebAccs = state.accounts.filter(a => a.ebUid);
+  let purged = false;
+  if (ebAccs.length) {
+    const needPurge = ebAccs.some(a => hasUploadedBankExcel(a.id) || (instKey(a) && state.accounts.some(o => o.id !== a.id && o.kind === 'bank' && !o.ebUid && instKey(o) === instKey(a))));
+    if (needPurge) {
+      const before = clone(state);
+      for (const a of ebAccs) purgeBankExcelForAccount(a, { removeSiblingExcelAccounts: true });
+      stampChanges(before);
+      save();
+      purged = true;
+    }
+  }
+  const workerUrl = normBase(state.settings.worker || '');
+  const isRealWorker = !!workerUrl && !/^https:\/\/worker\.test\b/i.test(workerUrl);
+  if (isRealWorker && state.workerInfo?.openBanking && !state.stamps?.migrations?.santanderExcelPurged) {
+    const sanExcel = state.accounts.filter(a => a.kind === 'bank' && !a.ebUid && instKey(a) === 'santander' && state.tx.some(t => t.acc === a.id && isFileImportSrc(t.src)));
+    const onlySampleFixture = sanExcel.length && sanExcel.every(a => state.tx.filter(t => t.acc === a.id && isFileImportSrc(t.src)).every(t => t.src === 'santander_ejemplo.xlsx'));
+    if (sanExcel.length && !onlySampleFixture) {
+      const before = clone(state);
+      const keep = sanExcel[0];
+      purgeBankExcelForAccount(keep, { removeSiblingExcelAccounts: true });
+      keep.ebPending = true;
+      state.stamps.migrations = { ...(state.stamps.migrations || {}), santanderExcelPurged: Date.now() };
+      stampChanges(before);
+      save();
+      purged = true;
+      toast('Excel de Santander eliminado. Autoriza Enable Banking en Cuentas para sincronizar.');
+    }
+  }
+  if (purged && ready) render();
+}
+
+async function openBankConnectModal(initialFilter = '') {
   const hasEB = !!(state.settings.worker && state.workerInfo?.openBanking);
   modal('Conectar banco automático (PSD2 gratuito)', !state.settings.worker
     ? '<div class="callout info">Para conectar tu banco automáticamente con Open Banking necesitas configurar antes tu Cloudflare Worker en Ajustes.</div><div class="row ch-actions">' + btn('Ir a Ajustes', 'data-go="ajustes"', 'primary') + btn('Importar Excel / CSV ahora', 'data-act="import"') + '</div>'
@@ -136,8 +224,8 @@ async function openBankConnectModal() {
       ? '<p class="ch-note">Finanzas soporta conexión bancaria oficial PSD2 mediante <b>Enable Banking</b> (compatible con <b>Banco Santander, Revolut, BBVA, CaixaBank, ING, Sabadell, N26 y +2.500 bancos europeos</b>).</p>'
         + '<div class="callout">Guarda tu <code>ENABLE_BANKING_APP_ID</code> y <code>ENABLE_BANKING_PRIVATE_KEY</code> directamente desde el Centro de conexiones sin salir de la app.</div>'
         + '<div class="row ch-actions">' + btn('Configurar PSD2 en la app', 'id="eb-go-hub"', 'primary') + btn('Subir Excel / CSV mientras tanto', 'data-act="import"') + '</div>'
-      : '<p class="ch-note">Elige el país y tu entidad para autorizar acceso oficial PSD2 de <b>solo lectura</b> durante 90 días (Santander, Revolut, BBVA, CaixaBank, ING, Sabadell, N26 y +2.500 bancos).</p>'
-        + '<div class="form"><label class="f ch-field"><span class="ch-label">País</span><select id="eb-country" class="ch-input"><option value="ES" selected>España (ES)</option><option value="LT">Lituania · Revolut (LT)</option><option value="DE">Alemania · N26 (DE)</option><option value="IE">Irlanda (IE)</option><option value="FR">Francia (FR)</option><option value="PT">Portugal (PT)</option><option value="IT">Italia (IT)</option><option value="NL">Países Bajos (NL)</option></select></label><label class="f ch-field"><span class="ch-label">Buscar entidad</span><input type="search" id="eb-filter" class="ch-input" placeholder="Santander, Revolut, BBVA, CaixaBank, ING…"></label></div>'
+      : '<p class="ch-note">Elige el país y tu entidad para autorizar acceso oficial PSD2 de <b>solo lectura</b> durante hasta 180 días (el máximo legal PSD2 que permite tu banco: Santander, Revolut, BBVA, CaixaBank, ING, Sabadell, N26 y +2.500 bancos).</p>'
+        + '<div class="form"><label class="f ch-field"><span class="ch-label">País</span><select id="eb-country" class="ch-input"><option value="ES" selected>España (ES)</option><option value="LT">Lituania · Revolut (LT)</option><option value="DE">Alemania · N26 (DE)</option><option value="IE">Irlanda (IE)</option><option value="FR">Francia (FR)</option><option value="PT">Portugal (PT)</option><option value="IT">Italia (IT)</option><option value="NL">Países Bajos (NL)</option></select></label><label class="f ch-field"><span class="ch-label">Buscar entidad</span><input type="search" id="eb-filter" class="ch-input" value="' + esc(initialFilter) + '" placeholder="Santander, Revolut, BBVA, CaixaBank, ING…"></label></div>'
         + '<div id="eb-list" class="ch-bank-list"><p class="muted">Cargando bancos autorizados…</p></div>');
   if (!hasEB && $('eb-go-hub')) {
     $('eb-go-hub').onclick = () => openConnectHub('bancos');
@@ -151,9 +239,12 @@ async function openBankConnectModal() {
         const paintList = () => {
           const q = val('eb-filter').toLowerCase();
           const list = all.filter(x => !q || String(x.name || '').toLowerCase().includes(q)).slice(0, 40);
-          $('eb-list').innerHTML = list.length ? list.map(b => '<button type="button" class="account-line ch-bank-item" data-eb-name="' + esc(b.name) + '" data-eb-country="' + esc(b.country || c) + '"><span class="account-mark">' + ico('bank') + '</span><span><b>' + esc(b.name) + '</b><small>' + esc(b.country || c) + ' · PSD2</small></span><span class="tag brand">Autorizar →</span></button>').join('') : '<p class="muted">Ningún banco coincide con el filtro.</p>';
+          $('eb-list').innerHTML = list.length ? list.map(b => {
+            const maxDays = +b.maximum_consent_validity ? Math.round(+b.maximum_consent_validity / 86400) : 0;
+            return '<button type="button" class="account-line ch-bank-item" data-eb-name="' + esc(b.name) + '" data-eb-country="' + esc(b.country || c) + '" data-eb-max-valid="' + esc(b.maximum_consent_validity || '') + '"><span class="account-mark">' + ico('bank') + '</span><span><b>' + esc(b.name) + '</b><small>' + esc(b.country || c) + ' · PSD2' + (maxDays ? ' · hasta ' + maxDays + ' días' : '') + '</small></span><span class="tag brand">Autorizar →</span></button>';
+          }).join('') : '<p class="muted">Ningún banco coincide con el filtro.</p>';
           $$('[data-eb-name]', $('eb-list')).forEach(btnEl => {
-            btnEl.onclick = () => startBankAuth(btnEl.dataset.ebName, btnEl.dataset.ebCountry);
+            btnEl.onclick = () => startBankAuth(btnEl.dataset.ebName, btnEl.dataset.ebCountry, +btnEl.dataset.ebMaxValid || 0);
           });
         };
         $('eb-filter').oninput = paintList;
@@ -165,64 +256,174 @@ async function openBankConnectModal() {
   }
 }
 
-async function startBankAuth(aspspName, country) {
+async function startBankAuth(aspspName, country, maxValidSec = 0) {
   try {
     toast('Preparando autorización oficial con ' + aspspName + '…');
-    const redirectUrl = location.origin + location.pathname;
+    const redirectUrl = location.origin + location.pathname.replace(/\/index\.html$/i, '/');
     const st = 'eb_' + uid();
-    sessionStorage.setItem('eb_pending', JSON.stringify({ state: st, aspspName, country }));
-    const r = await api('/bank/auth', { method: 'POST', body: JSON.stringify({ aspspName, country, redirectUrl, state: st }) });
+    const pending = JSON.stringify({ state: st, aspspName, country, ts: Date.now() });
+    try { localStorage.setItem('eb_pending', pending); } catch (e) { }
+    try { sessionStorage.setItem('eb_pending', pending); } catch (e) { }
+    const r = await api('/bank/auth', { method: 'POST', body: JSON.stringify({ aspspName, country, redirectUrl, state: st, maxValidSec: +maxValidSec || 0 }) });
     if (r.url) location.href = r.url;
     else throw new Error('No se recibió URL de autorización del banco.');
   } catch (e) { toast('Open Banking: ' + e.message); }
 }
 
+async function quickAuthorizeSantander() {
+  if (!state.settings.worker || !state.workerInfo?.openBanking) return openBankConnectModal('Santander');
+  try {
+    toast('Conectando con Banco Santander (PSD2)…');
+    const r = await api('/bank/aspsps?country=ES');
+    const list = (r.aspsps || []).filter(b => /santander/i.test(String(b.name || '')));
+    const exact = list.find(b => /^banco santander$/i.test(String(b.name || '').trim()))
+      || list.find(b => !/corporate|empresas|business|private|consumer/i.test(String(b.name || '')))
+      || list[0];
+    if (exact) return await startBankAuth(exact.name, exact.country || 'ES', +exact.maximum_consent_validity || 0);
+  } catch (e) { toast('Open Banking: ' + e.message); }
+  return openBankConnectModal('Santander');
+}
+
+const normIban = s => String(s || '').replace(/\s+/g, '').toUpperCase();
+
 async function handleBankCallback() {
   const sp = new URLSearchParams(location.search);
-  const code = sp.get('code'), st = sp.get('state');
-  if (!code || !st || !st.startsWith('eb_')) return;
+  const code = sp.get('code'), st = sp.get('state'), errCode = sp.get('error'), errDesc = sp.get('error_description');
+  let rawPending = '';
+  try { rawPending = localStorage.getItem('eb_pending') || sessionStorage.getItem('eb_pending') || ''; } catch (e) { }
+  let meta = {};
+  try {
+    const parsed = rawPending ? JSON.parse(rawPending) : {};
+    if (parsed && (!parsed.ts || Date.now() - parsed.ts < 30 * 60e3)) meta = parsed;
+  } catch (e) { }
+  if (errCode && (st?.startsWith('eb_') || meta.state)) {
+    history.replaceState(null, '', location.pathname + location.hash);
+    try { localStorage.removeItem('eb_pending'); sessionStorage.removeItem('eb_pending'); } catch (e) { }
+    toast('Autorización cancelada o rechazada: ' + (errDesc || errCode));
+    return true;
+  }
+  if (!code || !st || !st.startsWith('eb_')) return false;
   history.replaceState(null, '', location.pathname + location.hash);
-  let meta = {}; try { meta = JSON.parse(sessionStorage.getItem('eb_pending') || '{}'); sessionStorage.removeItem('eb_pending'); } catch (e) { }
+  try { localStorage.removeItem('eb_pending'); sessionStorage.removeItem('eb_pending'); } catch (e) { }
   try {
     toast('Completando conexión con ' + (meta.aspspName || 'tu banco') + '…');
     const r = await api('/bank/session', { method: 'POST', body: JSON.stringify({ code }) });
-    const accs = r.accounts || [];
-    if (!accs.length) return toast('El banco no devolvió cuentas autorizadas.');
+    const accs = r.accounts || r.accounts_data || [];
+    if (!accs.length) { toast('El banco no devolvió cuentas autorizadas.'); return true; }
+    const bankName = meta.aspspName || r.aspsp?.name || 'Banco';
+    const targetInst = instKey({ name: bankName, inst: bankName });
+    let totalPurged = 0;
     change(() => {
       for (const ba of accs) {
-        const uidB = ba.uid, iban = ba.account_id?.iban || '';
-        let a = state.accounts.find(x => x.ebUid === uidB || (iban && x.iban === iban));
+        const uidB = ba.uid, hashB = ba.identification_hash || '', iban = normIban(ba.account_id?.iban || ''), last4 = iban ? iban.slice(-4) : '';
+        let a = state.accounts.find(x => x.ebUid === uidB)
+          || (hashB ? state.accounts.find(x => x.ebHash === hashB) : null)
+          || (iban ? state.accounts.find(x => normIban(x.iban) === iban) : null)
+          || (last4 && targetInst ? state.accounts.find(x => x.kind === 'bank' && normIban(x.iban).slice(-4) === last4 && instKey(x) === targetInst) : null)
+          || (targetInst ? state.accounts.find(x => x.kind === 'bank' && !x.ebUid && instKey(x) === targetInst) : null);
         if (!a) {
-          a = { id: 'a_' + uid(), name: (meta.aspspName || 'Banco') + (iban ? ' ·' + iban.slice(-4) : ''), kind: 'bank', inst: meta.aspspName || '', currency: ba.currency || 'EUR', iban, manualBal: 0 };
+          a = { id: 'a_' + uid(), name: bankName + (last4 ? ' ·' + last4 : ''), kind: 'bank', inst: bankName, currency: ba.currency || 'EUR', iban, manualBal: 0 };
           state.accounts.push(a);
+        } else if (iban && normIban(a.iban) !== iban) {
+          a.iban = iban;
         }
-        a.ebUid = uidB; a.ebSessionId = r.session_id || ''; a.ebValidUntil = r.access?.valid_until || addDays(today(), 89);
+        if (bankName && !a.inst) a.inst = bankName;
+        a.ebUid = uidB;
+        if (hashB) a.ebHash = hashB;
+        a.ebSessionId = r.session_id || '';
+        a.ebValidUntil = r.access?.valid_until || addDays(today(), 89);
+        a.ebLastError = '';
+        const res = purgeBankExcelForAccount(a, { removeSiblingExcelAccounts: true });
+        totalPurged += res.removedTx;
       }
-    }, accs.length + ' cuenta(s) bancaria(s) conectada(s)');
-    await syncConnectedBanks(true);
-  } catch (e) { toast('Error al finalizar conexión bancaria: ' + e.message); }
+    }, accs.length + ' cuenta(s) conectada(s)' + (totalPurged ? ' · Excel anterior eliminado' : ''));
+    await syncConnectedBanks(true, { force: true, fullHistory: true });
+    if (syncOn()) await syncNow();
+    return true;
+  } catch (e) { toast('Error al finalizar conexión bancaria: ' + e.message); return true; }
 }
 
-async function syncConnectedBanks(manual = false) {
+async function syncConnectedBanks(manual = false, opts = {}) {
   const ebAccs = state.accounts.filter(a => a.ebUid);
-  if (!ebAccs.length || !state.settings.worker) return;
+  if (!ebAccs.length || !workerEndpoints().length) return { updated: 0, added: 0, errors: [] };
+  const force = !!(manual || opts.force);
+  const now = Date.now();
+  const dueAccs = force ? ebAccs : ebAccs.filter(a => {
+    const last = Math.max(a.ebBalTs || 0, a.ebSyncAttemptTs || 0);
+    const wait = a.ebLastError ? 10 * 60e3 : 30 * 60e3;
+    return !last || (now - last) >= wait;
+  });
+  if (!dueAccs.length) return { updated: 0, added: 0, errors: [] };
   try {
-    const r = await api('/bank/sync', { method: 'POST', timeout: 30000, body: JSON.stringify({ accounts: ebAccs.map(a => ({ uid: a.ebUid, currency: a.currency || 'EUR' })), dateFrom: addDays(today(), -60) }) });
-    let added = 0;
-    change(() => {
-      const seen = new Set(state.tx.map(txKey));
-      for (const res of r.accounts || []) {
-        const a = state.accounts.find(x => x.ebUid === res.uid); if (!a) continue;
-        if (res.bal != null && isFinite(res.bal)) a.manualBal = res.bal;
-        (res.tx || []).forEach((p, i) => {
-          const t = { id: 't_' + uid() + i, acc: a.id, date: p.date, desc: p.desc, amount: round(p.amount), bal: null, ord: i, src: 'enablebanking' };
-          t.cat = categorize(t); const k = txKey(t);
-          if (!seen.has(k)) { seen.add(k); state.tx.push(t); added++; }
-        });
+    const reqAccounts = dueAccs.map(a => {
+      const needsFull = !!(opts.fullHistory || !state.tx.some(t => t.acc === a.id && t.src === 'enablebanking'));
+      return { uid: a.ebUid, currency: a.currency || 'EUR', dateFrom: addDays(today(), needsFull ? -90 : -60), strategy: needsFull ? 'longest' : 'default' };
+    });
+    const r = await api('/bank/sync', { method: 'POST', timeout: 30000, body: JSON.stringify({ accounts: reqAccounts, dateFrom: addDays(today(), -60) }) });
+    let added = 0, updated = 0, structural = false;
+    const bankErrs = [];
+    const before = clone(state);
+    for (const a of dueAccs) {
+      const p = purgeBankExcelForAccount(a, { removeSiblingExcelAccounts: true });
+      if (p.removedTx || p.removedAccs) structural = true;
+    }
+    for (const rawErr of r.errors || []) {
+      const m = String(rawErr || '').match(/^([^:]+):\s*(.*)$/);
+      const a = m && state.accounts.find(x => x.ebUid === m[1]);
+      const msg = m ? m[2] : String(rawErr || 'Error desconocido');
+      if (a) {
+        a.ebSyncAttemptTs = Date.now();
+        if ((a.ebLastError || '') !== msg) { a.ebLastError = msg; structural = true; }
+        bankErrs.push(a.name + ': ' + msg);
+      } else {
+        bankErrs.push(msg);
       }
-    }, '');
-    if (manual) toast(added ? added + ' movimientos bancarios sincronizados' : 'Bancos conectados al día');
-  } catch (e) { if (manual) toast('Bancos PSD2: ' + e.message); }
+    }
+    const seenKey = new Set(state.tx.map(txKey));
+    for (const res of r.accounts || []) {
+      const a = state.accounts.find(x => x.ebUid === res.uid); if (!a) continue;
+      a.ebSyncAttemptTs = Date.now();
+      const warnMsg = (res.warnings || []).join(' · ');
+      if ((a.ebLastError || '') !== warnMsg) { a.ebLastError = warnMsg; structural = true; }
+      for (const w of res.warnings || []) bankErrs.push(a.name + ': ' + w);
+      if (res.bal != null && isFinite(res.bal)) {
+        const cur = res.currency || a.currency || 'EUR', valBal = round(res.bal);
+        state.apiBal[a.id] = { ts: Date.now(), assets: { [cur]: valBal }, src: 'enablebanking', balanceType: res.balanceType || '' };
+        if (a.ebBal !== valBal) { a.ebBal = valBal; structural = true; }
+        a.ebBalTs = Date.now();
+        updated++;
+      }
+      const seenExt = new Set(state.tx.filter(t => t.acc === a.id && t.extId).map(t => t.extId));
+      (res.tx || []).forEach((p, i) => {
+        if (p.id && seenExt.has(p.id)) return;
+        const balVal = p.bal != null && isFinite(p.bal) ? round(p.bal) : null;
+        const t = { id: 't_' + uid() + i, acc: a.id, date: p.date, desc: p.desc, amount: round(p.amount), bal: balVal, ord: i, src: 'enablebanking', ...(p.id ? { extId: p.id } : {}) };
+        t.cat = categorize(t);
+        const k = txKey(t);
+        if (seenKey.has(k)) return;
+        seenKey.add(k);
+        if (p.id) seenExt.add(p.id);
+        state.tx.push(t);
+        added++;
+        structural = true;
+      });
+    }
+    const ebPrefix = new RegExp('^(' + ebAccs.map(a => a.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + '):');
+    state.apiErrors = [...(state.apiErrors || []).filter(e => !ebPrefix.test(e) && !/^Bancos PSD2:/i.test(e)), ...bankErrs];
+    if (structural) { stampChanges(before); save(); } else save(false);
+    snapshot();
+    if (manual) {
+      if (bankErrs.length) toast('Bancos PSD2: ' + bankErrs.join(' · '));
+      else toast(added ? added + ' movimientos bancarios sincronizados' : updated ? 'Saldo bancario actualizado' : 'Bancos conectados al día');
+      if (ready) render();
+    }
+    return { updated, added, errors: bankErrs };
+  } catch (e) {
+    dueAccs.forEach(a => { a.ebSyncAttemptTs = Date.now(); });
+    save(false);
+    if (manual) toast('Bancos PSD2: ' + e.message);
+    return { updated: 0, added: 0, errors: ['Bancos PSD2: ' + e.message] };
+  }
 }
 
 const VAULT_GROUPS = {
@@ -403,14 +604,18 @@ function openConnectHub(initialTab = 'bancos') {
     + envTag('eb')
     + '</div>';
 
+  const ebAccsList = state.accounts.filter(a => a.ebUid);
+  const hasSanEb = ebAccsList.some(a => instKey(a) === 'santander');
   const paneBancos = '<div data-hub-pane="bancos"' + (curTab === 'bancos' ? '' : ' style="display:none"') + '>'
     + '<div class="ch-head"><div><b>Open Banking PSD2 · Cualquier banco europeo</b><div class="ch-note">Enable Banking (0 € uso personal) · Acceso oficial de solo lectura</div></div><div class="row">' + envTag('eb') + badge(ebOn) + '</div></div>'
     + '<p class="ch-note">Conecta automáticamente <b>Banco Santander, Revolut, BBVA, CaixaBank, ING, Sabadell, N26 y +2.500 bancos europeos</b>, o importa tus extractos por archivo o captura.</p>'
     + (ebOn
-      ? '<div class="callout ok"><b>Enable Banking activo en tu Worker.</b>'
-        + (ebAccCount ? ' Tienes <b>' + ebAccCount + ' cuenta(s)</b> conectada(s).' : ' Autoriza tu entidad bancaria oficial PSD2 en segundos.')
+      ? '<div class="callout ' + (ebAccsList.some(a => a.ebLastError) ? 'warn' : 'ok') + '"><b>Enable Banking activo en tu Worker.</b>'
+        + (ebAccCount ? ' Tienes <b>' + ebAccCount + ' cuenta(s)</b> conectada(s).' : ' Aún no has autorizado ninguna cuenta bancaria: pulsa abajo para conectar tu banco.')
+        + (ebAccsList.length ? '<div class="list mt-8">' + ebAccsList.map(a => '<div class="account-line"><span class="account-mark">' + ico('bank') + '</span><span><b>' + esc(a.name) + '</b><small>' + (a.ebLastError ? esc(a.ebLastError) : (a.ebBalTs ? 'Sync ' + ago(a.ebBalTs) : 'Conectada') + (a.ebValidUntil ? ' · válida hasta ' + esc(a.ebValidUntil.slice(0, 10)) : '')) + '</small></span><span class="tag ' + (a.ebLastError ? 'err' : 'ok') + '">' + (a.ebLastError ? 'Revisar' : 'PSD2') + '</span></div>').join('') + '</div>' : '')
         + '<div class="row ch-actions">'
-        + btn(ico('bank') + 'Elegir banco y autorizar', 'data-act="bank-connect"', 'primary')
+        + (!hasSanEb ? btn(ico('bank') + 'Conectar Banco Santander', 'data-act="eb-quick-santander"', 'primary') : '')
+        + btn(ico('bank') + (hasSanEb ? 'Elegir banco y autorizar' : 'Otro banco'), 'data-act="bank-connect"', hasSanEb ? 'primary' : 'small')
         + (ebAccCount ? btn(ico('sync') + 'Sincronizar bancos ahora', 'data-hub-act="sync-banks"', 'small') : '')
         + '</div></div>'
       : '')

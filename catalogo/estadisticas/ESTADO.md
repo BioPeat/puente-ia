@@ -5,7 +5,7 @@
 - **App publicada:** https://biopeat.github.io/estadisticas/
 - **Rama:** `main`
 - **Commit actual (`source_commit`):** `d2b6ba9be4dec2cf0f4d5e158b78b089a8f61c80`
-- **Sincronizado (UTC):** 2026-11-26T13:50:56.144175+00:00
+- **Sincronizado (UTC):** 2026-11-28T12:47:08.443514+00:00
 - **Archivos de texto legibles incluidos:** 35
 
 ## Lectura rápida recomendada (para empezar desde cero en Copilot)

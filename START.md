@@ -1,6 +1,6 @@
 # PUENTE IA · PORTAL ÚNICO (Antigravity ↔ Copilot)
 
-- **Guía rápida para Diego:** [guia.html](guia.html) · [GUIA_DIEGO.md](GUIA_DIEGO.md)
+- **Panel y guía para Diego:** [index.html](index.html) · [GUIA_DIEGO.md](GUIA_DIEGO.md)
 - **Referencia completa:** [PARA_COPILOT_LEEME.md](PARA_COPILOT_LEEME.md) · [HISTORIAL.md](HISTORIAL.md)
 
 ## INSTRUCCIONES OBLIGATORIAS PARA COPILOT (Protocolo 1.1)
@@ -40,6 +40,6 @@ Sin incidencias adicionales.
 
 | Proyecto | Visibilidad | Commit actual (`source_commit`) | Enlaces directos |
 |---|---|---|---|
-| biopeat | Público | `c79c4cb385cb05b753769a7a70eb56b43039c5bd` | [ESTADO.md](catalogo/biopeat/ESTADO.md) · [resumen.html](catalogo/biopeat/resumen.html) · [estado.json](catalogo/biopeat/estado.json) · [AGENTS.md](catalogo/biopeat/files/AGENTS.md) |
-| Finanzas | Público | `9cb8b81621da18cfbf4a558c5cd64fb7bb1e3b47` | [ESTADO.md](catalogo/finanzas/ESTADO.md) · [resumen.html](catalogo/finanzas/resumen.html) · [estado.json](catalogo/finanzas/estado.json) · [AGENTS.md](catalogo/finanzas/files/AGENTS.md) |
+| biopeat | Público | `37a739f533a135013931b269c378d19af62daf3c` | [ESTADO.md](catalogo/biopeat/ESTADO.md) · [resumen.html](catalogo/biopeat/resumen.html) · [estado.json](catalogo/biopeat/estado.json) · [AGENTS.md](catalogo/biopeat/files/AGENTS.md) |
+| Finanzas | Público | `6b246e0353ec5c7f7432339a60a30989f5316a03` | [ESTADO.md](catalogo/finanzas/ESTADO.md) · [resumen.html](catalogo/finanzas/resumen.html) · [estado.json](catalogo/finanzas/estado.json) · [AGENTS.md](catalogo/finanzas/files/AGENTS.md) |
 | estadisticas | Público | `d2b6ba9be4dec2cf0f4d5e158b78b089a8f61c80` | [ESTADO.md](catalogo/estadisticas/ESTADO.md) · [resumen.html](catalogo/estadisticas/resumen.html) · [estado.json](catalogo/estadisticas/estado.json) · [AGENTS.md](catalogo/estadisticas/files/AGENTS.md) |

@@ -107,6 +107,12 @@ function trackedAssets() {
 
 // ===== Cartera, saldos y derivados en tiempo real =====
 function bankBalance(a) {
+  if (a.ebUid && a.useApi !== false) {
+    const cur = a.currency || 'EUR';
+    const apiVal = state.apiBal?.[a.id]?.assets?.[cur];
+    if (apiVal != null && isFinite(apiVal)) return +apiVal;
+    if (a.ebBal != null && isFinite(a.ebBal)) return +a.ebBal;
+  }
   const txs = state.tx.filter(t => t.acc === a.id).sort((x, y) => x.date.localeCompare(y.date) || ((y.ord ?? 0) - (x.ord ?? 0)));
   if (!txs.length) return +a.manualBal || 0;
   let base = null, idx = -1;
@@ -356,6 +362,10 @@ function goalSaved(g) { if (g.acc) { const a = accById(g.acc); if (a) return sum
 
 function alerts() {
   const out = [], m = monthKey(today()), mt = monthTotals(m), add = (id, lvl, txt) => { if (!state.dismissed[id]) out.push({ id, lvl, txt }); };
+  for (const a of state.accounts) {
+    if (a.ebUid && a.ebLastError) add('eb|err|' + a.id + '|' + today(), 'err', 'Banco ' + a.name + ': ' + a.ebLastError);
+    else if (a.ebPending && !a.ebUid) add('eb|pend|' + a.id, 'warn', a.name + ': Excel eliminado · autoriza Enable Banking en Cuentas.');
+  }
   for (const a of state.accounts.filter(a => a.kind === 'bank')) { const b = bankBalance(a); if (b < (+state.settings.lowBal || 0)) add('low|' + a.id + '|' + today(), 'err', a.name + ': saldo bajo (' + nf(b) + ' €).'); }
   for (const [c, lim] of Object.entries(state.budgets)) { const g = mt.byCat[c] || 0; if (lim > 0 && g >= lim * 0.9) add('bud|' + c + '|' + m, g > lim ? 'err' : 'warn', 'Presupuesto de ' + catById(c).name + ': ' + nf(g, 0) + ' de ' + nf(lim, 0) + ' €.'); }
   for (const d of derivRows()) {

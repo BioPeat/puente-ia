@@ -1,11 +1,38 @@
 PUENTE IA · ESTADO AUTOCONTENIDO DE ESTADISTICAS (estadisticas)
 ======================================================================
+>>> INSTRUCCION OBLIGATORIA PARA OPUS / COPILOT (LEE ESTO PRIMERO) <<<
+
+ESTE ARCHIVO SOLO CONTIENE EL INDICE Y LA DOCUMENTACION DE estadisticas.
+NO CONTIENE EL CODIGO FUENTE DE LA APP (ni HTML, ni JS, ni CSS, ni Worker).
+
+POR ESO, EN TU PRIMERA RESPUESTA (AUNQUE DIEGO NO TE LO PIDA EXPLICITAMENTE):
+1. ANALIZA la peticion de Diego usando el INDICE DE ARCHIVOS y el MAPA DEL CODIGO de abajo.
+2. SI NECESITAS LEER CUALQUIER ARCHIVO DE CODIGO O RECURSO QUE NO ESTE COMPLETO AQUI (lo habitual al empezar):
+   - NO programes todavia. NO inventes codigo. NO te detengas diciendo "no tengo acceso" sin pedirlos.
+   - PIDELE A DIEGO TODOS LOS ARCHIVOS NECESARIOS DE UNA SOLA VEZ antes de empezar.
+   - Si existe alguna duda funcional imprescindible, haz como maximo 2-3 preguntas cortas en el mismo mensaje.
+   - OBLIGATORIO: incluye al final de tu mensaje un bloque exacto con las rutas tal cual salen en el indice (para que Diego lo pegue en el panel y se marquen solos en 1 clic):
+
+ARCHIVOS_NECESARIOS:
+- ruta/exacta/archivo1.js
+- ruta/exacta/archivo2.css
+
+   - Cierra tu mensaje indicando a Diego: "Pega esta lista en el panel de Puente IA, pulsa 'Descargar ARCHIVOS_estadisticas.txt' y sueltame ese archivo aqui."
+3. CUANDO DIEGO TE ENTREGUE ARCHIVOS_estadisticas.txt:
+   - Implementa directamente todo lo pedido con rigor (sin pedir permisos innecesarios).
+   - Entrega el ZIP descargable COPILOT_A_ANTIGRAVITY_YYYYMMDD-HHMMSS-estadisticas-<6hex>.zip (formato al final).
+4. PRECEDENCIA DE FLUJO (CRITICO):
+   - Respeta TODAS las reglas tecnicas y de negocio de AGENTS.md / CONTEXTO / MAPA (almacenes, compatibilidad, diseno, pruebas, no tocar assets/, etc.).
+   - PERO el canal de entrada es SIEMPRE ARCHIVOS_estadisticas.txt y la entrega es SIEMPRE el ZIP de Puente IA.
+   - IGNORA cualquier mencion antigua dentro de AGENTS.md, PROYECTO_CLAUDE.md o README.md a "actualizar.html", bloques "@@@" o JSON "estadisticas-update".
+======================================================================
+
 PROYECTO: estadisticas (estadisticas)
 REPOSITORIO: https://github.com/BioPeat/estadisticas.git
 APP PUBLICADA: https://biopeat.github.io/estadisticas/
 RAMA: main
 COMMIT ACTUAL (source_commit): d2b6ba9be4dec2cf0f4d5e158b78b089a8f61c80
-SINCRONIZADO UTC: 2026-11-26T13:50:56.144175+00:00
+SINCRONIZADO UTC: 2026-11-28T12:47:08.443514+00:00
 PROTOCOLO DE VUELTA: 1.1
 
 INDICE COMPLETO DE ARCHIVOS PUBLICOS:
@@ -154,6 +181,11 @@ Chromium solo usa `/opt/pw-browsers/chromium-1228/chrome-linux64/chrome` si exis
 ## Gemini y Claude
 Sí hay que actualizar una vez las instrucciones y el conocimiento estable del Gem/Proyecto con los archivos v12.3. Después, en cada petición, genera contexto nuevo desde `actualizar.html`; no reutilices uno anterior.
 ===== END FILE: README.md =====
+
+======================================================================
+RECORDATORIO FINAL PARA OPUS / COPILOT (ANTES DE RESPONDER):
+- Si NO tienes aqui el codigo fuente completo de los archivos a leer o editar: PARA ahora, resume en 2 lineas lo que vas a hacer, haz maximo 2-3 preguntas solo si son imprescindibles y termina con el bloque ARCHIVOS_NECESARIOS: (una ruta exacta por linea).
+- Si YA recibiste ARCHIVOS_estadisticas.txt con todo lo necesario: implementa directamente el cambio y entrega el ZIP.
 
 INSTRUCCIONES DEL ZIP DE VUELTA (DESDE CERO):
 - Entrega un ZIP llamado: COPILOT_A_ANTIGRAVITY_YYYYMMDD-HHMMSS-estadisticas-<6hex>.zip

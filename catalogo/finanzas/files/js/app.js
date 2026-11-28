@@ -85,8 +85,21 @@ function renderNav() {
   if ($('nav-drawer')) $('nav-drawer').innerHTML = drawerNav();
   $('nav-tabs').innerHTML = TABS.map(([id, n, i]) => '<button type="button" data-go="' + id + '"' + (view === id ? ' aria-current="page"' : '') + '>' + ico(i) + '<span>' + n + '</span></button>').join('');
   const dark = document.documentElement.dataset.theme !== 'light', hid = !!state.settings.hide;
-  for (const id of ['theme-side', 'theme-top', 'theme-top-desktop']) if ($(id)) $(id).innerHTML = ico(dark ? 'sun' : 'moon');
-  for (const id of ['hide-side', 'hide-top', 'hide-top-desktop']) if ($(id)) $(id).innerHTML = ico(hid ? 'eyeoff' : 'eye');
+  const themeLbl = dark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro';
+  const hideLbl = hid ? 'Mostrar importes' : 'Ocultar importes';
+  for (const id of ['theme-side', 'theme-top', 'theme-top-desktop']) {
+    const el = $(id); if (!el) continue;
+    el.innerHTML = ico(dark ? 'sun' : 'moon');
+    el.title = themeLbl;
+    el.setAttribute('aria-label', themeLbl);
+  }
+  for (const id of ['hide-side', 'hide-top', 'hide-top-desktop']) {
+    const el = $(id); if (!el) continue;
+    el.innerHTML = ico(hid ? 'eyeoff' : 'eye');
+    el.title = hideLbl;
+    el.setAttribute('aria-label', hideLbl);
+    el.setAttribute('aria-pressed', String(hid));
+  }
   if ($('ver-side')) $('ver-side').textContent = APP_VERSION;
   if ($('ver-badge')) $('ver-badge').textContent = APP_VERSION;
   if ($('ver-drawer')) $('ver-drawer').textContent = APP_VERSION;
@@ -206,7 +219,7 @@ function editAcc(id) {
     + '<label class="f">Entidad<input type="text" id="ac-inst" value="' + esc(a.inst || '') + '" placeholder="Santander, KuCoin, Kraken, Revolut…"></label>'
     + '<label class="f" id="ac-bal-w">Saldo inicial o manual (€)<input type="number" step="any" id="ac-bal" value="' + esc(a.manualBal ?? '') + '"></label>'
     + '<label class="f wide row" style="gap:8px"><input type="checkbox" id="ac-rs"' + (a.reportsSpain ? ' checked' : '') + '> Esta plataforma informa a Hacienda (entidad española). Si no, cuenta para el modelo 721.</label>'
-    + (a.api ? '<label class="f wide row" style="gap:8px"><input type="checkbox" id="ac-api"' + (a.useApi !== false ? ' checked' : '') + '> Usar los saldos de la API</label>' : '')
+    + ((a.api || a.ebUid) ? '<label class="f wide row" style="gap:8px"><input type="checkbox" id="ac-api"' + (a.useApi !== false ? ' checked' : '') + '> Usar saldo automático ' + (a.ebUid ? 'de Open Banking (PSD2)' : 'de la API') + '</label>' : '')
     + '</div><div class="row" style="margin-top:12px">' + btn('Guardar', 'data-act="acc-save" data-id="' + a.id + '"', 'primary') + (a.id ? btn('Eliminar con sus datos', 'data-act="acc-del" data-id="' + a.id + '"', 'danger') : '') + '</div>');
 }
 
@@ -410,6 +423,9 @@ async function act(a, el) {
     case 'add-watch': openAddWatchModal(); break;
     case 'import': $('file-in').click(); break;
     case 'refresh': await syncBalances(true); break;
+    case 'sync-banks': await syncConnectedBanks(true); break;
+    case 'eb-quick-santander': await quickAuthorizeSantander(); break;
+    case 'purge-bank-excel': await purgeBankExcelByAccId(id); break;
     case 'sync-hist': await syncExchangeHistory(id); break;
     case 'prices': await refreshPrices(true); toast('Precios actualizados'); break;
     case 'clear-filt': filt = { q: '', m: filt.m, cat: '', acc: '', type: '', day: '' }; render(); break;
@@ -685,7 +701,10 @@ addEventListener('resize', () => { const n = narrow(); if (ready && n !== lastNa
 function refreshAll(force) {
   snapshot();
   if (syncOn()) syncNow();
-  if (workerEndpoints().length) { if (force || Date.now() - (state.apiTs || 0) > 5 * 60e3) syncBalances(); }
+  if (workerEndpoints().length) {
+    if (force || Date.now() - (state.apiTs || 0) > 5 * 60e3) syncBalances();
+    else if (state.accounts.some(a => a.ebUid && (!a.ebBalTs || Date.now() - Math.max(a.ebBalTs || 0, a.ebSyncAttemptTs || 0) >= 30 * 60e3))) syncConnectedBanks(false);
+  }
   else if (state.accounts.length) refreshPrices();
   startLiveStream();
 }
@@ -707,10 +726,23 @@ function init() {
   filt.m = state.tx.map(t => monthKey(t.date)).sort().at(-1) || '';
   ready = true; snapshot(); autoBackup(); render();
   document.body.dataset.ready = 'true';
-  handleBankCallback();
   if (state.accounts.length) refreshPrices();
   startLiveStream();
-  if (workerEndpoints().length) { if (!paired) { syncNow(); syncBalances(); } api('/ping').then(x => { state.workerInfo = x; save(false); if (view === 'ajustes') render(); }).catch(() => { }); }
+  if (workerEndpoints().length) {
+    (async () => {
+      if (!state.workerInfo) {
+        try { state.workerInfo = await api('/ping'); save(false); } catch (e) { }
+      } else {
+        api('/ping').then(x => { state.workerInfo = x; save(false); if (view === 'ajustes') render(); }).catch(() => { });
+      }
+      if (!paired) await syncNow();
+      const handledBank = await handleBankCallback();
+      reconcileEnableBankingAccounts();
+      if (!handledBank && !paired) await syncBalances();
+    })();
+  } else {
+    handleBankCallback();
+  }
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refreshAll(); else stopLiveStream(); });
   addEventListener('online', () => refreshAll());
   addEventListener('focus', () => { if (syncOn()) syncNow(); });

@@ -5,231 +5,620 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>Puente IA · Panel único (v2.0)</title>
+  <title>Puente IA · Panel y guía paso a paso</title>
   <style>
     :root {
-      --bg: #0f1217;
-      --surface: #171c24;
-      --surface-2: #11151b;
-      --border: #2a3242;
-      --text: #eef1f6;
-      --muted: #a6b0c3;
-      --accent: #68b5ff;
-      --ok: #38c184;
-      --warn: #f5b971;
-      --btn-sec: #252d3b;
+      color-scheme: dark light;
+      --bg: #09090b;
+      --surface: #111114;
+      --surface-2: #17171b;
+      --line: #27272a;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --subtle: #8c8c96;
+      --cta-bg: #f4f4f5;
+      --cta-fg: #09090b;
+      --ok: #22c55e;
+      --warn: #f59e0b;
+      --radius: 10px;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
     }
     @media (prefers-color-scheme: light) {
-      :root {
-        --bg: #f6f4ef;
+      :root:not([data-theme="dark"]) {
+        --bg: #f6f5f1;
         --surface: #ffffff;
-        --surface-2: #f1eee7;
-        --border: #dcd6ca;
-        --text: #1c2026;
-        --muted: #5b6472;
-        --accent: #0b63ce;
-        --ok: #137a4b;
-        --warn: #9a5b00;
-        --btn-sec: #e6e1d6;
+        --surface-2: #f1efe9;
+        --line: #e2dfd7;
+        --text: #111114;
+        --muted: #52525b;
+        --subtle: #5f5f68;
+        --cta-bg: #111114;
+        --cta-fg: #ffffff;
+        --ok: #15803d;
+        --warn: #b45309;
       }
     }
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #f6f5f1;
+      --surface: #ffffff;
+      --surface-2: #f1efe9;
+      --line: #e2dfd7;
+      --text: #111114;
+      --muted: #52525b;
+      --subtle: #5f5f68;
+      --cta-bg: #111114;
+      --cta-fg: #ffffff;
+      --ok: #15803d;
+      --warn: #b45309;
+    }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #09090b;
+      --surface: #111114;
+      --surface-2: #17171b;
+      --line: #27272a;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --subtle: #8c8c96;
+      --cta-bg: #f4f4f5;
+      --cta-fg: #09090b;
+      --ok: #22c55e;
+      --warn: #f59e0b;
+    }
+
     * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
     body {
       margin: 0 auto;
-      max-width: 960px;
-      padding: 24px 16px 56px;
-      font: 15.5px/1.55 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      max-width: 880px;
+      padding: 24px 16px 48px;
+      font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
     }
+    .num { font-variant-numeric: tabular-nums; }
+    h1 { margin: 0; font-size: 1.5rem; letter-spacing: -0.02em; font-weight: 700; }
+    h2 { margin: 0 0 12px; font-size: 1.08rem; font-weight: 600; letter-spacing: -0.01em; }
+    h3 { margin: 0 0 8px; font-size: 0.96rem; font-weight: 600; }
+    p { margin: 0; }
+    .muted { color: var(--muted); font-size: 0.9rem; }
+    .subtle { color: var(--subtle); font-size: 0.84rem; }
+
     header {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 12px 16px;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 20px;
     }
-    h1 { margin: 0; font-size: 1.55rem; letter-spacing: -0.02em; }
-    h2 { margin: 0 0 10px; font-size: 1.15rem; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-    .sub { margin: 4px 0 0; color: var(--muted); font-size: 0.92rem; }
-    .pill {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      border: 1px solid var(--border);
-      background: var(--surface);
-    }
-    .pill.live { color: var(--ok); }
-    .pill.warn { color: var(--warn); }
-    .nav { display: flex; flex-wrap: wrap; gap: 12px; font-size: 0.9rem; margin-bottom: 16px; }
-    .nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
-    .nav a:hover { text-decoration: underline; }
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 18px;
-      margin-bottom: 16px;
-    }
-    .meta-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      gap: 8px 14px;
-      margin: 10px 0 14px;
-      font-size: 0.9rem;
-    }
-    .meta-item span { display: block; color: var(--muted); font-size: 0.78rem; }
-    .meta-item strong, .meta-item code { word-break: break-word; }
-    .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 10px; }
-    button {
-      border: 0;
-      border-radius: 9px;
-      padding: 9px 14px;
-      font: 600 0.88rem system-ui, sans-serif;
-      cursor: pointer;
-      background: var(--btn-sec);
-      color: var(--text);
-    }
-    button.primary { background: var(--accent); color: #fff; }
-    button.done { background: var(--ok); color: #fff; }
-    button:disabled { opacity: 0.55; cursor: wait; }
-    .hint { font-size: 0.88rem; color: var(--muted); margin: 8px 0 0; }
-    .app-row {
-      border: 1px solid var(--border);
-      background: var(--surface-2);
-      border-radius: 11px;
-      padding: 12px 14px;
-      margin-top: 10px;
-    }
-    .app-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
-    .app-title { font-weight: 700; font-size: 1rem; }
-    .app-meta { font-size: 0.84rem; color: var(--muted); }
-    details { margin-top: 10px; }
-    summary { cursor: pointer; font-weight: 600; font-size: 0.9rem; color: var(--accent); }
-    pre {
-      white-space: pre-wrap;
-      word-break: break-word;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px;
-      font-size: 0.82rem;
-      max-height: 360px;
-      overflow: auto;
-      margin: 8px 0 0;
-    }
-    .picker-list {
-      max-height: 240px;
-      overflow: auto;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 10px;
-      background: var(--surface);
-      margin-top: 8px;
-      display: grid;
-      gap: 4px;
-    }
-    .picker-item { display: flex; gap: 8px; align-items: center; font-size: 0.85rem; }
-    .picker-item code { flex: 1; }
-    .filter-input {
-      width: 100%;
-      max-width: 320px;
-      padding: 7px 10px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      font: inherit;
-      font-size: 0.86rem;
-    }
-    .cmd-row {
+    .header-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       align-items: center;
-      justify-content: space-between;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      padding: 8px 12px;
-      margin-top: 8px;
     }
-    .cmd-row code { font-size: 0.88rem; word-break: break-word; }
+    .status-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.84rem;
+      color: var(--muted);
+      padding-right: 4px;
+    }
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--subtle);
+      flex-shrink: 0;
+    }
+    .dot.ok { background: var(--ok); }
+    .dot.warn { background: var(--warn); }
+
+    button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 38px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      color: var(--text);
+      font: 600 0.88rem/1.2 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      cursor: pointer;
+      transition: background-color 160ms var(--ease), border-color 160ms var(--ease), color 160ms var(--ease), opacity 160ms var(--ease);
+    }
+    button:hover:not(:disabled) { border-color: var(--subtle); }
+    button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible {
+      outline: 2px solid var(--text);
+      outline-offset: 2px;
+    }
+    button.primary {
+      background: var(--cta-bg);
+      color: var(--cta-fg);
+      border-color: var(--cta-bg);
+    }
+    button.primary:hover:not(:disabled) { opacity: 0.9; border-color: var(--cta-bg); }
+    button.done {
+      border-color: var(--ok);
+      color: var(--ok);
+    }
+    button.primary.done {
+      background: var(--ok);
+      border-color: var(--ok);
+      color: #ffffff;
+    }
+    button.icon-btn {
+      width: 38px;
+      padding: 0;
+    }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .segmented {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 4px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      max-width: 100%;
+    }
+    .segmented button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      min-height: 36px;
+      padding: 8px 14px;
+      border-radius: 7px;
+      font-weight: 600;
+    }
+    .segmented button[aria-selected="true"],
+    .segmented button[aria-pressed="true"] {
+      background: var(--cta-bg);
+      color: var(--cta-fg);
+    }
+    .app-selector {
+      margin-bottom: 12px;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0 20px;
+      margin-bottom: 24px;
+    }
+    .step {
+      padding: 20px 0;
+      border-top: 1px solid var(--line);
+    }
+    .step:first-child { border-top: 0; }
+    .step-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .step-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    textarea, .filter-input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      color: var(--text);
+      font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      transition: border-color 160ms var(--ease);
+    }
+    textarea { resize: vertical; min-height: 82px; margin-top: 10px; }
+    .filter-input { max-width: 340px; }
+    .paste-status {
+      margin-top: 8px;
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+    .paste-status.ok { color: var(--ok); }
+    .paste-status.warn { color: var(--warn); }
+
+    details { margin-top: 12px; }
+    summary {
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--muted);
+      user-select: none;
+    }
+    summary:hover { color: var(--text); }
+
+    .picker-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .picker-list {
+      max-height: 240px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 6px 10px;
+      background: var(--surface-2);
+      margin-top: 8px;
+      display: grid;
+      gap: 2px;
+    }
+    .picker-item {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 4px 2px;
+      font-size: 0.86rem;
+      cursor: pointer;
+    }
+    .picker-item input { width: 16px; height: 16px; flex-shrink: 0; accent-color: var(--text); }
+    .picker-path { flex: 1; word-break: break-word; }
+
+    .meta-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 16px;
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .meta-line strong { color: var(--text); font-weight: 600; }
+
+    .cmd-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-top: 1px solid var(--line);
+    }
+    .cmd-row:first-child { border-top: 0; }
+    .cmd-body { flex: 1; min-width: 220px; }
+    .cmd-label { font-size: 0.84rem; color: var(--muted); margin-bottom: 4px; }
+    .cmd-text {
+      display: block;
+      font-size: 0.88rem;
+      color: var(--text);
+      word-break: break-word;
+      user-select: all;
+    }
+    .phrase-group {
+      padding: 16px 0;
+      border-top: 1px solid var(--line);
+    }
+    .phrase-group:first-child { border-top: 0; }
+
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.82rem;
+      max-height: 320px;
+      overflow: auto;
+      margin: 10px 0 0;
+    }
+
+    footer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      padding-top: 8px;
+      font-size: 0.84rem;
+      color: var(--subtle);
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); text-decoration: underline; }
+    [hidden] { display: none !important; }
+
+    @media (max-width: 600px) {
+      body { padding: 16px 12px 40px; }
+      .panel { padding: 0 14px; }
+      .segmented { width: 100%; }
+      .segmented button { flex: 1 1 auto; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+    }
   </style>
 </head>
 <body>
   <header>
     <div>
-      <h1>Puente IA · Panel de Diego</h1>
-      <p class="sub">Copilot ↔ Antigravity sin depender de que Copilot abra enlaces.</p>
+      <h1>Puente IA</h1>
+      <p class="muted">Panel y guía paso a paso · Antigravity ↔ Opus</p>
     </div>
-    <div class="actions">
-      <span id="source-pill" class="pill">Cargando...</span>
-      <button id="refresh-btn" type="button">Actualizar ahora</button>
+    <div class="header-actions">
+      <span class="status-dot">
+        <span id="source-dot" class="dot" aria-hidden="true"></span>
+        <span id="source-text" class="num">Cargando...</span>
+      </span>
+      <button id="refresh-btn" type="button">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+        Actualizar
+      </button>
+      <button id="theme-btn" type="button" class="icon-btn" aria-label="Cambiar tema claro u oscuro" title="Cambiar tema">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </button>
     </div>
   </header>
 
-  <nav class="nav">
-    <a href="guia.html">Guía rápida (paso a paso)</a>
-    <a href="ultimo/PARA_COPILOT.txt">Ver último PARA_COPILOT.txt</a>
+  <div class="segmented" role="tablist" aria-label="Modo de trabajo">
+    <button id="tab-opus" type="button" role="tab" aria-selected="true" aria-controls="view-opus">
+      Empezar en Opus
+    </button>
+    <button id="tab-antigravity" type="button" role="tab" aria-selected="false" aria-controls="view-antigravity">
+      <span id="ag-pending-dot" class="dot" hidden aria-hidden="true"></span>
+      Seguir desde Antigravity
+    </button>
+  </div>
+
+  <main>
+    <!-- VISTA A: EMPEZAR EN OPUS -->
+    <section id="view-opus" class="panel" role="tabpanel" aria-labelledby="tab-opus">
+      <div class="step">
+        <div class="step-head">
+          <h2 class="step-title">Paso 1 · Envía el estado de tu app a Opus</h2>
+        </div>
+        <div id="app-selector" class="segmented app-selector" role="group" aria-label="Seleccionar aplicación"></div>
+        <p id="app-meta" class="meta-line num">Cargando catálogo...</p>
+        <div id="app-step1-actions" class="actions">
+          <button id="btn-dl-estado" type="button" class="primary">Descargar ESTADO.txt</button>
+          <button id="btn-copy-estado" type="button">Copiar estado</button>
+        </div>
+        <p id="app-private-note" class="subtle" hidden style="margin-top:8px">
+          Repositorio privado: su código no se publica aquí. Pásalo por PairDrop si lo necesitas en el otro ordenador.
+        </p>
+        <p class="subtle" style="margin-top:10px">
+          Arrastra ese archivo al chat de Opus y dile qué quieres cambiar. El propio archivo ya le ordena pedirte todos los archivos de código antes de empezar.
+        </p>
+      </div>
+
+      <div id="opus-step2" class="step">
+        <div class="step-head">
+          <h2 class="step-title">Paso 2 · Cuando Opus te pida archivos, empaquétalos en 1 clic</h2>
+        </div>
+        <p class="muted">Pega aquí la respuesta de Opus (o su bloque <code>ARCHIVOS_NECESARIOS</code>) y se marcarán solos:</p>
+        <textarea id="opus-paste" rows="3" placeholder="Pega aquí la respuesta de Opus o su lista ARCHIVOS_NECESARIOS..."></textarea>
+        <p id="paste-status" class="paste-status num">Ningún archivo marcado todavía.</p>
+        <div class="actions">
+          <button id="btn-dl-archivos" type="button" class="primary">Descargar ARCHIVOS.txt</button>
+          <button id="btn-copy-archivos" type="button">Copiar archivos</button>
+          <button id="btn-mark-main" type="button">Código principal</button>
+          <button id="btn-clear-files" type="button">Limpiar</button>
+        </div>
+        <details id="manual-picker-details">
+          <summary id="manual-picker-summary">Ver o ajustar archivos manualmente</summary>
+          <div class="picker-toolbar">
+            <input id="file-filter" type="search" class="filter-input" placeholder="Filtrar ruta (ej. app.js, worker.js)...">
+          </div>
+          <div id="picker-list" class="picker-list">Cargando lista...</div>
+        </details>
+      </div>
+
+      <div class="step">
+        <div class="step-head">
+          <h2 class="step-title">Paso 3 · Aplica el ZIP de Opus en Antigravity</h2>
+        </div>
+        <p class="muted">Descarga el ZIP que te entregue Opus, pásalo por PairDrop a tu carpeta Descargas y pega esta frase en Antigravity:</p>
+        <div class="cmd-row" style="border-top:0;padding-bottom:0">
+          <div class="cmd-body">
+            <span class="cmd-text">PUENTE: aplica lo de Copilot</span>
+          </div>
+          <button type="button" class="copy-btn" data-copy="PUENTE: aplica lo de Copilot">Copiar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- VISTA B: SEGUIR DESDE ANTIGRAVITY -->
+    <section id="view-antigravity" class="panel" role="tabpanel" aria-labelledby="tab-antigravity" hidden>
+      <div class="step">
+        <div class="step-head">
+          <h2 class="step-title">Paso 1 · Prepara el traspaso en Antigravity</h2>
+        </div>
+        <div class="cmd-row" style="border-top:0;padding-top:4px">
+          <div class="cmd-body">
+            <div class="cmd-label">Escribe esto en Antigravity y espera a que confirme la subida</div>
+            <span class="cmd-text">PUENTE: pásalo a Copilot</span>
+          </div>
+          <button type="button" class="copy-btn" data-copy="PUENTE: pásalo a Copilot">Copiar</button>
+        </div>
+        <p class="subtle">Cuando Antigravity termine, pulsa <strong>Actualizar</strong> arriba a la derecha.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-head">
+          <h2 class="step-title">Paso 2 · Dale el traspaso a Opus</h2>
+          <span class="status-dot">
+            <span id="h-status-dot" class="dot" aria-hidden="true"></span>
+            <span id="h-status-label">-</span>
+          </span>
+        </div>
+        <div class="meta-line num">
+          <span>ID: <strong id="h-id">-</strong></span>
+          <span>App: <strong id="h-app">-</strong></span>
+          <span>Commit: <strong id="h-commit">-</strong></span>
+          <span>Tamaño: <strong id="h-size">-</strong></span>
+        </div>
+        <p id="h-obj" class="muted" style="margin-top:8px"></p>
+        <div class="actions">
+          <button id="btn-copy-handoff" type="button">Copiar texto</button>
+          <button id="btn-dl-handoff" type="button">Descargar PARA_COPILOT.txt</button>
+        </div>
+        <p id="h-advice" class="subtle" style="margin-top:8px"></p>
+        <details>
+          <summary>Ver texto completo de PARA_COPILOT.txt</summary>
+          <pre id="h-preview">Cargando...</pre>
+        </details>
+      </div>
+
+      <div class="step">
+        <div class="step-head">
+          <h2 class="step-title">Paso 3 · Aplica el ZIP de vuelta en Antigravity</h2>
+        </div>
+        <p class="muted">Descarga el ZIP de Opus, pásalo por PairDrop a tu carpeta Descargas y pega esta frase en Antigravity:</p>
+        <div class="cmd-row" style="border-top:0;padding-bottom:0">
+          <div class="cmd-body">
+            <span class="cmd-text">PUENTE: aplica lo de Copilot</span>
+          </div>
+          <button type="button" class="copy-btn" data-copy="PUENTE: aplica lo de Copilot">Copiar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FRASES LISTAS PARA COPIAR -->
+    <section class="panel" aria-label="Frases listas para copiar">
+      <div class="phrase-group">
+        <h2>Frases listas para copiar (1 clic)</h2>
+        <p class="subtle">Las frases de Opus se adaptan automáticamente a la app elegida arriba.</p>
+      </div>
+
+      <div class="phrase-group">
+        <h3>En Antigravity</h3>
+        <div class="cmd-row">
+          <div class="cmd-body">
+            <div class="cmd-label">Pasar la tarea actual a Opus</div>
+            <span class="cmd-text">PUENTE: pásalo a Copilot</span>
+          </div>
+          <button type="button" class="copy-btn" data-copy="PUENTE: pásalo a Copilot">Copiar</button>
+        </div>
+        <div class="cmd-row">
+          <div class="cmd-body">
+            <div class="cmd-label">Aplicar el ZIP recibido de Opus (tras pasarlo por PairDrop)</div>
+            <span class="cmd-text">PUENTE: aplica lo de Copilot</span>
+          </div>
+          <button type="button" class="copy-btn" data-copy="PUENTE: aplica lo de Copilot">Copiar</button>
+        </div>
+        <div class="cmd-row">
+          <div class="cmd-body">
+            <div class="cmd-label">Añadir una app nueva al puente</div>
+            <span class="cmd-text">PUENTE: añade https://github.com/BioPeat/NUEVO_REPO.git</span>
+          </div>
+          <button type="button" class="copy-btn" data-copy="PUENTE: añade https://github.com/BioPeat/NUEVO_REPO.git">Copiar</button>
+        </div>
+      </div>
+
+      <div class="phrase-group">
+        <h3>En Opus / Copilot</h3>
+        <div class="cmd-row">
+          <div class="cmd-body">
+            <div class="cmd-label">1. Empezar una mejora (adjuntando ESTADO_<span class="dyn-slug">app</span>.txt)</div>
+            <span id="phrase-opus-start" class="cmd-text"></span>
+          </div>
+          <button id="btn-phrase-opus-start" type="button" class="copy-btn">Copiar</button>
+        </div>
+        <div class="cmd-row">
+          <div class="cmd-body">
+            <div class="cmd-label">2. Recordar a Opus que pida archivos (si intenta adivinar código)</div>
+            <span id="phrase-opus-ask" class="cmd-text"></span>
+          </div>
+          <button id="btn-phrase-opus-ask" type="button" class="copy-btn">Copiar</button>
+        </div>
+        <div class="cmd-row">
+          <div class="cmd-body">
+            <div class="cmd-label">3. Enviar los archivos pedidos y pedir el ZIP (adjuntando ARCHIVOS_<span class="dyn-slug">app</span>.txt)</div>
+            <span id="phrase-opus-zip" class="cmd-text"></span>
+          </div>
+          <button id="btn-phrase-opus-zip" type="button" class="copy-btn">Copiar</button>
+        </div>
+      </div>
+
+      <div class="phrase-group">
+        <h3>Tu marcador único en el portátil</h3>
+        <div class="cmd-row" style="padding-bottom:4px">
+          <div class="cmd-body">
+            <span class="cmd-text">https://biopeat.github.io/puente-ia/</span>
+          </div>
+          <button type="button" class="copy-btn" data-copy="https://biopeat.github.io/puente-ia/">Copiar</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a href="ultimo/PARA_COPILOT.txt">ultimo/PARA_COPILOT.txt</a>
     <a href="PARA_COPILOT_LEEME.md">PARA_COPILOT_LEEME.md</a>
-    <a href="HISTORIAL.md">Historial</a>
-  </nav>
-
-  <section class="card">
-    <h2>
-      1. Pasar tarea de Antigravity a Copilot
-      <span id="handoff-status-pill" class="pill">...</span>
-    </h2>
-    <div class="meta-grid">
-      <div class="meta-item"><span>ID</span><strong id="h-id">-</strong></div>
-      <div class="meta-item"><span>App</span><strong id="h-app">-</strong></div>
-      <div class="meta-item"><span>Commit</span><code id="h-commit">-</code></div>
-      <div class="meta-item"><span>Tamaño</span><strong id="h-size">-</strong></div>
-    </div>
-    <p id="h-obj" class="sub"></p>
-    <div class="actions">
-      <button id="btn-copy-handoff" type="button">Copiar texto</button>
-      <button id="btn-dl-handoff" type="button">Descargar PARA_COPILOT.txt</button>
-    </div>
-    <p id="h-advice" class="hint"></p>
-    <details>
-      <summary>Ver texto completo de PARA_COPILOT.txt</summary>
-      <pre id="h-preview">Cargando...</pre>
-    </details>
-  </section>
-
-  <section class="card">
-    <h2>2. Empezar desde cero en Copilot (elegir app)</h2>
-    <p class="sub">Descarga o copia el estado actual de una app para pegarlo o soltarlo en Copilot. Si Copilot te pide archivos de código concretos, márcalos abajo en un clic.</p>
-    <div id="apps-container">Cargando catálogo...</div>
-  </section>
-
-  <section class="card">
-    <h2>3. Órdenes cortas en Antigravity</h2>
-    <div class="cmd-row">
-      <div><strong>Mandar tarea a Copilot:</strong> <code>PUENTE: pásalo a Copilot</code></div>
-      <button type="button" class="mini-copy" data-text="PUENTE: pásalo a Copilot">Copiar</button>
-    </div>
-    <div class="cmd-row">
-      <div><strong>Aplicar ZIP de Copilot (tras pasarlo por PairDrop):</strong> <code>PUENTE: aplica lo de Copilot</code></div>
-      <button type="button" class="mini-copy" data-text="PUENTE: aplica lo de Copilot">Copiar</button>
-    </div>
-    <div class="cmd-row">
-      <div><strong>Añadir una app nueva:</strong> <code>PUENTE: añade https://github.com/BioPeat/NUEVO_REPO.git</code></div>
-      <button type="button" class="mini-copy" data-text="PUENTE: añade https://github.com/BioPeat/NUEVO_REPO.git">Copiar</button>
-    </div>
-  </section>
+    <a href="HISTORIAL.md">HISTORIAL.md</a>
+    <a href="catalogo.json">catalogo.json</a>
+  </footer>
 
   <script>
     const API_COMMIT = 'https://api.github.com/repos/BioPeat/puente-ia/commits/main';
     const RAW_ROOT = 'https://raw.githubusercontent.com/BioPeat/puente-ia/';
+
     let activeBase = './';
     let useBust = true;
     let handoffText = '';
+    let catalogProjects = [];
+    let selectedProj = null;
+    let selectedState = null;
+    let pickerRows = [];
+    const stateCache = new Map();
+
+    function applyTheme(mode) {
+      if (mode === 'light' || mode === 'dark') {
+        document.documentElement.setAttribute('data-theme', mode);
+        localStorage.setItem('puente_theme', mode);
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+      }
+    }
+
+    (function initTheme() {
+      const saved = localStorage.getItem('puente_theme');
+      if (saved === 'light' || saved === 'dark') applyTheme(saved);
+    })();
+
+    document.getElementById('theme-btn').addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+      const effective = cur || (prefersLight ? 'light' : 'dark');
+      applyTheme(effective === 'light' ? 'dark' : 'light');
+    });
+
+    function setTab(which) {
+      const isOpus = which === 'opus';
+      const tabOpus = document.getElementById('tab-opus');
+      const tabAg = document.getElementById('tab-antigravity');
+      const viewOpus = document.getElementById('view-opus');
+      const viewAg = document.getElementById('view-antigravity');
+      tabOpus.setAttribute('aria-selected', String(isOpus));
+      tabAg.setAttribute('aria-selected', String(!isOpus));
+      viewOpus.hidden = !isOpus;
+      viewAg.hidden = isOpus;
+    }
+
+    document.getElementById('tab-opus').addEventListener('click', () => setTab('opus'));
+    document.getElementById('tab-antigravity').addEventListener('click', () => setTab('antigravity'));
 
     function urlFor(rel) {
       return useBust ? `${activeBase}${rel}?t=${Date.now()}` : `${activeBase}${rel}`;
@@ -252,6 +641,9 @@
       } catch {
         const ta = document.createElement('textarea');
         ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
         document.body.appendChild(ta);
         ta.select();
         document.execCommand('copy');
@@ -259,7 +651,10 @@
       }
       btn.textContent = 'Copiado';
       btn.classList.add('done');
-      setTimeout(() => { btn.textContent = prev; btn.classList.remove('done'); }, 1500);
+      setTimeout(() => {
+        btn.textContent = prev;
+        btn.classList.remove('done');
+      }, 1600);
     }
 
     function downloadText(filename, text) {
@@ -280,8 +675,20 @@
       return /\.(html|js|mjs|css|json|py|sql)$/i.test(path) || path === 'AGENTS.md';
     }
 
+    function escapeRegex(str) {
+      return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
     async function resolveSource() {
-      const pill = document.getElementById('source-pill');
+      const dot = document.getElementById('source-dot');
+      const txt = document.getElementById('source-text');
+      if (location.hostname === '127.0.0.1' || location.hostname === 'localhost') {
+        activeBase = './';
+        useBust = true;
+        dot.className = 'dot ok';
+        txt.textContent = 'Vista local';
+        return;
+      }
       const ac = new AbortController();
       const timer = setTimeout(() => ac.abort(), 4000);
       try {
@@ -292,245 +699,342 @@
         activeBase = `${RAW_ROOT}${sha}/`;
         useBust = false;
         const when = (info.commit && info.commit.committer && info.commit.committer.date) || '';
-        pill.textContent = `En vivo · ${sha.slice(0, 7)}${when ? ' · ' + when.slice(11, 16) + 'Z' : ''}`;
-        pill.className = 'pill live';
+        dot.className = 'dot ok';
+        txt.textContent = `Actualizado · ${sha.slice(0, 7)}${when ? ' · ' + when.slice(11, 16) + 'Z' : ''}`;
       } catch {
         activeBase = './';
         useBust = true;
-        pill.textContent = 'Modo Pages (respaldo)';
-        pill.className = 'pill warn';
+        dot.className = 'dot warn';
+        txt.textContent = 'Modo respaldo';
       } finally {
         clearTimeout(timer);
       }
     }
 
-    function buildAppRow(proj) {
-      const row = document.createElement('div');
-      row.className = 'app-row';
+    function updateDynamicPhrases() {
+      const name = selectedProj ? selectedProj.name : 'app';
+      const slug = selectedProj ? selectedProj.slug : 'app';
+      document.querySelectorAll('.dyn-slug').forEach((el) => { el.textContent = slug; });
 
-      const head = document.createElement('div');
-      head.className = 'app-head';
+      const pStart = `Te adjunto el estado de ${name}. Quiero hacer este cambio: [describe aquí qué quieres]. Antes de programar, revisa el índice y pídemelo todo en ARCHIVOS_NECESARIOS.`;
+      const pAsk = `Para antes de programar. No inventes código que no hayas leído: dame la lista exacta de rutas que necesitas en ARCHIVOS_NECESARIOS y te paso ARCHIVOS_${slug}.txt en un clic.`;
+      const pZip = `Aquí tienes los archivos solicitados. Implementa todo lo pedido y entrégame el ZIP descargable COPILOT_A_ANTIGRAVITY_*.zip siguiendo el Protocolo 1.1.`;
 
-      const infoWrap = document.createElement('div');
-      const title = document.createElement('div');
-      title.className = 'app-title';
-      title.textContent = proj.name;
-      const meta = document.createElement('div');
-      meta.className = 'app-meta';
-      if (proj.public) {
-        meta.textContent = `Commit ${(proj.commit || '').slice(0, 10)} · ${proj.file_count || 0} archivos públicos`;
+      document.getElementById('phrase-opus-start').textContent = pStart;
+      document.getElementById('btn-phrase-opus-start').dataset.copy = pStart;
+      document.getElementById('phrase-opus-ask').textContent = pAsk;
+      document.getElementById('btn-phrase-opus-ask').dataset.copy = pAsk;
+      document.getElementById('phrase-opus-zip').textContent = pZip;
+      document.getElementById('btn-phrase-opus-zip').dataset.copy = pZip;
+    }
+
+    function updateSelectionSummary(sourceNote) {
+      const slug = selectedProj ? selectedProj.slug : 'app';
+      const chosen = pickerRows.filter((r) => r.cb.checked);
+      const totalBytes = chosen.reduce((acc, r) => acc + (r.size || 0), 0);
+      const kb = totalBytes ? Math.max(1, Math.round(totalBytes / 1024)) : 0;
+
+      const btnDl = document.getElementById('btn-dl-archivos');
+      const btnCp = document.getElementById('btn-copy-archivos');
+      const status = document.getElementById('paste-status');
+
+      if (chosen.length) {
+        btnDl.textContent = `Descargar ARCHIVOS_${slug}.txt (${chosen.length} · ${kb} KB)`;
+        btnCp.textContent = `Copiar archivos (${chosen.length})`;
+        const names = chosen.slice(0, 4).map((r) => r.path).join(', ') + (chosen.length > 4 ? ` y ${chosen.length - 4} más` : '');
+        status.textContent = `${sourceNote ? sourceNote + ': ' : ''}${chosen.length} archivo${chosen.length === 1 ? '' : 's'} marcado${chosen.length === 1 ? '' : 's'} (${kb} KB): ${names}`;
+        status.className = 'paste-status ok num';
       } else {
-        meta.textContent = 'Repositorio privado (no se publica aquí; usa PairDrop si hace falta)';
+        btnDl.textContent = `Descargar ARCHIVOS_${slug}.txt`;
+        btnCp.textContent = 'Copiar archivos';
+        status.textContent = sourceNote || 'Ningún archivo marcado todavía.';
+        status.className = sourceNote && sourceNote.startsWith('No se detectaron') ? 'paste-status warn num' : 'paste-status num';
       }
-      infoWrap.appendChild(title);
-      infoWrap.appendChild(meta);
-      head.appendChild(infoWrap);
+    }
 
-      if (proj.public) {
-        const btns = document.createElement('div');
-        btns.className = 'actions';
-        const estadoPath = proj.estado_txt_path || `catalogo/${proj.slug}/ESTADO_${proj.slug}.txt`;
-        const dlName = `ESTADO_${proj.slug}.txt`;
+    function extractTargetText(rawText) {
+      const normalized = rawText.replace(/\r\n?/g, '\n').replace(/\\/g, '/');
+      const marker = /ARCHIVOS_NECESARIOS\s*:/i.exec(normalized);
+      if (!marker) return { text: normalized, fromBlock: false };
 
-        const btnDl = document.createElement('button');
-        btnDl.className = 'primary';
-        btnDl.type = 'button';
-        btnDl.textContent = `Descargar ${dlName}`;
-        btnDl.addEventListener('click', async () => {
-          btnDl.disabled = true;
-          try {
-            const txt = await fetchText(estadoPath);
-            downloadText(dlName, txt);
-          } catch (err) {
-            alert(`No se pudo descargar ${dlName}: ${err.message}`);
-          } finally {
-            btnDl.disabled = false;
-          }
-        });
+      const after = normalized.slice(marker.index + marker[0].length);
+      const lines = after.split('\n');
+      const blockLines = [];
+      let started = false;
+      for (const line of lines) {
+        const t = line.trim();
+        if (!t) {
+          if (started) break;
+          continue;
+        }
+        if (/^(?:[-*•]|\d+[.)])\s+/.test(t) || /[./]/.test(t) || /^[A-Za-z0-9_.-]+$/.test(t)) {
+          started = true;
+          blockLines.push(t);
+        } else if (started) {
+          break;
+        }
+      }
+      if (blockLines.length) {
+        return { text: blockLines.join('\n'), fromBlock: true };
+      }
+      return { text: normalized, fromBlock: false };
+    }
 
-        const btnCp = document.createElement('button');
-        btnCp.type = 'button';
-        btnCp.textContent = 'Copiar estado';
-        btnCp.addEventListener('click', async () => {
-          btnCp.disabled = true;
-          try {
-            const txt = await fetchText(estadoPath);
-            await copyString(txt, btnCp);
-          } catch (err) {
-            alert(`No se pudo copiar ${dlName}: ${err.message}`);
-          } finally {
-            btnCp.disabled = false;
-          }
-        });
+    function matchPathsInText(text, allPaths) {
+      const matched = new Set();
+      const occupied = [];
+      const sorted = [...allPaths].sort((a, b) => b.length - a.length);
 
-        btns.appendChild(btnDl);
-        btns.appendChild(btnCp);
-        head.appendChild(btns);
+      function overlaps(start, end) {
+        return occupied.some(([s, e]) => start < e && end > s);
       }
 
-      row.appendChild(head);
-
-      if (proj.public) {
-        const det = document.createElement('details');
-        const sum = document.createElement('summary');
-        sum.textContent = 'Si Copilot te pide archivos concretos, selecciónalos aquí en 1 clic';
-        det.appendChild(sum);
-
-        const body = document.createElement('div');
-        body.className = 'hint';
-        body.textContent = 'Abre para cargar la lista de archivos...';
-        det.appendChild(body);
-
-        let loaded = false;
-        det.addEventListener('toggle', async () => {
-          if (!det.open || loaded) return;
-          loaded = true;
-          try {
-            const st = await fetchJson(`catalogo/${proj.slug}/estado.json`);
-            const files = st.files || [];
-            body.textContent = '';
-
-            const toolbar = document.createElement('div');
-            toolbar.className = 'actions';
-            const filter = document.createElement('input');
-            filter.type = 'search';
-            filter.className = 'filter-input';
-            filter.placeholder = 'Filtrar archivo (ej. index.html, worker.js)...';
-
-            const btnMain = document.createElement('button');
-            btnMain.type = 'button';
-            btnMain.textContent = 'Marcar código principal';
-            const btnNone = document.createElement('button');
-            btnNone.type = 'button';
-            btnNone.textContent = 'Limpiar';
-            const btnPack = document.createElement('button');
-            btnPack.type = 'button';
-            btnPack.className = 'primary';
-            btnPack.textContent = `Descargar ARCHIVOS_${proj.slug}.txt`;
-
-            toolbar.appendChild(filter);
-            toolbar.appendChild(btnMain);
-            toolbar.appendChild(btnNone);
-            toolbar.appendChild(btnPack);
-            body.appendChild(toolbar);
-
-            const list = document.createElement('div');
-            list.className = 'picker-list';
-            const boxes = [];
-            for (const f of files) {
-              const lbl = document.createElement('label');
-              lbl.className = 'picker-item';
-              const cb = document.createElement('input');
-              cb.type = 'checkbox';
-              cb.value = f.path;
-              cb.dataset.sha = f.sha256 || '';
-              const code = document.createElement('code');
-              code.textContent = f.path;
-              const sz = document.createElement('span');
-              sz.className = 'hint';
-              sz.textContent = `${Math.max(1, Math.round((f.size || 0) / 1024))} KB`;
-              lbl.appendChild(cb);
-              lbl.appendChild(code);
-              lbl.appendChild(sz);
-              list.appendChild(lbl);
-              boxes.push({ cb, lbl, path: f.path });
-            }
-            body.appendChild(list);
-
-            filter.addEventListener('input', () => {
-              const q = filter.value.trim().toLowerCase();
-              for (const b of boxes) {
-                b.lbl.style.display = !q || b.path.toLowerCase().includes(q) ? 'flex' : 'none';
-              }
-            });
-            btnMain.addEventListener('click', () => {
-              for (const b of boxes) b.cb.checked = isMainCodeFile(b.path);
-            });
-            btnNone.addEventListener('click', () => {
-              for (const b of boxes) b.cb.checked = false;
-            });
-            btnPack.addEventListener('click', async () => {
-              const chosen = boxes.filter((b) => b.cb.checked);
-              if (!chosen.length) {
-                alert('Marca al menos un archivo.');
-                return;
-              }
-              btnPack.disabled = true;
-              const prev = btnPack.textContent;
-              btnPack.textContent = 'Empaquetando...';
-              try {
-                const chunks = [
-                  `PUENTE IA · ARCHIVOS SOLICITADOS DE ${proj.name.toUpperCase()}`,
-                  '='.repeat(70),
-                  `PROYECTO: ${proj.name} (${proj.slug})`,
-                  `REPOSITORIO: ${proj.repo_url}`,
-                  `COMMIT EXACTO (source_commit): ${st.commit}`,
-                  `ARCHIVOS INCLUIDOS: ${chosen.length}`,
-                  '',
-                ];
-                for (const item of chosen) {
-                  const content = await fetchText(`catalogo/${proj.slug}/files/${item.path}`);
-                  chunks.push(`===== FILE: ${item.path} | sha256: ${item.cb.dataset.sha} =====\n${content.trimEnd()}\n===== END FILE: ${item.path} =====`);
-                }
-                downloadText(`ARCHIVOS_${proj.slug}.txt`, chunks.join('\n\n') + '\n');
-              } catch (err) {
-                alert(`Error al empaquetar archivos: ${err.message}`);
-              } finally {
-                btnPack.disabled = false;
-                btnPack.textContent = prev;
-              }
-            });
-          } catch (err) {
-            body.textContent = `No se pudo cargar la lista de archivos: ${err.message}`;
+      for (const path of sorted) {
+        const rx = new RegExp(`(?:^|[\\s\`"'(\\[*:,;\\-])(${escapeRegex(path)})(?=$|[\\s\`"'.,;:)\\]*!?\\r\\n])`, 'gi');
+        let m;
+        while ((m = rx.exec(text)) !== null) {
+          const start = m.index + m[0].length - m[1].length;
+          const end = start + m[1].length;
+          if (!overlaps(start, end)) {
+            occupied.push([start, end]);
+            matched.add(path);
           }
-        });
-        row.appendChild(det);
+        }
       }
-      return row;
+
+      // Respaldo: nombres base únicos (ej. worker.js -> cloudflare/worker.js)
+      const baseMap = new Map();
+      for (const p of allPaths) {
+        const base = p.split('/').pop();
+        if (!baseMap.has(base)) baseMap.set(base, []);
+        baseMap.get(base).push(p);
+      }
+      for (const [base, paths] of baseMap.entries()) {
+        if (paths.length !== 1 || matched.has(paths[0])) continue;
+        const rx = new RegExp(`(?:^|[\\s\`"'(\\[*:,;\\-])(${escapeRegex(base)})(?=$|[\\s\`"'.,;:)\\]*!?\\r\\n])`, 'gi');
+        let m;
+        while ((m = rx.exec(text)) !== null) {
+          const start = m.index + m[0].length - m[1].length;
+          const end = start + m[1].length;
+          if (!overlaps(start, end)) {
+            occupied.push([start, end]);
+            matched.add(paths[0]);
+          }
+        }
+      }
+      return matched;
+    }
+
+    function applyOpusPaste() {
+      if (!pickerRows.length) return;
+      const raw = document.getElementById('opus-paste').value;
+      if (!raw.trim()) {
+        for (const r of pickerRows) r.cb.checked = false;
+        updateSelectionSummary('');
+        return;
+      }
+      const allPaths = pickerRows.map((r) => r.path);
+      const extracted = extractTargetText(raw);
+      let matched = matchPathsInText(extracted.text, allPaths);
+      if (extracted.fromBlock && matched.size === 0) {
+        matched = matchPathsInText(raw.replace(/\r\n?/g, '\n').replace(/\\/g, '/'), allPaths);
+      }
+      for (const r of pickerRows) {
+        r.cb.checked = matched.has(r.path);
+      }
+      if (matched.size > 0) {
+        updateSelectionSummary('Detectado de Opus');
+      } else {
+        updateSelectionSummary('No se detectaron rutas del proyecto en el texto pegado');
+      }
+    }
+
+    async function buildPackText() {
+      const chosen = pickerRows.filter((r) => r.cb.checked);
+      if (!chosen.length) {
+        alert('Pega la lista de Opus o marca al menos un archivo.');
+        return null;
+      }
+      const proj = selectedProj;
+      const st = selectedState || {};
+      const commit = st.commit || proj.commit || '';
+      const branch = st.branch || proj.branch || 'main';
+      const chunks = [
+        `PUENTE IA · ARCHIVOS SOLICITADOS DE ${proj.name.toUpperCase()}`,
+        '='.repeat(70),
+        `PROYECTO: ${proj.name} (${proj.slug})`,
+        `REPOSITORIO: ${proj.repo_url}`,
+        `RAMA: ${branch}`,
+        `COMMIT EXACTO (source_commit): ${commit}`,
+        `ARCHIVOS INCLUIDOS: ${chosen.length}`,
+        '',
+        'INSTRUCCIONES DE IMPLEMENTACION Y ENTREGA:',
+        '- Ya tienes los archivos completos solicitados. Implementa directamente todo lo pedido por Diego.',
+        `- Entrega un ZIP llamado: COPILOT_A_ANTIGRAVITY_YYYYMMDD-HHMMSS-${proj.slug}-<6hex>.zip`,
+        `- Incluye HANDOFF.json (protocol_version: "1.1", direction: "copilot_to_antigravity", origin_mode: "copilot_from_scratch", project: "${proj.name}", repo_url: "${proj.repo_url}", branch: "${branch}", source_commit: "${commit}", task_id >= 8 chars, created_at, objective, files con sha256 en minúsculas).`,
+        '- Incluye RESPUESTA.md, PRUEBAS.md y, si hay cambios, PATCH.diff y/o files/ (deleted_files opcional).',
+        '- Ignora menciones antiguas dentro de AGENTS.md o PROYECTO_CLAUDE.md a actualizar.html, bloques @@@ o JSON.',
+      ];
+      for (const item of chosen) {
+        const content = await fetchText(`catalogo/${proj.slug}/files/${item.path}`);
+        chunks.push(
+          `===== FILE: ${item.path} | sha256: ${item.sha} =====\n` +
+          `${content.trimEnd()}\n` +
+          `===== END FILE: ${item.path} =====`
+        );
+      }
+      return chunks.join('\n\n') + '\n';
+    }
+
+    async function selectApp(proj) {
+      selectedProj = proj;
+      localStorage.setItem('puente_last_app', proj.slug);
+      document.querySelectorAll('#app-selector button').forEach((b) => {
+        b.setAttribute('aria-pressed', String(b.dataset.slug === proj.slug));
+      });
+      updateDynamicPhrases();
+
+      const meta = document.getElementById('app-meta');
+      const actions = document.getElementById('app-step1-actions');
+      const privNote = document.getElementById('app-private-note');
+      const step2 = document.getElementById('opus-step2');
+
+      if (!proj.public) {
+        meta.textContent = 'Repositorio privado';
+        actions.hidden = true;
+        privNote.hidden = false;
+        step2.hidden = true;
+        selectedState = null;
+        pickerRows = [];
+        return;
+      }
+
+      actions.hidden = false;
+      privNote.hidden = true;
+      step2.hidden = false;
+      meta.innerHTML = `Commit <strong>${(proj.commit || '').slice(0, 10)}</strong> · ${proj.file_count || 0} archivos públicos`;
+
+      document.getElementById('btn-dl-estado').textContent = `Descargar ESTADO_${proj.slug}.txt`;
+      document.getElementById('opus-paste').value = '';
+      document.getElementById('file-filter').value = '';
+
+      const list = document.getElementById('picker-list');
+      list.textContent = 'Cargando lista de archivos...';
+      pickerRows = [];
+      updateSelectionSummary('');
+
+      try {
+        let st = stateCache.get(proj.slug);
+        if (!st) {
+          st = await fetchJson(`catalogo/${proj.slug}/estado.json`);
+          stateCache.set(proj.slug, st);
+        }
+        selectedState = st;
+        const files = st.files || [];
+        document.getElementById('manual-picker-summary').textContent = `Ver o ajustar los ${files.length} archivos manualmente`;
+        list.textContent = '';
+
+        for (const f of files) {
+          const lbl = document.createElement('label');
+          lbl.className = 'picker-item';
+          const cb = document.createElement('input');
+          cb.type = 'checkbox';
+          cb.value = f.path;
+          cb.addEventListener('change', () => updateSelectionSummary('Selección manual'));
+
+          const spanPath = document.createElement('span');
+          spanPath.className = 'picker-path';
+          spanPath.textContent = f.path;
+
+          const sz = document.createElement('span');
+          sz.className = 'subtle num';
+          sz.textContent = `${Math.max(1, Math.round((f.size || 0) / 1024))} KB`;
+
+          lbl.appendChild(cb);
+          lbl.appendChild(spanPath);
+          lbl.appendChild(sz);
+          list.appendChild(lbl);
+          pickerRows.push({ cb, lbl, path: f.path, sha: f.sha256 || '', size: f.size || 0 });
+        }
+        updateSelectionSummary('');
+      } catch (err) {
+        list.textContent = `No se pudo cargar la lista de archivos: ${err.message}`;
+      }
     }
 
     async function loadAll() {
       const btnRefresh = document.getElementById('refresh-btn');
       btnRefresh.disabled = true;
+      stateCache.clear();
       await resolveSource();
+
       try {
         const [st, cat, txt] = await Promise.all([
           fetchJson('estado.json'),
           fetchJson('catalogo.json'),
           fetchText('ultimo/PARA_COPILOT.txt').catch(() => ''),
         ]);
+
         handoffText = txt;
+        const isPending = st.status === 'ready_for_copilot';
+        document.getElementById('ag-pending-dot').hidden = !isPending;
+        document.getElementById('ag-pending-dot').className = isPending ? 'dot ok' : 'dot';
+
         document.getElementById('h-id').textContent = st.latest_task_id || 'Ninguno';
         document.getElementById('h-app').textContent = st.project || '-';
         document.getElementById('h-commit').textContent = (st.final_commit || st.source_commit || '-').slice(0, 12);
-        const kb = txt ? `${(new Blob([txt]).size / 1024).toFixed(1)} KB` : '0 KB';
+        const bytesLen = txt ? new Blob([txt]).size : 0;
+        const kb = txt ? `${(bytesLen / 1024).toFixed(1)} KB` : '0 KB';
         document.getElementById('h-size').textContent = kb;
         document.getElementById('h-obj').textContent = st.objective ? `Objetivo: ${st.objective}` : '';
-        const statusPill = document.getElementById('handoff-status-pill');
-        statusPill.textContent = st.status || 'empty';
-        statusPill.className = st.status === 'ready_for_copilot' ? 'pill live' : 'pill';
 
-        const bytesLen = txt ? new Blob([txt]).size : 0;
-        const btnCopy = document.getElementById('btn-copy-handoff');
-        const btnDl = document.getElementById('btn-dl-handoff');
+        const hDot = document.getElementById('h-status-dot');
+        const hLabel = document.getElementById('h-status-label');
+        hDot.className = isPending ? 'dot ok' : 'dot';
+        hLabel.textContent = isPending ? 'Listo para Opus' : 'Sin traspaso pendiente · última cerrada';
+
+        const btnCopyH = document.getElementById('btn-copy-handoff');
+        const btnDlH = document.getElementById('btn-dl-handoff');
         const advice = document.getElementById('h-advice');
         if (bytesLen > 20480) {
-          btnDl.className = 'primary';
-          btnCopy.className = '';
-          advice.textContent = `Recomendado (${kb}): pulsa "Descargar PARA_COPILOT.txt" y arrastra el archivo al chat de Copilot para que no se corte.`;
+          btnDlH.className = 'primary';
+          btnCopyH.className = '';
+          advice.textContent = `Recomendado (${kb}): descarga PARA_COPILOT.txt y arrástralo al chat de Opus para que no se corte.`;
         } else {
-          btnCopy.className = 'primary';
-          btnDl.className = '';
-          advice.textContent = `Recomendado (${kb}): pulsa "Copiar texto" y pégalo directo en Copilot (o descárgalo como .txt).`;
+          btnCopyH.className = 'primary';
+          btnDlH.className = '';
+          advice.textContent = `Recomendado (${kb}): pulsa "Copiar texto" y pégalo directo en Opus (o descárgalo como .txt).`;
         }
         document.getElementById('h-preview').textContent = txt || 'Todavía no hay PARA_COPILOT.txt.';
 
-        const appsBox = document.getElementById('apps-container');
-        appsBox.textContent = '';
-        for (const proj of (cat.projects || [])) {
-          appsBox.appendChild(buildAppRow(proj));
+        catalogProjects = cat.projects || [];
+        const selector = document.getElementById('app-selector');
+        selector.textContent = '';
+        for (const proj of catalogProjects) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.textContent = proj.name;
+          btn.dataset.slug = proj.slug;
+          btn.setAttribute('aria-pressed', 'false');
+          btn.addEventListener('click', () => selectApp(proj));
+          selector.appendChild(btn);
         }
+
+        const savedSlug = localStorage.getItem('puente_last_app');
+        const initialProj =
+          catalogProjects.find((p) => p.slug === savedSlug && p.public) ||
+          catalogProjects.find((p) => p.public) ||
+          catalogProjects[0];
+
+        if (initialProj) {
+          await selectApp(initialProj);
+        } else {
+          document.getElementById('app-meta').textContent = 'No hay aplicaciones registradas.';
+        }
+
+        setTab(isPending ? 'antigravity' : 'opus');
       } catch (err) {
+        document.getElementById('app-meta').textContent = `Error cargando catálogo: ${err.message}`;
         document.getElementById('h-preview').textContent = `Error cargando estado: ${err.message}`;
       } finally {
         btnRefresh.disabled = false;
@@ -538,17 +1042,104 @@
     }
 
     document.getElementById('refresh-btn').addEventListener('click', loadAll);
+
+    document.getElementById('btn-dl-estado').addEventListener('click', async (e) => {
+      if (!selectedProj || !selectedProj.public) return;
+      const btn = e.currentTarget;
+      btn.disabled = true;
+      try {
+        const path = selectedProj.estado_txt_path || `catalogo/${selectedProj.slug}/ESTADO_${selectedProj.slug}.txt`;
+        const txt = await fetchText(path);
+        downloadText(`ESTADO_${selectedProj.slug}.txt`, txt);
+      } catch (err) {
+        alert(`No se pudo descargar ESTADO_${selectedProj.slug}.txt: ${err.message}`);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById('btn-copy-estado').addEventListener('click', async (e) => {
+      if (!selectedProj || !selectedProj.public) return;
+      const btn = e.currentTarget;
+      btn.disabled = true;
+      try {
+        const path = selectedProj.estado_txt_path || `catalogo/${selectedProj.slug}/ESTADO_${selectedProj.slug}.txt`;
+        const txt = await fetchText(path);
+        await copyString(txt, btn);
+      } catch (err) {
+        alert(`No se pudo copiar el estado: ${err.message}`);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById('opus-paste').addEventListener('input', applyOpusPaste);
+
+    document.getElementById('file-filter').addEventListener('input', (e) => {
+      const q = e.target.value.trim().toLowerCase();
+      for (const r of pickerRows) {
+        r.lbl.style.display = !q || r.path.toLowerCase().includes(q) ? 'flex' : 'none';
+      }
+    });
+
+    document.getElementById('btn-mark-main').addEventListener('click', () => {
+      for (const r of pickerRows) r.cb.checked = isMainCodeFile(r.path);
+      updateSelectionSummary('Código principal');
+    });
+
+    document.getElementById('btn-clear-files').addEventListener('click', () => {
+      document.getElementById('opus-paste').value = '';
+      for (const r of pickerRows) r.cb.checked = false;
+      updateSelectionSummary('');
+    });
+
+    document.getElementById('btn-dl-archivos').addEventListener('click', async (e) => {
+      const btn = e.currentTarget;
+      btn.disabled = true;
+      const prev = btn.textContent;
+      btn.textContent = 'Empaquetando...';
+      try {
+        const txt = await buildPackText();
+        if (txt) downloadText(`ARCHIVOS_${selectedProj.slug}.txt`, txt);
+      } catch (err) {
+        alert(`Error al empaquetar archivos: ${err.message}`);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = prev;
+        updateSelectionSummary('');
+      }
+    });
+
+    document.getElementById('btn-copy-archivos').addEventListener('click', async (e) => {
+      const btn = e.currentTarget;
+      btn.disabled = true;
+      try {
+        const txt = await buildPackText();
+        if (txt) await copyString(txt, btn);
+      } catch (err) {
+        alert(`Error al copiar archivos: ${err.message}`);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
     document.getElementById('btn-copy-handoff').addEventListener('click', (e) => {
       if (!handoffText) return;
       copyString(handoffText, e.currentTarget);
     });
+
     document.getElementById('btn-dl-handoff').addEventListener('click', () => {
       if (!handoffText) return;
       downloadText('PARA_COPILOT.txt', handoffText);
     });
-    document.querySelectorAll('.mini-copy').forEach((btn) => {
-      btn.addEventListener('click', () => copyString(btn.dataset.text, btn));
+
+    document.querySelectorAll('.copy-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const txt = btn.dataset.copy;
+        if (txt) copyString(txt, btn);
+      });
     });
+
     loadAll();
   </script>
 </body>

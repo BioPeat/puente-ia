@@ -84,9 +84,17 @@ function accCard(a, rows) {
   const iban4 = a.iban ? a.iban.slice(-4) : '', hasIbanInName = iban4 && String(a.name || '').includes(iban4);
   const lastTx = (a.kind === 'bank' || a.kind === 'cash') ? state.tx.filter(t => t.acc === a.id).map(t => t.date).sort().at(-1) : '';
   const ik = instKey(a), auto = !!(state.apiBal[a.id] || a.ebUid);
-  const sub = (iban4 && !hasIbanInName) ? '•••• ' + iban4 : a.address ? a.address.slice(0, 6) + '…' + a.address.slice(-4) : n ? n + ' ' + (n === 1 ? 'activo' : 'activos') : lastTx ? 'Últ. mov. ' + fmtDate(lastTx, { day: 'numeric', month: 'short' }) : auto ? 'Sincronizado en vivo' : 'Saldo verificado';
+  const syncTs = a.ebBalTs || state.apiBal[a.id]?.ts || 0;
+  const ebExp = a.ebUid && a.ebValidUntil && a.ebValidUntil <= addDays(today(), 7);
+  const tagHTML = (a.ebUid && a.ebLastError) ? '<span class="tag err">revisar</span>'
+    : ebExp ? '<span class="tag warn">renovar</span>'
+    : (a.ebPending && !a.ebUid) ? '<span class="tag warn">conectar PSD2</span>'
+    : auto ? '<span class="tag ok">auto</span>'
+    : '<span class="tag">' + esc(KIND_NAMES[a.kind] || '') + '</span>';
+  const fresh = auto && syncTs ? ' · ' + ago(syncTs) : '';
+  const sub = (a.ebPending && !a.ebUid) ? 'Autorizar en Enable Banking' : (a.ebUid && a.ebLastError) ? 'Error PSD2 · toca para ver' : (iban4 && !hasIbanInName) ? '•••• ' + iban4 + fresh : a.address ? a.address.slice(0, 6) + '…' + a.address.slice(-4) : n ? n + ' ' + (n === 1 ? 'activo' : 'activos') : lastTx ? 'Últ. mov. ' + fmtDate(lastTx, { day: 'numeric', month: 'short' }) : auto ? (syncTs ? 'Sync ' + ago(syncTs) : 'Sincronizado en vivo') : 'Saldo verificado';
   return '<button type="button" class="acard k-' + a.kind + (ik ? ' inst-' + ik : '') + '" data-acc="' + a.id + '">'
-    + '<span class="top"><span class="acc-title"><i class="cat-dot k-' + a.kind + (ik ? ' inst-' + ik : '') + '"></i><span>' + esc(a.name) + '</span></span>' + (auto ? '<span class="tag ok">auto</span>' : '<span class="tag">' + esc(KIND_NAMES[a.kind] || '') + '</span>') + '</span>'
+    + '<span class="top"><span class="acc-title"><i class="cat-dot k-' + a.kind + (ik ? ' inst-' + ik : '') + '"></i><span>' + esc(a.name) + '</span></span>' + tagHTML + '</span>'
     + '<span class="acc-bottom"><span class="val">' + money(v, { d: 0 }) + '</span><span class="sub">' + esc(sub) + '</span></span></button>';
 }
 function derivCardHTML(d) {
@@ -426,13 +434,33 @@ function vAccountDetail(accId) {
   const ops = state.ledger.filter(l => l.acc === a.id).sort((x, y) => y.t.localeCompare(x.t));
   const ders = derivRows().filter(d => d.acc === a.id);
   const isCash = a.kind === 'bank' || a.kind === 'cash';
-  const apiSyncTs = state.apiBal[a.id]?.ts;
+  const apiSyncTs = a.ebBalTs || state.apiBal[a.id]?.ts;
+  const ebOpen = !!(a.kind === 'bank' && state.workerInfo?.openBanking);
+  const ebRenew = a.ebUid && (a.ebLastError || (a.ebValidUntil && a.ebValidUntil <= addDays(today(), 14)));
+  const isSan = instKey(a) === 'santander';
   const acts = btn('← Todas', 'data-act="acc-back"', 'ghost') + btn('Editar', 'data-act="edit-acc" data-id="' + a.id + '"', 'ghost')
-    + (isCash ? btn(ico('upload') + 'Importar extracto', 'data-act="import"', 'primary') : (a.api ? btn(ico('sync') + 'Sincronizar', 'data-act="refresh"', 'primary') : btn('+ Operación', 'data-act="add-op"', 'primary')));
+    + (isCash
+      ? (a.ebUid
+        ? btn(ico('sync') + 'Sincronizar', 'data-act="sync-banks"', 'primary') + (ebRenew ? btn('Renovar PSD2', 'data-act="bank-connect"', 'ghost') : '') + btn(ico('upload') + 'Importar extracto', 'data-act="import"', 'ghost')
+        : (ebOpen ? btn(ico('bank') + 'Conectar Enable Banking', isSan ? 'data-act="eb-quick-santander"' : 'data-act="bank-connect"', 'primary') + btn(ico('upload') + 'Importar extracto', 'data-act="import"', 'ghost') : btn(ico('upload') + 'Importar extracto', 'data-act="import"', 'primary')))
+      : (a.api ? btn(ico('sync') + 'Sincronizar', 'data-act="refresh"', 'primary') : btn('+ Operación', 'data-act="add-op"', 'primary')));
+
+  const ebWarn = a.ebUid && a.ebValidUntil && a.ebValidUntil <= addDays(today(), 7)
+    ? '<div class="callout warn mt-12">Autorización PSD2 próxima a caducar o caducada (' + esc(a.ebValidUntil.slice(0, 10)) + '). ' + btn('Renovar', 'data-act="bank-connect"', 'small') + '</div>'
+    : '';
+  const ebErr = a.ebUid && a.ebLastError
+    ? '<div class="callout err mt-12">' + esc(a.ebLastError) + ' ' + btn('Reautorizar', isSan ? 'data-act="eb-quick-santander"' : 'data-act="bank-connect"', 'small') + '</div>'
+    : '';
+  const ebExcelCallout = (a.kind === 'bank' && !a.ebUid && typeof hasUploadedBankExcel === 'function' && hasUploadedBankExcel(a.id))
+    ? '<div class="callout warn mt-12">Esta cuenta muestra datos de un Excel subido manualmente. ' + btn('Eliminar Excel y usar solo Enable Banking', 'data-act="purge-bank-excel" data-id="' + a.id + '"', 'small') + '</div>'
+    : (a.kind === 'bank' && !a.ebUid && a.ebPending)
+      ? '<div class="callout info mt-12">Excel eliminado. Autoriza tu cuenta en Enable Banking para sincronizar saldo y movimientos en vivo. ' + btn(isSan ? 'Autorizar Santander ahora' : 'Autorizar banco', isSan ? 'data-act="eb-quick-santander"' : 'data-act="bank-connect"', 'primary small') + '</div>'
+      : '';
 
   return head(esc(a.name), (KIND_NAMES[a.kind] || 'Cuenta') + (a.iban ? ' · ' + esc(a.iban) : '') + (a.address ? ' · ' + esc(a.address.slice(0, 10) + '…' + a.address.slice(-6)) : ''), acts)
     + '<div class="grid">'
-    + '<section class="panel span4"><div class="position-eyebrow">Saldo en cuenta</div><div class="position-value">' + moneyBig(valAcc) + '</div><div class="position-status">' + (state.apiBal[a.id] ? '<span class="tag ok">Sincronización API</span>' : a.ebUid ? '<span class="tag ok">Open Banking PSD2</span>' : '<span class="tag">Manual / Importada</span>') + (apiSyncTs ? ' <small class="faint">' + fmtDate(new Date(apiSyncTs).toISOString().slice(0, 10)) + '</small>' : '') + '</div>'
+    + '<section class="panel span4"><div class="position-eyebrow">Saldo en cuenta</div><div class="position-value">' + moneyBig(valAcc) + '</div><div class="position-status">' + (a.ebUid ? '<span class="tag ok">Open Banking PSD2</span>' : state.apiBal[a.id] ? '<span class="tag ok">Sincronización API</span>' : '<span class="tag">Manual / Importada</span>') + (apiSyncTs ? ' <small class="faint">' + fmtDate(new Date(apiSyncTs).toISOString().slice(0, 10)) + '</small>' : '') + '</div>'
+    + ebErr + ebWarn + ebExcelCallout
     + (!isCash ? '<div class="label">Activos en cartera (' + rows.length + ')</div>' + (rows.length ? '<div class="kv">' + rows.map(r => '<dt>' + esc(r.asset) + ' <span class="faint">' + nf(r.qty, r.qty < 1 ? 6 : 2, 0) + '</span></dt><dd>' + money(r.eur, { d: 0 }) + '</dd>').join('') + '</div>' : '<p class="muted">Sin activos registrados.</p>') : '')
     + (ders.length ? '<div class="label">Derivados (' + ders.length + ')</div>' + ders.map(d => '<button type="button" class="upcoming-line rec-line acc-deriv-row" ' + (d.api ? 'data-select-sym="' + esc(d.markSym) + '"' : 'data-deriv="' + esc(d.id) + '"') + '><span class="tag ' + (d.side === 'short' ? 'err' : 'ok') + '">' + (d.side === 'short' ? 'Corto' : 'Largo') + (d.lev ? ' ' + d.lev + '×' : '') + '</span><span><b>' + esc(d.instr) + '</b><small>Margen ' + money(d.marginEUR, { d: 0 }) + '</small></span><strong class="' + cls(d.pnlEUR) + '">' + money(d.pnlEUR, { sign: true }) + '</strong></button>').join('') : '')
     + (!isCash && state.apiBal[a.id] && !ops.length ? '<div class="callout info mt-12">Saldos en vivo por API. Importa tu historial CSV si necesitas coste FIFO.</div>' : '')
@@ -449,8 +477,10 @@ function vCuentasDesktop() {
     return head('Cuentas', 'Conecta tus bancos, exchanges, brókeres y wallets.', btn(ico('link') + 'Conectar', 'data-act="connect-hub"', 'primary'))
       + '<div class="panel"><div class="empty"><b>Sin cuentas todavía</b>Pulsa «Conectar» para añadir Santander, KuCoin, Kraken, Revolut o cualquier wallet/bróker.</div></div>';
   }
+  const hasAuto = workerEndpoints().length && state.accounts.some(a => a.api || a.ebUid || a.address);
   return head('Cuentas', state.accounts.length + ' cuentas · ' + money(nw.total, { d: 0 }),
-    btn(ico('plus') + 'Manual', 'data-act="add-acc"', 'ghost') + btn(ico('link') + 'Conectar', 'data-act="connect-hub"', 'primary'))
+    (hasAuto ? btn(ico('sync'), 'data-act="refresh" aria-label="Sincronizar cuentas" title="Sincronizar cuentas"', 'ghost iconbtn') : '')
+    + btn(ico('plus') + 'Manual', 'data-act="add-acc"', 'ghost') + btn(ico('link') + 'Conectar', 'data-act="connect-hub"', 'primary'))
     + groups.filter(([k]) => state.accounts.some(a => a.kind === k)).map(([k, t]) => {
       const accs = state.accounts.filter(a => a.kind === k).sort((a, b) => accValue(b, nw.rows) - accValue(a, nw.rows)), tot = sum(accs.map(a => accValue(a, nw.rows)));
       return '<div class="acc-group-head"><h2>' + t + '</h2><b class="num">' + money(tot, { d: 0 }) + '</b></div><div class="cards-grid">' + accs.map(a => accCard(a, nw.rows)).join('') + '</div>';

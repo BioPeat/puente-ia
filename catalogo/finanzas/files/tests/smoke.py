@@ -72,6 +72,30 @@ async def browser_checks():
             return await route.fulfill(json={'trending': [{'symbol': 'BTC', 'price': 65000, 'change': 2.1}, {'symbol': 'SOL', 'price': 150, 'change': 9}], 'news': [{'title': 'Resumen del mercado', 'url': 'https://example.com', 'publisher': 'Fuente'}], 'quotes': []})
         if p.startswith('/ai'):
             return await route.fulfill(json={'text': '### Análisis Gemini\n- Posiciones abiertas verificadas correctamente.', 'provider': 'gemini', 'model': 'gemini-2.5-flash'})
+        if p == '/bank/sync':
+            req_body = json.loads(r.post_data or '{}')
+            accs_out = []
+            for req_acc in req_body.get('accounts', []):
+                uid_b = req_acc.get('uid')
+                if uid_b == 'eb_santander_1':
+                    accs_out.append({
+                        'uid': uid_b, 'bal': 930.00, 'currency': 'EUR', 'balanceType': 'ITAV',
+                        'tx': [
+                            {'id': 'eb_dup_1', 'date': '2026-11-02', 'desc': 'Bizum Ana Lopez', 'amount': 45.00, 'bal': 412.94, 'currency': 'EUR'},
+                            {'id': 'eb_new_1', 'date': '2026-11-27', 'desc': 'Ingreso nómina extra', 'amount': 517.06, 'bal': 930.00, 'currency': 'EUR'}
+                        ],
+                        'warnings': []
+                    })
+                elif uid_b == 'eb_santander_only':
+                    accs_out.append({
+                        'uid': uid_b, 'bal': 930.00, 'currency': 'EUR', 'balanceType': 'ITAV',
+                        'tx': [
+                            {'id': 'eb_only_1', 'date': '2026-11-25', 'desc': 'Compra supermercado', 'amount': -18.00, 'bal': None, 'currency': 'EUR'},
+                            {'id': 'eb_only_2', 'date': '2026-11-26', 'desc': 'Alquiler', 'amount': -500.00, 'bal': None, 'currency': 'EUR'}
+                        ],
+                        'warnings': []
+                    })
+            return await route.fulfill(json={'accounts': accs_out, 'errors': [], 'ts': 1764250000000})
         m = re.match(r'/sync/(\w+)', p)
         if m:
             if r.method == 'PUT':
@@ -134,6 +158,34 @@ async def browser_checks():
         await ev("document.querySelector('[data-act=\"worker-test\"]').click()"); await pg.wait_for_timeout(800)
         r = await ev("({acc:state.accounts.find(a=>a.api==='kucoin')?.name,btc:priceEUR('BTC'),nw:netWorth().total,der:derivRows().length,version:state.workerInfo?.version==='w6'})")
         ok(f"Worker w6 conectado, patrimonio {round(r['nw'])} €, {r['der']} derivados") if r['version'] and r['acc'] == 'KuCoin' and r['btc'] > 50000 and r['der'] == 2 else fail('Worker w6: ' + str(r))
+        # Open Banking PSD2 Santander: purga Excel previo y cuenta Excel duplicada, usa solo Enable Banking (930 €)
+        r_eb = await ev("""(async()=>{
+          const snap = JSON.stringify(state);
+          const sAcc = state.accounts[0];
+          const excelIds = state.tx.filter(t => t.acc === sAcc.id && isFileImportSrc(t.src)).map(t => t.id);
+          const dupAcc = { id: 'a_san_dup', name: 'Santander Excel', kind: 'bank', inst: 'Santander', currency: 'EUR', fmt: 'santander', manualBal: 412.94 };
+          state.accounts.push(dupAcc);
+          state.tx.push({ id: 't_dup_excel', acc: dupAcc.id, date: '2026-11-01', desc: 'Compra Excel', amount: -10, bal: 412.94, src: 'movimientos.xlsx', cat: 'otros' });
+          sAcc.ebUid = 'eb_santander_1';
+          await syncConnectedBanks(true, { force: true });
+          const balMerged = bankBalance(sAcc);
+          const excelLeft = state.tx.filter(t => t.acc === sAcc.id && isFileImportSrc(t.src)).length;
+          const dupLeft = state.accounts.some(a => a.id === 'a_san_dup');
+          const deletedTracked = excelIds.every(id => state.deleted[id] > 0) && state.deleted['t_dup_excel'] > 0 && state.deleted['a_san_dup'] > 0;
+          const ebCount = state.tx.filter(t => t.acc === sAcc.id && t.src === 'enablebanking').length;
+          const solo = { id: 'a_eb_solo', name: 'Santander PSD2', kind: 'bank', inst: 'Santander', currency: 'EUR', manualBal: 0, ebUid: 'eb_santander_only' };
+          state.accounts.push(solo);
+          await syncConnectedBanks(true, { force: true });
+          const balSolo = bankBalance(solo);
+          const freshSkip = await syncConnectedBanks(false);
+          solo.ebBalTs = Date.now() - 31 * 60e3;
+          solo.ebSyncAttemptTs = Date.now() - 31 * 60e3;
+          const staleRun = await syncConnectedBanks(false);
+          state = migrate(JSON.parse(snap));
+          save(false);
+          return { balMerged, balSolo, excelLeft, dupLeft, deletedTracked, ebCount, freshSkip, staleRun };
+        })()""")
+        ok(f"Open Banking Santander en vivo ({r_eb['balMerged']} € / {r_eb['balSolo']} €) y purga Excel") if abs(r_eb['balMerged'] - 930.0) < 0.01 and abs(r_eb['balSolo'] - 930.0) < 0.01 and r_eb['excelLeft'] == 0 and not r_eb['dupLeft'] and r_eb['deletedTracked'] and r_eb['ebCount'] == 2 and r_eb['freshSkip']['updated'] == 0 and r_eb['staleRun']['updated'] == 1 else fail('Open Banking Santander: ' + str(r_eb))
         check('Worker')
 
         print('6. Historiales e impuestos FIFO')
@@ -157,6 +209,16 @@ async def browser_checks():
         r = await pg2.evaluate("({home:!!document.querySelector('.mobile-home'),tabs:document.querySelectorAll('#nav-tabs button').length,fb:state.settings.workerFallback,tx:state.tx.length,ss:syncState,minTap:Math.min(...[...document.querySelectorAll('#nav-tabs button,.mobile-fab,.topbar .iconbtn')].filter(x=>x.offsetParent!==null).map(x=>Math.min(x.getBoundingClientRect().width,x.getBoundingClientRect().height)))})")
         ok('Móvil propio, 5 pestañas y controles >= 44 px') if r['home'] and r['tabs'] == 5 and r['minTap'] >= 44 else fail('Diseño móvil: ' + str(r))
         ok('Vinculación conserva respaldo y móvil vacío no fuerza PUT') if r['fb'] == 'https://worker-backup.test' and r['tx'] == 40 and r['ss'] == 'ok' and sync_opts['put_count'] == 0 else fail('Vinculación móvil: ' + str(r) + ' puts=' + str(sync_opts['put_count']))
+        t_mob = await pg2.evaluate("""(()=>{
+          const b=document.querySelector('#theme-top'), h=document.querySelector('#hide-top');
+          const br=b?.getBoundingClientRect(), hr=h?.getBoundingClientRect();
+          const before=document.documentElement.dataset.theme;
+          b?.click();
+          const after=document.documentElement.dataset.theme;
+          b?.click();
+          return {vis:!!(br&&br.width>=44&&br.height>=44&&hr),adj:!!(br&&hr&&br.left>=hr.right-2),before,after,restored:document.documentElement.dataset.theme};
+        })()""")
+        ok('Botón rápido claro/oscuro en móvil junto a privacidad') if t_mob['vis'] and t_mob['adj'] and t_mob['before'] != t_mob['after'] and t_mob['before'] == t_mob['restored'] else fail('Botón tema móvil: ' + str(t_mob))
         await pg2.evaluate("""(()=>{const fire=(t,x,y)=>document.dispatchEvent(new PointerEvent(t,{bubbles:true,pointerId:7,pointerType:'touch',isPrimary:true,clientX:x,clientY:y}));fire('pointerdown',4,360);fire('pointermove',125,362);fire('pointerup',125,362)})()""")
         ok('Gesto borde izquierdo abre menú') if await pg2.evaluate("document.querySelector('#mobile-drawer').classList.contains('open')") else fail('Gesto borde falló')
         await ctx2.close()
@@ -190,6 +252,15 @@ async def browser_checks():
             r = await ev("({overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,hero:parseFloat(getComputedStyle(document.querySelector('.position-value')).fontSize),body:parseFloat(getComputedStyle(document.body).fontSize)})")
             if r['overflow'] > 1: fail(f'Desbordamiento a {width}px: {r}')
             if width < 1024 and r['hero'] < r['body'] * 2.5: fail(f'Jerarquía móvil débil a {width}px: {r}')
+        t_pc = await ev("""(()=>{
+          const b=document.querySelector('#theme-side');
+          const before=document.documentElement.dataset.theme;
+          b?.click();
+          const after=document.documentElement.dataset.theme;
+          b?.click();
+          return {before,after,restored:document.documentElement.dataset.theme};
+        })()""")
+        ok('Botón rápido claro/oscuro en escritorio') if t_pc['before'] != t_pc['after'] and t_pc['before'] == t_pc['restored'] else fail('Botón tema PC: ' + str(t_pc))
         ok('Responsive 360–1920 px sin desbordamiento')
         await b.close()
 

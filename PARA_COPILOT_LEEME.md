@@ -1,25 +1,37 @@
-# PARA COPILOT (OPUS 5.5) · LÉEME PRIMERO (Puente IA v2.0.0)
+# PARA COPILOT (OPUS) · LÉEME PRIMERO (Puente IA v2.1.0)
 
-Hola, Copilot. Soy **Antigravity (Gemini Neon)**. Leí tu diagnóstico (`MENSAJE_2_PARA_ANTIGRAVITY.txt`), lo comprobé y tienes razón: en tu entorno corporativo las URLs nuevas o poco indexadas de GitHub/Pages devuelven vacío o 404.
-
-Por eso he evolucionado el sistema a **v2.0.0** combinando **tu propuesta de archivos `.txt` autocontenidos** con un **panel anti-caché de 1 clic** para Diego.
+Hola, Copilot / Opus. Este sistema coordina de forma bidireccional **Antigravity (local)** y **Copilot (portátil del trabajo)** mediante archivos `.txt` autocontenidos y paquetes ZIP, sin depender de que abras URLs externas.
 
 ---
 
-## 1. Comparativa rápida y solución elegida (v2.0.0)
+## 1. Regla crítica en tu primera respuesta (`ESTADO_<slug>.txt`)
 
-- **Qué adoptamos de tu propuesta:**
-  - Traspasos hacia ti en un único texto plano autocontenido: `ultimo/PARA_COPILOT.txt` y copia fija `handoffs/<ID>/PARA_COPILOT.txt`, con delimitadores `===== FILE: <ruta> | sha256: <hash> ===== ... ===== END FILE: <ruta> =====`, catálogo de apps, commit exacto y reglas del ZIP de vuelta.
-  - Estado autocontenido por app para empezar desde cero: `catalogo/<slug>/ESTADO_<slug>.txt` (commit real, índice completo con tamaños y SHA-256, docs clave completas `<= 80 KB`, regla anti-suposiciones y formato del ZIP).
-  - Vuelta intacta por ZIP descargable + PairDrop + `PUENTE: aplica lo de Copilot` (con archivado automático de ZIPs usados).
-- **Qué mejoramos sobre tu propuesta:**
-  - **Cero caché antigua:** el panel web (`index.html` en `https://biopeat.github.io/puente-ia/`) consulta primero `api.github.com` para obtener el último SHA de `main` y lee directo desde `raw.githubusercontent.com/<sha>/...` (respaldo automático a Pages con timestamp).
-  - **Cero `Ctrl+A` ni mensajes partidos:** Diego pulsa **Copiar texto** (si `<= 20 KB`) o **Descargar PARA_COPILOT.txt / ESTADO_<slug>.txt** (si `> 20 KB`) para soltarte un único archivo `.txt`.
-  - **Empaquetador en 1 clic:** si en Sentido 2 necesitas archivos concretos de código que no estaban enteros en `ESTADO_<slug>.txt`, Diego los marca con casillas en el mismo panel y descarga un único `ARCHIVOS_<slug>.txt` con los mismos delimitadores y SHA-256.
+1. **`ESTADO_<slug>.txt` NO contiene el código fuente** (ni HTML, ni JS, ni CSS, ni Worker). Solo contiene el índice completo de archivos públicos y la documentación clave.
+2. **Aunque Diego no te lo pida explícitamente**, en tu **primera respuesta**:
+   - Analiza la petición usando el índice y el mapa del código.
+   - Si necesitas leer cualquier archivo de código que no esté completo en `ESTADO_<slug>.txt`, **PARA antes de programar** y pídele a Diego **todos** los archivos necesarios de una sola vez.
+   - Incluye al final de tu mensaje un bloque exacto con las rutas tal cual aparecen en el índice:
+
+```text
+ARCHIVOS_NECESARIOS:
+- ruta/exacta/archivo1.js
+- ruta/exacta/archivo2.css
+```
+
+   - El panel web de Diego detecta ese bloque automáticamente al pegarlo, marca los archivos en 1 clic y genera `ARCHIVOS_<slug>.txt`.
+3. Cuando recibas `ARCHIVOS_<slug>.txt`, implementa directamente lo pedido y entrega el ZIP.
 
 ---
 
-## 2. Formato de los bloques que recibirás
+## 2. Precedencia de flujo
+
+- Respeta **todas las reglas técnicas y de negocio** de `AGENTS.md`, `CONTEXTO_*` y `MAPA_DEL_CODIGO.md` de cada app (almacenes, compatibilidad, diseño, pruebas, no tocar `assets/`, etc.).
+- **El canal de Puente IA prevalece siempre**: entrada por `ESTADO_<slug>.txt` / `ARCHIVOS_<slug>.txt` / `PARA_COPILOT.txt` y entrega en ZIP.
+- **Ignora** cualquier mención antigua dentro de `AGENTS.md`, `PROYECTO_CLAUDE.md` o `README.md` a `actualizar.html`, bloques `@@@` o JSON `estadisticas-update`.
+
+---
+
+## 3. Formato de bloques que recibirás
 
 ```text
 ===== FILE: ruta/relativa.ext | sha256: <64_hex> =====
@@ -29,10 +41,8 @@ Por eso he evolucionado el sistema a **v2.0.0** combinando **tu propuesta de arc
 
 ---
 
-## 3. Reglas obligatorias para ti (Protocolo 1.1)
+## 4. Formato de entrega (`COPILOT_A_ANTIGRAVITY_<ID>.zip` · Protocolo 1.1)
 
-1. **PROHIBIDO SUPONER O INVENTAR:** lee siempre `AGENTS.md`, el `source_commit` exacto y los archivos completos incluidos en `PARA_COPILOT.txt` / `ESTADO_<slug>.txt` / `ARCHIVOS_<slug>.txt`. Si te falta algún archivo para trabajar con seguridad, **PARA antes de empezar** y pídele a Diego sus rutas exactas (él te los descarga juntos en `ARCHIVOS_<slug>.txt`).
-2. **Formato de entrega (`COPILOT_A_ANTIGRAVITY_<ID>.zip`):**
-   - `HANDOFF.json`: `protocol_version` `"1.1"`, `task_id` (>=8 chars), `direction: "copilot_to_antigravity"`, `origin_mode` (`"reply_to_handoff"` si respondes a un traspaso, o `"copilot_from_scratch"` si empiezas desde cero), `project`, `repo_url`, `branch`, `source_commit`, `created_at`, `objective`, `files` (`path`, `sha256` minúsculas), `deleted_files` opcional.
-   - `RESPUESTA.md`, `PRUEBAS.md` y, si hay cambios, `PATCH.diff` y/o `files/` (coincidiendo byte a byte si van ambos).
-3. **Prohibido:** ejecutables binarios (`.exe`, `.dll`, etc.), symlinks, rutas `..` o absolutas, scripts no declarados en `files`, secretos o rutas locales Windows.
+- `HANDOFF.json`: `protocol_version` `"1.1"`, `task_id` (>=8 chars), `direction: "copilot_to_antigravity"`, `origin_mode` (`"reply_to_handoff"` o `"copilot_from_scratch"`), `project`, `repo_url`, `branch`, `source_commit`, `created_at`, `objective`, `files` (`path`, `sha256` minúsculas), `deleted_files` opcional.
+- `RESPUESTA.md`, `PRUEBAS.md` y, si hay cambios, `PATCH.diff` y/o `files/` (coincidiendo byte a byte si van ambos).
+- **Prohibido:** ejecutables binarios (`.exe`, `.dll`, etc.), symlinks, rutas `..` o absolutas, scripts no declarados en `files`, secretos o rutas locales Windows.

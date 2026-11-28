@@ -101,7 +101,8 @@ async function kraken(env) {
 async function krakenFuturesReq(env, path, params = '') {
   const nonce = String(krakenFuturesLastNonce = Math.max(Date.now(), krakenFuturesLastNonce + 1));
   const key = String(env.KRAKEN_FUTURES_KEY || '').trim(), sec = String(env.KRAKEN_FUTURES_SECRET || '').trim();
-  const msg = params + nonce + path;
+  const signPath = path.replace(/^\/derivatives(?=\/)/, '');
+  const msg = params + nonce + signPath;
   const sha = await crypto.subtle.digest('SHA-256', enc.encode(msg));
   const authent = b64(await hmac('SHA-512', unb64(sec), sha));
   const url = 'https://futures.kraken.com' + path + (params ? '?' + params : '');
@@ -481,21 +482,108 @@ function pkcs1ToPkcs8(der) {
 }
 async function enableBankingJWT(env) {
   if (!env.ENABLE_BANKING_APP_ID || !env.ENABLE_BANKING_PRIVATE_KEY) throw new Error('Enable Banking no está configurado en los secretos del Worker.');
-  const rawPem = String(env.ENABLE_BANKING_PRIVATE_KEY).replace(/\\n/g, '\n');
+  const appId = String(env.ENABLE_BANKING_APP_ID).trim().replace(/^["']|["']$/g, '');
+  const rawPem = String(env.ENABLE_BANKING_PRIVATE_KEY).trim().replace(/^["']|["']$/g, '').replace(/\\n/g, '\n');
   const isPkcs1 = /-----BEGIN RSA PRIVATE KEY-----/i.test(rawPem);
   const pem = rawPem.replace(/-----BEGIN [^-]+-----/g, '').replace(/-----END [^-]+-----/g, '').replace(/\s+/g, '');
   let der = unb64(pem);
   if (isPkcs1) der = pkcs1ToPkcs8(der);
   const key = await crypto.subtle.importKey('pkcs8', der, { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' }, false, ['sign']);
   const iat = Math.floor(Date.now() / 1000);
-  const head = b64u(enc.encode(JSON.stringify({ alg: 'RS256', typ: 'JWT', kid: String(env.ENABLE_BANKING_APP_ID).trim() })));
+  const head = b64u(enc.encode(JSON.stringify({ alg: 'RS256', typ: 'JWT', kid: appId })));
   const pay = b64u(enc.encode(JSON.stringify({ iss: 'enablebanking.com', aud: 'api.enablebanking.com', iat, exp: iat + 300 })));
   const sig = b64u(await crypto.subtle.sign('RSASSA-PKCS1-v1_5', key, enc.encode(head + '.' + pay)));
   return head + '.' + pay + '.' + sig;
 }
 async function ebReq(env, path, opts = {}) {
   const jwt = await enableBankingJWT(env);
-  return getJSON('https://api.enablebanking.com' + path, { ...opts, headers: { Authorization: 'Bearer ' + jwt, 'Content-Type': 'application/json', ...(opts.headers || {}) } });
+  const hdrs = { Authorization: 'Bearer ' + jwt, ...(opts.body ? { 'Content-Type': 'application/json' } : {}), ...(opts.headers || {}) };
+  return getJSON('https://api.enablebanking.com' + path, { ...opts, headers: hdrs });
+}
+function ebPsuHeaders(req) {
+  const h = {};
+  const ip = (req.headers.get('cf-connecting-ip') || req.headers.get('x-forwarded-for') || '').split(',')[0].trim();
+  const ua = String(req.headers.get('user-agent') || '').trim().slice(0, 256);
+  if (ip) h['Psu-Ip-Address'] = ip;
+  if (ua) h['Psu-User-Agent'] = ua;
+  return h;
+}
+function parseEbBalanceAmount(b) {
+  const raw = b?.balance_amount?.amount;
+  if (raw == null || raw === '') return null;
+  const n = +raw;
+  if (!Number.isFinite(n)) return null;
+  return String(b?.credit_debit_indicator || '').toUpperCase() === 'DBIT' && n > 0 ? -n : n;
+}
+function pickEnableBankingBalance(bals) {
+  if (!Array.isArray(bals) || !bals.length) return null;
+  const order = ['ITAV', 'XPCD', 'ITBD', 'CLAV', 'CLBD', 'FWAV', 'OPAV', 'OPBD'];
+  const stamp = b => String(b?.last_change_date_time || b?.reference_date || '');
+  for (const tp of order) {
+    const matches = bals.filter(x => x && x.balance_type === tp && parseEbBalanceAmount(x) != null);
+    if (matches.length) return matches.sort((a, b) => stamp(b).localeCompare(stamp(a)))[0];
+  }
+  return bals.find(x => x && parseEbBalanceAmount(x) != null) || bals[0];
+}
+async function fetchEbTransactions(effEnv, uid, dateFrom, strategy, psuHeaders) {
+  const run = async (df, strat) => {
+    const qs = new URLSearchParams();
+    if (df) qs.set('date_from', df);
+    if (strat && strat !== 'default') qs.set('strategy', strat);
+    const qStr = qs.toString();
+    const first = await ebReq(effEnv, '/accounts/' + encodeURIComponent(uid) + '/transactions' + (qStr ? '?' + qStr : ''), { headers: psuHeaders });
+    const raw = [...(first?.transactions || [])];
+    const warnings = [];
+    let cont = first?.continuation_key || '', page = 1;
+    while (cont && page < 8) {
+      try {
+        const pqs = new URLSearchParams();
+        if (df) pqs.set('date_from', df);
+        pqs.set('continuation_key', cont);
+        const nextTx = await ebReq(effEnv, '/accounts/' + encodeURIComponent(uid) + '/transactions?' + pqs.toString(), { headers: psuHeaders });
+        raw.push(...(nextTx?.transactions || []));
+        cont = nextTx?.continuation_key || '';
+        page++;
+      } catch (pageErr) {
+        warnings.push('Movimientos (pág. ' + (page + 1) + '): ' + formatEbError(pageErr));
+        break;
+      }
+    }
+    return { raw, warnings };
+  };
+  try {
+    return await run(dateFrom, strategy);
+  } catch (e) {
+    const isPeriodErr = e?.status === 422 || /WRONG_TRANSACTIONS_PERIOD|out of bound|period/i.test(String(e?.message || ''));
+    if (!isPeriodErr) throw e;
+    const d30 = new Date(Date.now() - 30 * 864e5).toISOString().slice(0, 10);
+    try {
+      return await run(d30, 'default');
+    } catch (e2) {
+      const isPeriodErr2 = e2?.status === 422 || /WRONG_TRANSACTIONS_PERIOD|out of bound|period/i.test(String(e2?.message || ''));
+      if (!isPeriodErr2) throw e2;
+      return await run('', 'default');
+    }
+  }
+}
+function formatEbError(err) {
+  const msg = String(err?.message || err || 'Error desconocido');
+  if (/\b(401|403)\b|EXPIRED|UNAUTHORIZED|INVALID_SESSION/i.test(msg)) return msg + ' (sesión PSD2 caducada: vuelve a autorizar el banco en Conectar)';
+  if (/\b429\b|RATE_LIMIT|ACCESS_EXCEEDED/i.test(msg)) return msg + ' (límite temporal del banco PSD2; reintenta más tarde)';
+  return msg;
+}
+async function resolveEbValidUntil(env, aspspName, country, maxValidSec, psuHeaders) {
+  let maxSec = +maxValidSec || 0;
+  if (!maxSec && aspspName) {
+    try {
+      const list = await ebReq(env, '/aspsps?country=' + encodeURIComponent(country), { headers: psuHeaders });
+      const target = String(aspspName).trim().toLowerCase();
+      const found = (list?.aspsps || []).find(x => String(x?.name || '').trim().toLowerCase() === target);
+      if (found && +found.maximum_consent_validity > 0) maxSec = +found.maximum_consent_validity;
+    } catch (e) { }
+  }
+  const safeSec = maxSec > 0 ? Math.max(86400, Math.min(maxSec - 3600, 180 * 86400 - 3600)) : 89 * 86400;
+  return new Date(Date.now() + safeSec * 1000).toISOString();
 }
 
 // ---------- Copiloto multi-proveedor: chat, análisis, categorización e importación IA ----------
@@ -795,51 +883,68 @@ export default {
         return respond(await ebReq(await getEffEnv(), '/aspsps?country=' + encodeURIComponent(c)));
       }
       if (url.pathname === '/bank/auth' && req.method === 'POST') {
+        const effEnv = await getEffEnv();
+        const psuHeaders = ebPsuHeaders(req);
         const b = JSON.parse(await req.text());
-        const valid = new Date(Date.now() + 89 * 864e5).toISOString();
-        const r = await ebReq(await getEffEnv(), '/auth', { method: 'POST', body: JSON.stringify({ access: { balances: true, transactions: true, valid_until: valid }, aspsp: { name: b.aspspName, country: (b.country || 'ES').toUpperCase() }, psu_type: 'personal', redirect_url: b.redirectUrl, state: b.state || String(Date.now()) }) });
+        const country = (b.country || 'ES').toUpperCase();
+        const valid = await resolveEbValidUntil(effEnv, b.aspspName, country, +b.maxValidSec || 0, psuHeaders);
+        const r = await ebReq(effEnv, '/auth', { method: 'POST', headers: psuHeaders, body: JSON.stringify({ access: { balances: true, transactions: true, valid_until: valid }, aspsp: { name: b.aspspName, country }, psu_type: 'personal', redirect_url: b.redirectUrl, state: b.state || String(Date.now()) }) });
         return respond(r);
       }
       if (url.pathname === '/bank/session' && req.method === 'POST') {
         const b = JSON.parse(await req.text());
-        return respond(await ebReq(await getEffEnv(), '/sessions', { method: 'POST', body: JSON.stringify({ code: b.code }) }));
+        const ses = await ebReq(await getEffEnv(), '/sessions', { method: 'POST', headers: ebPsuHeaders(req), body: JSON.stringify({ code: b.code }) });
+        if (ses && !ses.accounts?.length && Array.isArray(ses.accounts_data)) ses.accounts = ses.accounts_data;
+        return respond(ses);
       }
       if (url.pathname === '/bank/sync' && req.method === 'POST') {
         const effEnv = await getEffEnv();
+        const psuHeaders = ebPsuHeaders(req);
         const b = JSON.parse(await req.text()), accounts = [], errors = [];
-        for (const acc of b.accounts || []) {
+        await Promise.all((b.accounts || []).map(async acc => {
           try {
-            const qs1 = new URLSearchParams();
-            if (b.dateFrom) qs1.set('date_from', b.dateFrom);
-            const qStr1 = qs1.toString();
-            const [balRes, firstTxRes] = await Promise.all([
-              ebReq(effEnv, '/accounts/' + encodeURIComponent(acc.uid) + '/balances'),
-              ebReq(effEnv, '/accounts/' + encodeURIComponent(acc.uid) + '/transactions' + (qStr1 ? '?' + qStr1 : ''))
+            const df = acc.dateFrom ?? b.dateFrom ?? '';
+            const strat = acc.strategy || b.strategy || 'default';
+            const [balSettled, txSettled] = await Promise.allSettled([
+              ebReq(effEnv, '/accounts/' + encodeURIComponent(acc.uid) + '/balances', { headers: psuHeaders }),
+              fetchEbTransactions(effEnv, acc.uid, df, strat, psuHeaders)
             ]);
-            const rawTx = [...(firstTxRes.transactions || [])];
-            let cont = firstTxRes.continuation_key || '', page = 1;
-            while (cont && page < 3) {
-              const qs = new URLSearchParams();
-              if (b.dateFrom) qs.set('date_from', b.dateFrom);
-              qs.set('continuation_key', cont);
-              const nextTx = await ebReq(effEnv, '/accounts/' + encodeURIComponent(acc.uid) + '/transactions?' + qs.toString());
-              rawTx.push(...(nextTx.transactions || []));
-              cont = nextTx.continuation_key || '';
-              page++;
+            if (balSettled.status === 'rejected' && txSettled.status === 'rejected') {
+              errors.push(acc.uid + ': ' + formatEbError(balSettled.reason));
+              return;
             }
-            const bals = balRes.balances || [];
-            const firstBal = ['CLAV', 'ITAV', 'XPCD', 'CLBD'].map(tp => bals.find(x => x.balance_type === tp)).find(Boolean) || bals[0];
-            const bal = firstBal && firstBal.balance_amount ? +firstBal.balance_amount.amount : null;
-            const cur = firstBal && firstBal.balance_amount ? firstBal.balance_amount.currency : (acc.currency || 'EUR');
-            const tx = rawTx.map(t => {
-              const amt = +(t.transaction_amount && t.transaction_amount.amount || 0);
-              const signed = t.credit_debit_indicator === 'DBIT' ? -Math.abs(amt) : t.credit_debit_indicator === 'CRDT' ? Math.abs(amt) : amt;
-              const desc = [...(t.remittance_information || []), t.creditor?.name, t.debtor?.name].filter(Boolean).join(' · ') || 'Movimiento bancario';
-              return { id: t.entry_reference || t.transaction_id || '', date: (t.booking_date || t.value_date || '').slice(0, 10), desc, amount: signed, currency: (t.transaction_amount && t.transaction_amount.currency) || cur };
-            }).filter(x => x.date && Number.isFinite(x.amount));
-            accounts.push({ uid: acc.uid, bal, currency: cur, tx });
-          } catch (e) { errors.push(acc.uid + ': ' + e.message); }
-        }
+            const warnings = [];
+            let bal = null, cur = acc.currency || 'EUR', balanceType = '', referenceDate = '';
+            if (balSettled.status === 'fulfilled') {
+              const firstBal = pickEnableBankingBalance(balSettled.value?.balances || []);
+              bal = parseEbBalanceAmount(firstBal);
+              cur = firstBal?.balance_amount?.currency || cur;
+              balanceType = firstBal?.balance_type || '';
+              referenceDate = firstBal?.reference_date || '';
+            } else {
+              warnings.push('Saldo: ' + formatEbError(balSettled.reason));
+            }
+            const rawTx = [];
+            if (txSettled.status === 'fulfilled') {
+              rawTx.push(...(txSettled.value?.raw || []));
+              if (txSettled.value?.warnings?.length) warnings.push(...txSettled.value.warnings);
+            } else {
+              warnings.push('Movimientos: ' + formatEbError(txSettled.reason));
+            }
+            const tx = rawTx
+              .filter(t => String(t?.status || '').toUpperCase() !== 'PDNG')
+              .map(t => {
+                const amt = +(t.transaction_amount && t.transaction_amount.amount || 0);
+                const signed = t.credit_debit_indicator === 'DBIT' ? -Math.abs(amt) : t.credit_debit_indicator === 'CRDT' ? Math.abs(amt) : amt;
+                const rem = Array.isArray(t.remittance_information) ? t.remittance_information : (t.remittance_information ? [t.remittance_information] : []);
+                const desc = [...rem, t.creditor?.name, t.debtor?.name, t.additional_information].filter(Boolean).join(' · ') || 'Movimiento bancario';
+                const rawAfter = t.balance_after_transaction?.amount;
+                const balAfter = rawAfter != null && rawAfter !== '' && Number.isFinite(+rawAfter) ? +rawAfter : null;
+                return { id: t.entry_reference || t.transaction_id || '', date: (t.booking_date || t.value_date || t.transaction_date || '').slice(0, 10), desc, amount: signed, bal: balAfter, currency: (t.transaction_amount && t.transaction_amount.currency) || cur };
+              }).filter(x => x.date && Number.isFinite(x.amount));
+            accounts.push({ uid: acc.uid, bal, currency: cur, balanceType, referenceDate, tx, warnings });
+          } catch (e) { errors.push(acc.uid + ': ' + formatEbError(e)); }
+        }));
         return respond({ accounts, errors, ts: Date.now() });
       }
       if (url.pathname === '/ai' && req.method === 'POST') {

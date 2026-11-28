@@ -4,12 +4,12 @@
   "repo_url": "https://github.com/BioPeat/biopeat.git",
   "pages_url": "https://biopeat.github.io/biopeat/",
   "branch": "main",
-  "commit": "c79c4cb385cb05b753769a7a70eb56b43039c5bd",
+  "commit": "37a739f533a135013931b269c378d19af62daf3c",
   "dirty_local": false,
   "public": true,
   "status": "synced",
-  "synced_at": "2026-11-27T13:48:05.465883+00:00",
-  "file_count": 24,
+  "synced_at": "2026-11-28T12:47:08.443514+00:00",
+  "file_count": 28,
   "omitted_count": 3,
   "estado_txt_path": "catalogo/biopeat/ESTADO_biopeat.txt",
   "files": [
@@ -40,13 +40,13 @@
     },
     {
       "path": "CONTEXTO_BIOPEAT.md",
-      "size": 21922,
-      "sha256": "6e205bc1af04c7daadfdec96f4c67cec6785abb6b11bb4118be1a83cc9f931ab"
+      "size": 22058,
+      "sha256": "c4e384e8b8ecafe366a40f5d84ac4d882008ec73ada3d027b99bce35a43d5768"
     },
     {
       "path": "MAPA_DEL_CODIGO.md",
-      "size": 26092,
-      "sha256": "2f7174bb735d9fd567ed9b0571b3d7eeff58e5cab3b0668e7782f7e42818dd0a"
+      "size": 26725,
+      "sha256": "79e505e6e00be8ad13a52a686fcda9b5c10a17e3fa052919ad498adf13884134"
     },
     {
       "path": "README.md",
@@ -55,23 +55,23 @@
     },
     {
       "path": "assets/app.js",
-      "size": 527645,
-      "sha256": "bdc941411801241f0ebe9e133b04a2c1ac0b1ea569b066cdb133840038cc895e"
+      "size": 533243,
+      "sha256": "f29b378939abdbbcefa4abb213e1fb808fb3d87b5f2b651e6c4f9a46f45eea8c"
     },
     {
       "path": "assets/data.js",
-      "size": 54290,
-      "sha256": "4be26c4f274f512bc52b2ba05a982fe7da5728e8cae78e62b370c21fd78c421a"
+      "size": 54511,
+      "sha256": "066be91fc8bed687d1cca174104501ca9945cb124e22a755a6c72bcd91d52fba"
     },
     {
       "path": "assets/i18n-en.js",
-      "size": 164841,
-      "sha256": "3e3b8142e306b975ebc091fd35b13452dcd84637654f321469b8fa154d7fd377"
+      "size": 166789,
+      "sha256": "a6fc590fa58dcca51ba9c201618188fb0fbe1a409c1bd54c867de70c8b55ec1d"
     },
     {
       "path": "assets/styles.css",
-      "size": 236763,
-      "sha256": "816a3e3bf72881399f009e652aba7f71ac2ebe29c134870e4fa1fddfb1e517ab"
+      "size": 243218,
+      "sha256": "4702bd1db3fff90e0c1e10e7bf66f255ac98519cb79c9a1259a1efb9ccab4c1a"
     },
     {
       "path": "cloudflare/config.json",
@@ -85,18 +85,18 @@
     },
     {
       "path": "cloudflare/worker.js",
-      "size": 37860,
-      "sha256": "a7e8c05a822f76e838e59865f00b50c47d180e8cdcfb2c8ff5300b49ade6d7ac"
+      "size": 44835,
+      "sha256": "e7ad73ba0d8c933ebdb34896b56c0798938878350e3768538a1683f4a6a604cc"
     },
     {
       "path": "index.html",
-      "size": 67558,
-      "sha256": "e577c40d1315174db7d4f55855ed8f752b8b7b35e3e985b8621e7965c877e02c"
+      "size": 67632,
+      "sha256": "1753f202b24340a3e657e9e4b1f02dc0cde0027dc340acbfd6ce47364c71e713"
     },
     {
       "path": "inicio.html",
-      "size": 75375,
-      "sha256": "a5b7e9676200af20201ee84f2a01745ded66745d816d87a01f91e95bfc68db32"
+      "size": 77288,
+      "sha256": "54c334ad8696ad1edf2d609d3e597b80aa72fafa0e054b332fb4ad2990f94d26"
     },
     {
       "path": "manifest.json",
@@ -104,9 +104,19 @@
       "sha256": "30feb2e83eca6d7fdf1c69f111ad3fde7b2b71e97f8510650686135b7847ea65"
     },
     {
+      "path": "privacy.html",
+      "size": 7738,
+      "sha256": "3c9db3eb99707718304e124d34610b161efba9fc6ddbc06d78cb1a4cc2e48211"
+    },
+    {
       "path": "sw.js",
-      "size": 1881,
-      "sha256": "ae479518f08e8dfcf47ba2a72593f165fb27d6467172854ab9a0f685db696b36"
+      "size": 1975,
+      "sha256": "022e7753983c184705843a71ea5652b091c069fdcb1233b61d79930cd4e2fe9f"
+    },
+    {
+      "path": "terms.html",
+      "size": 8274,
+      "sha256": "48e63c4672f68b84e7bf662d3735e6868dd3cdc0dc151bd8772bb2e1ed7e4509"
     },
     {
       "path": "tests/datos_prueba.json",
@@ -117,6 +127,16 @@
       "path": "tests/smoke.py",
       "size": 64214,
       "sha256": "5b80c098e2dd3486cdcf977959d8735966cea931de880a53579e83a76dba1b86"
+    },
+    {
+      "path": "tiktok-studio.html",
+      "size": 24097,
+      "sha256": "589b30924652e6f3a1a4df388953f9b31f37a58adb1d6d2025c8d5feeef6c353"
+    },
+    {
+      "path": "tiktokyW0KYnBXq0JNMcgjYiC3ABTl98vuT74G.txt",
+      "size": 69,
+      "sha256": "6134b66b010ab979f69ae0d014fd339198a600d4dba1594d8db612036cb4b8b3"
     },
     {
       "path": "tools/mapa.py",

@@ -1,11 +1,38 @@
 PUENTE IA · ESTADO AUTOCONTENIDO DE BIOPEAT (biopeat)
 ======================================================================
+>>> INSTRUCCION OBLIGATORIA PARA OPUS / COPILOT (LEE ESTO PRIMERO) <<<
+
+ESTE ARCHIVO SOLO CONTIENE EL INDICE Y LA DOCUMENTACION DE biopeat.
+NO CONTIENE EL CODIGO FUENTE DE LA APP (ni HTML, ni JS, ni CSS, ni Worker).
+
+POR ESO, EN TU PRIMERA RESPUESTA (AUNQUE DIEGO NO TE LO PIDA EXPLICITAMENTE):
+1. ANALIZA la peticion de Diego usando el INDICE DE ARCHIVOS y el MAPA DEL CODIGO de abajo.
+2. SI NECESITAS LEER CUALQUIER ARCHIVO DE CODIGO O RECURSO QUE NO ESTE COMPLETO AQUI (lo habitual al empezar):
+   - NO programes todavia. NO inventes codigo. NO te detengas diciendo "no tengo acceso" sin pedirlos.
+   - PIDELE A DIEGO TODOS LOS ARCHIVOS NECESARIOS DE UNA SOLA VEZ antes de empezar.
+   - Si existe alguna duda funcional imprescindible, haz como maximo 2-3 preguntas cortas en el mismo mensaje.
+   - OBLIGATORIO: incluye al final de tu mensaje un bloque exacto con las rutas tal cual salen en el indice (para que Diego lo pegue en el panel y se marquen solos en 1 clic):
+
+ARCHIVOS_NECESARIOS:
+- ruta/exacta/archivo1.js
+- ruta/exacta/archivo2.css
+
+   - Cierra tu mensaje indicando a Diego: "Pega esta lista en el panel de Puente IA, pulsa 'Descargar ARCHIVOS_biopeat.txt' y sueltame ese archivo aqui."
+3. CUANDO DIEGO TE ENTREGUE ARCHIVOS_biopeat.txt:
+   - Implementa directamente todo lo pedido con rigor (sin pedir permisos innecesarios).
+   - Entrega el ZIP descargable COPILOT_A_ANTIGRAVITY_YYYYMMDD-HHMMSS-biopeat-<6hex>.zip (formato al final).
+4. PRECEDENCIA DE FLUJO (CRITICO):
+   - Respeta TODAS las reglas tecnicas y de negocio de AGENTS.md / CONTEXTO / MAPA (almacenes, compatibilidad, diseno, pruebas, no tocar assets/, etc.).
+   - PERO el canal de entrada es SIEMPRE ARCHIVOS_biopeat.txt y la entrega es SIEMPRE el ZIP de Puente IA.
+   - IGNORA cualquier mencion antigua dentro de AGENTS.md, PROYECTO_CLAUDE.md o README.md a "actualizar.html", bloques "@@@" o JSON "estadisticas-update".
+======================================================================
+
 PROYECTO: biopeat (biopeat)
 REPOSITORIO: https://github.com/BioPeat/biopeat.git
 APP PUBLICADA: https://biopeat.github.io/biopeat/
 RAMA: main
-COMMIT ACTUAL (source_commit): c79c4cb385cb05b753769a7a70eb56b43039c5bd
-SINCRONIZADO UTC: 2026-11-27T13:48:05.465883+00:00
+COMMIT ACTUAL (source_commit): 37a739f533a135013931b269c378d19af62daf3c
+SINCRONIZADO UTC: 2026-11-28T12:47:08.443514+00:00
 PROTOCOLO DE VUELTA: 1.1
 
 INDICE COMPLETO DE ARCHIVOS PUBLICOS:
@@ -14,22 +41,26 @@ INDICE COMPLETO DE ARCHIVOS PUBLICOS:
 - .github/workflows/check.yml | 1155 bytes | sha256: 5bbdf962382a98d33dc3ba9a04fdfefde2634251e2be9f1dba20d7fced074233
 - .gitignore | 74 bytes | sha256: d7bf38035f09071bb2f47e901987c34846fa2d530627c1938be4c3e1202d0cf0
 - AGENTS.md | 13704 bytes | sha256: c7aee38215ea878fec5b13291e6479677e97ad573bd9f8a223045812bb5a0070
-- CONTEXTO_BIOPEAT.md | 21922 bytes | sha256: 6e205bc1af04c7daadfdec96f4c67cec6785abb6b11bb4118be1a83cc9f931ab
-- MAPA_DEL_CODIGO.md | 26092 bytes | sha256: 2f7174bb735d9fd567ed9b0571b3d7eeff58e5cab3b0668e7782f7e42818dd0a
+- CONTEXTO_BIOPEAT.md | 22058 bytes | sha256: c4e384e8b8ecafe366a40f5d84ac4d882008ec73ada3d027b99bce35a43d5768
+- MAPA_DEL_CODIGO.md | 26725 bytes | sha256: 79e505e6e00be8ad13a52a686fcda9b5c10a17e3fa052919ad498adf13884134
 - README.md | 2113 bytes | sha256: f5e5a1b342b351dfa236d8a9ffce6439650353c45ea7ffb0a7d056d43ab76074
-- assets/app.js | 527645 bytes | sha256: bdc941411801241f0ebe9e133b04a2c1ac0b1ea569b066cdb133840038cc895e
-- assets/data.js | 54290 bytes | sha256: 4be26c4f274f512bc52b2ba05a982fe7da5728e8cae78e62b370c21fd78c421a
-- assets/i18n-en.js | 164841 bytes | sha256: 3e3b8142e306b975ebc091fd35b13452dcd84637654f321469b8fa154d7fd377
-- assets/styles.css | 236763 bytes | sha256: 816a3e3bf72881399f009e652aba7f71ac2ebe29c134870e4fa1fddfb1e517ab
+- assets/app.js | 533243 bytes | sha256: f29b378939abdbbcefa4abb213e1fb808fb3d87b5f2b651e6c4f9a46f45eea8c
+- assets/data.js | 54511 bytes | sha256: 066be91fc8bed687d1cca174104501ca9945cb124e22a755a6c72bcd91d52fba
+- assets/i18n-en.js | 166789 bytes | sha256: a6fc590fa58dcca51ba9c201618188fb0fbe1a409c1bd54c867de70c8b55ec1d
+- assets/styles.css | 243218 bytes | sha256: 4702bd1db3fff90e0c1e10e7bf66f255ac98519cb79c9a1259a1efb9ccab4c1a
 - cloudflare/config.json | 323 bytes | sha256: 585093498f7646a334ff7c60c76e98325b27b9ce6fc9f54c479d59e25e50c40e
 - cloudflare/schema.sql | 1566 bytes | sha256: 9fa7e8e05ed202bbf4d2c59c84b84b97497b0c41ad0f7fdc7bffe8e754e3640a
-- cloudflare/worker.js | 37860 bytes | sha256: a7e8c05a822f76e838e59865f00b50c47d180e8cdcfb2c8ff5300b49ade6d7ac
-- index.html | 67558 bytes | sha256: e577c40d1315174db7d4f55855ed8f752b8b7b35e3e985b8621e7965c877e02c
-- inicio.html | 75375 bytes | sha256: a5b7e9676200af20201ee84f2a01745ded66745d816d87a01f91e95bfc68db32
+- cloudflare/worker.js | 44835 bytes | sha256: e7ad73ba0d8c933ebdb34896b56c0798938878350e3768538a1683f4a6a604cc
+- index.html | 67632 bytes | sha256: 1753f202b24340a3e657e9e4b1f02dc0cde0027dc340acbfd6ce47364c71e713
+- inicio.html | 77288 bytes | sha256: 54c334ad8696ad1edf2d609d3e597b80aa72fafa0e054b332fb4ad2990f94d26
 - manifest.json | 1340 bytes | sha256: 30feb2e83eca6d7fdf1c69f111ad3fde7b2b71e97f8510650686135b7847ea65
-- sw.js | 1881 bytes | sha256: ae479518f08e8dfcf47ba2a72593f165fb27d6467172854ab9a0f685db696b36
+- privacy.html | 7738 bytes | sha256: 3c9db3eb99707718304e124d34610b161efba9fc6ddbc06d78cb1a4cc2e48211
+- sw.js | 1975 bytes | sha256: 022e7753983c184705843a71ea5652b091c069fdcb1233b61d79930cd4e2fe9f
+- terms.html | 8274 bytes | sha256: 48e63c4672f68b84e7bf662d3735e6868dd3cdc0dc151bd8772bb2e1ed7e4509
 - tests/datos_prueba.json | 52526 bytes | sha256: db66997bbe34b71ef063326547139fd179332eecc0e56f1480cd956ff68d3e70
 - tests/smoke.py | 64214 bytes | sha256: 5b80c098e2dd3486cdcf977959d8735966cea931de880a53579e83a76dba1b86
+- tiktok-studio.html | 24097 bytes | sha256: 589b30924652e6f3a1a4df388953f9b31f37a58adb1d6d2025c8d5feeef6c353
+- tiktokyW0KYnBXq0JNMcgjYiC3ABTl98vuT74G.txt | 69 bytes | sha256: 6134b66b010ab979f69ae0d014fd339198a600d4dba1594d8db612036cb4b8b3
 - tools/mapa.py | 2152 bytes | sha256: bf5c48cd9a35777bd0084f57421fcfb454ab8b3df5d6769c3fd875a4ebcdaed4
 - tools/security_check.py | 5273 bytes | sha256: fd18e4b6b26f8eddc9d793c294dbe49489cc761dd40aac1491a2cda1dbd057a9
 - tools/sincronizar_version.py | 1974 bytes | sha256: 43d0e20400e47a62718326df5507e7078db2f7ecff1f5ff430223d0544a541b4
@@ -132,7 +163,7 @@ Lo usan el Gem de Gemini «BioPeat Dev» y el proyecto de Claude «BioPeat Dev»
 - **`inicio.html`** comparte `bp_theme` y `bp_lang` con la app y usa su misma estética. Sus textos van en dos bloques `data-lang="es"` / `data-lang="en"`.
 - **Se actualiza solo en GitHub** (no lo hagas a mano): versión, «Qué hace la app (vNN)» e **Historial** de CONTEXTO_BIOPEAT.md (se copia del «Registro de cambios» de index.html) y MAPA_DEL_CODIGO.md. Por eso la línea del Registro de cambios es obligatoria y debe resumir bien el cambio.
 ===== END FILE: AGENTS.md =====
-===== FILE: CONTEXTO_BIOPEAT.md | sha256: 6e205bc1af04c7daadfdec96f4c67cec6785abb6b11bb4118be1a83cc9f931ab | sha256_lf: 6e205bc1af04c7daadfdec96f4c67cec6785abb6b11bb4118be1a83cc9f931ab | eol: lf =====
+===== FILE: CONTEXTO_BIOPEAT.md | sha256: c4e384e8b8ecafe366a40f5d84ac4d882008ec73ada3d027b99bce35a43d5768 | sha256_lf: 6e205bc1af04c7daadfdec96f4c67cec6785abb6b11bb4118be1a83cc9f931ab | eol: crlf =====
 # CONTEXTO · BioPeat
 
 **Versión actual: v83** (revisión de datos 27)
@@ -270,7 +301,7 @@ Una sola página. Barra inferior **Hoy · Registro · Añadir · Semana · Más*
 - Unificar las capas de CSS sin cambiar el aspecto (hay reglas repetidas de varias versiones).
 - Gimnasio: aplicar el mismo estilo de «preguntas numeradas» que Semana.
 ===== END FILE: CONTEXTO_BIOPEAT.md =====
-===== FILE: MAPA_DEL_CODIGO.md | sha256: 2f7174bb735d9fd567ed9b0571b3d7eeff58e5cab3b0668e7782f7e42818dd0a | sha256_lf: 2f7174bb735d9fd567ed9b0571b3d7eeff58e5cab3b0668e7782f7e42818dd0a | eol: lf =====
+===== FILE: MAPA_DEL_CODIGO.md | sha256: 79e505e6e00be8ad13a52a686fcda9b5c10a17e3fa052919ad498adf13884134 | sha256_lf: 2f7174bb735d9fd567ed9b0571b3d7eeff58e5cab3b0668e7782f7e42818dd0a | eol: crlf =====
 # MAPA DEL CÓDIGO · BioPeat v83 (revisión de datos 27)
 
 Generado con `python tools/mapa.py`. No lo edites a mano. Las líneas son orientativas: busca siempre por nombre.
@@ -921,11 +952,16 @@ App de nutrición bioenergética gratuita con enfoque Ray Peat / Georgi Dinkov, 
   - `python tests/smoke.py` (ejecución completa en Chromium headless en cada subida y semanalmente).
 ===== END FILE: README.md =====
 
+======================================================================
+RECORDATORIO FINAL PARA OPUS / COPILOT (ANTES DE RESPONDER):
+- Si NO tienes aqui el codigo fuente completo de los archivos a leer o editar: PARA ahora, resume en 2 lineas lo que vas a hacer, haz maximo 2-3 preguntas solo si son imprescindibles y termina con el bloque ARCHIVOS_NECESARIOS: (una ruta exacta por linea).
+- Si YA recibiste ARCHIVOS_biopeat.txt con todo lo necesario: implementa directamente el cambio y entrega el ZIP.
+
 INSTRUCCIONES DEL ZIP DE VUELTA (DESDE CERO):
 - Entrega un ZIP llamado: COPILOT_A_ANTIGRAVITY_YYYYMMDD-HHMMSS-biopeat-<6hex>.zip
 - Incluye HANDOFF.json con:
   - protocol_version: "1.1", direction: "copilot_to_antigravity", origin_mode: "copilot_from_scratch"
-  - project: "biopeat", repo_url: "https://github.com/BioPeat/biopeat.git", branch: "main", source_commit: "c79c4cb385cb05b753769a7a70eb56b43039c5bd"
+  - project: "biopeat", repo_url: "https://github.com/BioPeat/biopeat.git", branch: "main", source_commit: "37a739f533a135013931b269c378d19af62daf3c"
   - task_id único (>=8 chars), created_at, objective, files (con sha256 en minúsculas)
 - Incluye RESPUESTA.md, PRUEBAS.md y, si hay cambios, PATCH.diff y/o files/ (deleted_files opcional).
 - PROHIBIDO: ejecutables binarios, scripts no declarados, rutas .. o absolutas, secretos o rutas locales.

@@ -1,25 +1,25 @@
-# Guía rápida · Puente IA v2.0 (para Diego)
+# Guía rápida · Puente IA v2.1 (para Diego)
 
-Copilot no necesita abrir URLs. Todo se hace desde **un único marcador** en el portátil del trabajo:
+Todo está unificado en **un único marcador** en el portátil del trabajo (panel + guía paso a paso + detector automático de archivos + frases para copiar):
 
 - **Marcador único:** https://biopeat.github.io/puente-ia/
 
 ---
 
-## Camino A · Empiezas en Antigravity → sigues en Copilot
+## Camino A · Empiezas desde cero en Opus → aplicas en Antigravity
 
-1. En Antigravity: `PUENTE: pásalo a Copilot`
-2. En el portátil del trabajo abre el marcador y pulsa **Copiar texto** o **Descargar PARA_COPILOT.txt**.
-3. Pega el texto (o suelta el `.txt`) en Copilot.
-4. Descarga el ZIP de Copilot → pásalo por PairDrop a Descargas → en Antigravity di: `PUENTE: aplica lo de Copilot`
+1. En tu marcador elige tu app y pulsa **Descargar `ESTADO_<app>.txt`** (o **Copiar estado**).
+2. Suelta ese archivo en Opus y dile qué cambio quieres hacer. El propio archivo ya le ordena a Opus pedirte todo el código necesario en un bloque `ARCHIVOS_NECESARIOS:` antes de programar.
+3. Pega la respuesta de Opus en el **Paso 2** del panel: se marcarán solos los archivos pedidos. Pulsa **Descargar `ARCHIVOS_<app>.txt`** y suéltaselo a Opus.
+4. Descarga el ZIP de Opus → pásalo por PairDrop a Descargas → en Antigravity di: `PUENTE: aplica lo de Copilot`
 
 ---
 
-## Camino B · Empiezas desde cero en Copilot → aplicas aquí
+## Camino B · Empiezas en Antigravity → sigues en Opus
 
-1. En el marcador pulsa **Descargar ESTADO_<app>.txt** (o **Copiar estado**) y suéltalo en Copilot con tu petición.
-2. Si Copilot pide algún archivo de código concreto, márcalo en el propio panel y descarga **ARCHIVOS_<app>.txt** en 1 clic.
-3. Descarga el ZIP de Copilot → pásalo por PairDrop a Descargas → en Antigravity di: `PUENTE: aplica lo de Copilot`
+1. En Antigravity di: `PUENTE: pásalo a Copilot`
+2. En tu marcador entra en **Seguir desde Antigravity**, pulsa **Copiar texto** o **Descargar `PARA_COPILOT.txt`** y pásalo a Opus.
+3. Descarga el ZIP de Opus → pásalo por PairDrop a Descargas → en Antigravity di: `PUENTE: aplica lo de Copilot`
 
 ---
 

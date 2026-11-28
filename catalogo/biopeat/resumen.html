@@ -4,9 +4,9 @@
 - **Repositorio:** https://github.com/BioPeat/biopeat.git
 - **App publicada:** https://biopeat.github.io/biopeat/
 - **Rama:** `main`
-- **Commit actual (`source_commit`):** `c79c4cb385cb05b753769a7a70eb56b43039c5bd`
-- **Sincronizado (UTC):** 2026-11-27T13:48:05.465883+00:00
-- **Archivos de texto legibles incluidos:** 24
+- **Commit actual (`source_commit`):** `37a739f533a135013931b269c378d19af62daf3c`
+- **Sincronizado (UTC):** 2026-11-28T12:47:08.443514+00:00
+- **Archivos de texto legibles incluidos:** 28
 
 ## Lectura rápida recomendada (para empezar desde cero en Copilot)
 
@@ -24,22 +24,26 @@
 | [.github/workflows/check.yml](files/.github/workflows/check.yml) | 1155 | `5bbdf962382a` |
 | [.gitignore](files/.gitignore) | 74 | `d7bf38035f09` |
 | [AGENTS.md](files/AGENTS.md) | 13704 | `c7aee38215ea` |
-| [CONTEXTO_BIOPEAT.md](files/CONTEXTO_BIOPEAT.md) | 21922 | `6e205bc1af04` |
-| [MAPA_DEL_CODIGO.md](files/MAPA_DEL_CODIGO.md) | 26092 | `2f7174bb735d` |
+| [CONTEXTO_BIOPEAT.md](files/CONTEXTO_BIOPEAT.md) | 22058 | `c4e384e8b8ec` |
+| [MAPA_DEL_CODIGO.md](files/MAPA_DEL_CODIGO.md) | 26725 | `79e505e6e00b` |
 | [README.md](files/README.md) | 2113 | `f5e5a1b342b3` |
-| [assets/app.js](files/assets/app.js) | 527645 | `bdc941411801` |
-| [assets/data.js](files/assets/data.js) | 54290 | `4be26c4f274f` |
-| [assets/i18n-en.js](files/assets/i18n-en.js) | 164841 | `3e3b8142e306` |
-| [assets/styles.css](files/assets/styles.css) | 236763 | `816a3e3bf728` |
+| [assets/app.js](files/assets/app.js) | 533243 | `f29b378939ab` |
+| [assets/data.js](files/assets/data.js) | 54511 | `066be91fc8be` |
+| [assets/i18n-en.js](files/assets/i18n-en.js) | 166789 | `a6fc590fa58d` |
+| [assets/styles.css](files/assets/styles.css) | 243218 | `4702bd1db3ff` |
 | [cloudflare/config.json](files/cloudflare/config.json) | 323 | `585093498f76` |
 | [cloudflare/schema.sql](files/cloudflare/schema.sql) | 1566 | `9fa7e8e05ed2` |
-| [cloudflare/worker.js](files/cloudflare/worker.js) | 37860 | `a7e8c05a822f` |
-| [index.html](files/index.html) | 67558 | `e577c40d1315` |
-| [inicio.html](files/inicio.html) | 75375 | `a5b7e9676200` |
+| [cloudflare/worker.js](files/cloudflare/worker.js) | 44835 | `e7ad73ba0d8c` |
+| [index.html](files/index.html) | 67632 | `1753f202b243` |
+| [inicio.html](files/inicio.html) | 77288 | `54c334ad8696` |
 | [manifest.json](files/manifest.json) | 1340 | `30feb2e83eca` |
-| [sw.js](files/sw.js) | 1881 | `ae479518f08e` |
+| [privacy.html](files/privacy.html) | 7738 | `3c9db3eb9970` |
+| [sw.js](files/sw.js) | 1975 | `022e7753983c` |
+| [terms.html](files/terms.html) | 8274 | `48e63c4672f6` |
 | [tests/datos_prueba.json](files/tests/datos_prueba.json) | 52526 | `db66997bbe34` |
 | [tests/smoke.py](files/tests/smoke.py) | 64214 | `5b80c098e2dd` |
+| [tiktok-studio.html](files/tiktok-studio.html) | 24097 | `589b30924652` |
+| [tiktokyW0KYnBXq0JNMcgjYiC3ABTl98vuT74G.txt](files/tiktokyW0KYnBXq0JNMcgjYiC3ABTl98vuT74G.txt) | 69 | `6134b66b010a` |
 | [tools/mapa.py](files/tools/mapa.py) | 2152 | `bf5c48cd9a35` |
 | [tools/security_check.py](files/tools/security_check.py) | 5273 | `fd18e4b6b26f` |
 | [tools/sincronizar_version.py](files/tools/sincronizar_version.py) | 1974 | `43d0e20400e4` |

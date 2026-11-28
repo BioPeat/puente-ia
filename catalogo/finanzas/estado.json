@@ -4,11 +4,11 @@
   "repo_url": "https://github.com/BioPeat/Finanzas.git",
   "pages_url": "https://biopeat.github.io/Finanzas/",
   "branch": "main",
-  "commit": "9cb8b81621da18cfbf4a558c5cd64fb7bb1e3b47",
+  "commit": "6b246e0353ec5c7f7432339a60a30989f5316a03",
   "dirty_local": false,
   "public": true,
   "status": "synced",
-  "synced_at": "2026-11-24T14:25:57.302854+00:00",
+  "synced_at": "2026-11-28T12:47:08.443514+00:00",
   "file_count": 30,
   "omitted_count": 7,
   "estado_txt_path": "catalogo/finanzas/ESTADO_finanzas.txt",
@@ -41,12 +41,12 @@
     {
       "path": "CONTEXTO_FINANZAS.md",
       "size": 2587,
-      "sha256": "979a4e18fb7ef0ce458f4c2cf6eb194459996a7c8babd4ef489d05fc90b20ec5"
+      "sha256": "c1c95af4cd5337c05291ad12516b014d55c28f656993962ca595fa83a3d2eb6f"
     },
     {
       "path": "MAPA_DEL_CODIGO.md",
-      "size": 12567,
-      "sha256": "3c20309bb941b41268c51b3b89ae6a7cb52a5d05adc02e4e7490eb86c9779553"
+      "size": 12998,
+      "sha256": "efa4a4b7dbd92aea9319411209a32c5a94637fb371ef6e2aadf29cbb4f9b4b45"
     },
     {
       "path": "README.md",
@@ -60,13 +60,13 @@
     },
     {
       "path": "css/app.css",
-      "size": 54929,
-      "sha256": "2d8ed2d759e93179a60a3d416211a8a57614b7d320eefd2b4996caef8fe0548e"
+      "size": 55396,
+      "sha256": "0d5964c8d6b44377280bac45e9c2ad66cf762ab30a99e15a5ee648f8fc283141"
     },
     {
       "path": "index.html",
-      "size": 5823,
-      "sha256": "8b36926531b5c361148636f22a9ccf82cedad26f851a2b393b07d2764b049c0c"
+      "size": 5845,
+      "sha256": "9fb4eca10e8c1dfdbd6cc3ee9f321c9bd8a30faa370cd035db8e9a0b906871ab"
     },
     {
       "path": "js/ai.js",
@@ -75,8 +75,8 @@
     },
     {
       "path": "js/app.js",
-      "size": 62753,
-      "sha256": "03d475da2a16f0c1cc1577551465fd9c20a8ab53a79fcef9e5be9b485e567a38"
+      "size": 63965,
+      "sha256": "4d59276f2467e06bb00a59c463975b2285dd2c681b94f1da2c117e7476081fdc"
     },
     {
       "path": "js/charts.js",
@@ -85,18 +85,18 @@
     },
     {
       "path": "js/connectors.js",
-      "size": 37064,
-      "sha256": "71d65059bb071f83904c40cd2a57e8694e957994390a599b222cfaf3c523388d"
+      "size": 48383,
+      "sha256": "072af2e7010c957b1dbd7326a3ddafb63e3e03f1a8775cca61a8cac71459155d"
     },
     {
       "path": "js/finance.js",
-      "size": 38098,
-      "sha256": "1b81c3f4772185880f8e2ec9d6f737050da1ecdfee4660eb45419a6b845bb2af"
+      "size": 38658,
+      "sha256": "8bcafaee125560bc79b3e19f63aec872f334eaa580781f4599d46824fe22c29b"
     },
     {
       "path": "js/importers.js",
-      "size": 29193,
-      "sha256": "03459f927b70f30fce5c92b6c16088db783a877ca7bbf71fd4f080ef08205a96"
+      "size": 29381,
+      "sha256": "3f332949fde739377b9e0d9531c223942d089340f8a1173cbb87b1aac2b1520f"
     },
     {
       "path": "js/live.js",
@@ -106,17 +106,17 @@
     {
       "path": "js/state.js",
       "size": 28541,
-      "sha256": "f7ede7c221d989b5bd08aa0fa2f79174fabfb61e730a987d839ce4ae6a0ef168"
+      "sha256": "bd1460ab013430703368ce5f90095356b0677da1264fb3ba37e403c3920ffcd0"
     },
     {
       "path": "js/views-desktop.js",
-      "size": 72305,
-      "sha256": "3c820f6e302a065a8a5cd67b1ddbcf749f4c99d29e1a0e2355ce9c5adb6f494e"
+      "size": 75144,
+      "sha256": "8d3ac679c4630c840df1403d0ceec11bf19522f1dd5cfdd097de81dd0ef41745"
     },
     {
       "path": "js/views-mobile.js",
-      "size": 23177,
-      "sha256": "826f95bef679568f3890b64ca371fd1f897d76db4a57a15286fd77879ef09aff"
+      "size": 23388,
+      "sha256": "8d44a9a6b27f31e39be81580702ffc02c63fe3b97409b30a8ef51f7a5637e2fd"
     },
     {
       "path": "manifest.json",
@@ -126,17 +126,17 @@
     {
       "path": "sw.js",
       "size": 1449,
-      "sha256": "5cb295adcbf7ed2c040a305b0af39674cbd62cc9014e674fc4d4d2ebd9d72988"
+      "sha256": "600b475d0ddf124257dd0dd1192578ab94d6156c7f09234e87892e59ec2e8e03"
     },
     {
       "path": "tests/smoke.py",
-      "size": 18132,
-      "sha256": "036f75c4cd191e5f6a85a17d17076a1ac4cc9c6289eb3689a843d6a53594a161"
+      "size": 23406,
+      "sha256": "52b0eb677a473841bc886eeb042675cf6edc262bec54e072043e43c8ccfa3305"
     },
     {
       "path": "tests/worker_smoke.mjs",
-      "size": 17375,
-      "sha256": "88d394a65e874b683f65e08369433d772331b8c74f9179d082aef6f103723c12"
+      "size": 25842,
+      "sha256": "1edd078e39cfd97ed363fab32196c3f6f799cbaef258e4661ac6be7d43d575a5"
     },
     {
       "path": "tools/generar_capturas.py",
@@ -160,8 +160,8 @@
     },
     {
       "path": "worker.js",
-      "size": 59157,
-      "sha256": "477a1d5951646a7f3f4e6e6dc082503f8efd02315b486d8e877d41f1b7978815"
+      "size": 64566,
+      "sha256": "77e9fabe48ad7470bf777a95fc0b62c91a0f3df2780479a540926dacb2709d31"
     }
   ],
   "omitted": [

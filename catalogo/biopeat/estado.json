@@ -4,11 +4,11 @@
   "repo_url": "https://github.com/BioPeat/biopeat.git",
   "pages_url": "https://biopeat.github.io/biopeat/",
   "branch": "main",
-  "commit": "46df7dc31bde40e1c4a9630d7a69676450273368",
+  "commit": "a4281d81cb8fd2cb8ee68e9f78159598098b5cfc",
   "dirty_local": false,
   "public": true,
   "status": "synced",
-  "synced_at": "2026-11-28T13:15:18.484327+00:00",
+  "synced_at": "2026-11-28T13:23:12.397882+00:00",
   "file_count": 28,
   "omitted_count": 3,
   "estado_txt_path": "catalogo/biopeat/ESTADO_biopeat.txt",
@@ -40,13 +40,13 @@
     },
     {
       "path": "CONTEXTO_BIOPEAT.md",
-      "size": 22189,
-      "sha256": "e6d31b7b914e9e9ce006cac23a29f4cbd4946abc6ebabd69c0ff5d656a65fdb1"
+      "size": 22211,
+      "sha256": "1f648eff1726a10b22a8e3105888f5d4554d08172d84c037048525822362b57c"
     },
     {
       "path": "MAPA_DEL_CODIGO.md",
       "size": 26821,
-      "sha256": "e0c9ad253ffc71bfd9694baa666a2243c0d470559a6b0bc0a22933e1e6b7f08e"
+      "sha256": "2497685a2cb584e711a77112aa1ab0ad284b2ab0510a314c9a6089bb82e77041"
     },
     {
       "path": "README.md",
@@ -55,8 +55,8 @@
     },
     {
       "path": "assets/app.js",
-      "size": 534989,
-      "sha256": "7e7ee75b2883e891bf384b8beccd7faed73731e830482bea3c6e281ba3c8526b"
+      "size": 535132,
+      "sha256": "fe91ce29600d76f30217eece345abfe72e7f16b0429ef191871a2ebc5773e68f"
     },
     {
       "path": "assets/data.js",
@@ -70,8 +70,8 @@
     },
     {
       "path": "assets/styles.css",
-      "size": 246494,
-      "sha256": "ea19394e28b83ca3a2a7fe51367cf5cf6726b23597b333690af72348aa04f1dd"
+      "size": 244570,
+      "sha256": "65f145a66b7853105e3a75d7e9d288c7e64efee4fc7d9fbc2fd84a94e2f3e4e3"
     },
     {
       "path": "cloudflare/config.json",
@@ -90,8 +90,8 @@
     },
     {
       "path": "index.html",
-      "size": 68534,
-      "sha256": "c5f6b7a40c82713f7feb424c3065a820b96d085c2deb6ed3839804821092a490"
+      "size": 67514,
+      "sha256": "4d05184db00409d6e4fdd5d26d60e3509570209c731a1b50e01147a48797032d"
     },
     {
       "path": "inicio.html",
@@ -111,7 +111,7 @@
     {
       "path": "sw.js",
       "size": 2438,
-      "sha256": "2f0f12921835620266103b236be1764bbe6578818310a17b55c44ed0b003b84a"
+      "sha256": "29b0b7704c70f092a9c1f48139e52535e48309a29b3b19034dc42ae970e51955"
     },
     {
       "path": "terms.html",

@@ -4,8 +4,8 @@
 - **Repositorio:** https://github.com/BioPeat/biopeat.git
 - **App publicada:** https://biopeat.github.io/biopeat/
 - **Rama:** `main`
-- **Commit actual (`source_commit`):** `46df7dc31bde40e1c4a9630d7a69676450273368`
-- **Sincronizado (UTC):** 2026-11-28T13:15:18.484327+00:00
+- **Commit actual (`source_commit`):** `a4281d81cb8fd2cb8ee68e9f78159598098b5cfc`
+- **Sincronizado (UTC):** 2026-11-28T13:23:12.397882+00:00
 - **Archivos de texto legibles incluidos:** 28
 
 ## Lectura rápida recomendada (para empezar desde cero en Copilot)
@@ -24,21 +24,21 @@
 | [.github/workflows/check.yml](files/.github/workflows/check.yml) | 1189 | `c56dee73363f` |
 | [.gitignore](files/.gitignore) | 74 | `d7bf38035f09` |
 | [AGENTS.md](files/AGENTS.md) | 13704 | `c7aee38215ea` |
-| [CONTEXTO_BIOPEAT.md](files/CONTEXTO_BIOPEAT.md) | 22189 | `e6d31b7b914e` |
-| [MAPA_DEL_CODIGO.md](files/MAPA_DEL_CODIGO.md) | 26821 | `e0c9ad253ffc` |
+| [CONTEXTO_BIOPEAT.md](files/CONTEXTO_BIOPEAT.md) | 22211 | `1f648eff1726` |
+| [MAPA_DEL_CODIGO.md](files/MAPA_DEL_CODIGO.md) | 26821 | `2497685a2cb5` |
 | [README.md](files/README.md) | 2113 | `f5e5a1b342b3` |
-| [assets/app.js](files/assets/app.js) | 534989 | `7e7ee75b2883` |
+| [assets/app.js](files/assets/app.js) | 535132 | `fe91ce29600d` |
 | [assets/data.js](files/assets/data.js) | 54511 | `066be91fc8be` |
 | [assets/i18n-en.js](files/assets/i18n-en.js) | 166789 | `a6fc590fa58d` |
-| [assets/styles.css](files/assets/styles.css) | 246494 | `ea19394e28b8` |
+| [assets/styles.css](files/assets/styles.css) | 244570 | `65f145a66b78` |
 | [cloudflare/config.json](files/cloudflare/config.json) | 323 | `585093498f76` |
 | [cloudflare/schema.sql](files/cloudflare/schema.sql) | 1566 | `9fa7e8e05ed2` |
 | [cloudflare/worker.js](files/cloudflare/worker.js) | 44835 | `e7ad73ba0d8c` |
-| [index.html](files/index.html) | 68534 | `c5f6b7a40c82` |
+| [index.html](files/index.html) | 67514 | `4d05184db004` |
 | [inicio.html](files/inicio.html) | 77288 | `54c334ad8696` |
 | [manifest.json](files/manifest.json) | 1340 | `30feb2e83eca` |
 | [privacy.html](files/privacy.html) | 7738 | `3c9db3eb9970` |
-| [sw.js](files/sw.js) | 2438 | `2f0f12921835` |
+| [sw.js](files/sw.js) | 2438 | `29b0b7704c70` |
 | [terms.html](files/terms.html) | 8274 | `48e63c4672f6` |
 | [tests/datos_prueba.json](files/tests/datos_prueba.json) | 52526 | `db66997bbe34` |
 | [tests/smoke.py](files/tests/smoke.py) | 64214 | `5b80c098e2dd` |

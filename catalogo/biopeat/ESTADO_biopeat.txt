@@ -31,8 +31,8 @@ PROYECTO: biopeat (biopeat)
 REPOSITORIO: https://github.com/BioPeat/biopeat.git
 APP PUBLICADA: https://biopeat.github.io/biopeat/
 RAMA: main
-COMMIT ACTUAL (source_commit): 46df7dc31bde40e1c4a9630d7a69676450273368
-SINCRONIZADO UTC: 2026-11-28T13:15:18.484327+00:00
+COMMIT ACTUAL (source_commit): a4281d81cb8fd2cb8ee68e9f78159598098b5cfc
+SINCRONIZADO UTC: 2026-11-28T13:23:12.397882+00:00
 PROTOCOLO DE VUELTA: 1.1
 
 INDICE COMPLETO DE ARCHIVOS PUBLICOS:
@@ -41,21 +41,21 @@ INDICE COMPLETO DE ARCHIVOS PUBLICOS:
 - .github/workflows/check.yml | 1189 bytes | sha256: c56dee73363f0ed364615b9c877af452479e291f55c6f2ebbee3c8cb887c5d96
 - .gitignore | 74 bytes | sha256: d7bf38035f09071bb2f47e901987c34846fa2d530627c1938be4c3e1202d0cf0
 - AGENTS.md | 13704 bytes | sha256: c7aee38215ea878fec5b13291e6479677e97ad573bd9f8a223045812bb5a0070
-- CONTEXTO_BIOPEAT.md | 22189 bytes | sha256: e6d31b7b914e9e9ce006cac23a29f4cbd4946abc6ebabd69c0ff5d656a65fdb1
-- MAPA_DEL_CODIGO.md | 26821 bytes | sha256: e0c9ad253ffc71bfd9694baa666a2243c0d470559a6b0bc0a22933e1e6b7f08e
+- CONTEXTO_BIOPEAT.md | 22211 bytes | sha256: 1f648eff1726a10b22a8e3105888f5d4554d08172d84c037048525822362b57c
+- MAPA_DEL_CODIGO.md | 26821 bytes | sha256: 2497685a2cb584e711a77112aa1ab0ad284b2ab0510a314c9a6089bb82e77041
 - README.md | 2113 bytes | sha256: f5e5a1b342b351dfa236d8a9ffce6439650353c45ea7ffb0a7d056d43ab76074
-- assets/app.js | 534989 bytes | sha256: 7e7ee75b2883e891bf384b8beccd7faed73731e830482bea3c6e281ba3c8526b
+- assets/app.js | 535132 bytes | sha256: fe91ce29600d76f30217eece345abfe72e7f16b0429ef191871a2ebc5773e68f
 - assets/data.js | 54511 bytes | sha256: 066be91fc8bed687d1cca174104501ca9945cb124e22a755a6c72bcd91d52fba
 - assets/i18n-en.js | 166789 bytes | sha256: a6fc590fa58dcca51ba9c201618188fb0fbe1a409c1bd54c867de70c8b55ec1d
-- assets/styles.css | 246494 bytes | sha256: ea19394e28b83ca3a2a7fe51367cf5cf6726b23597b333690af72348aa04f1dd
+- assets/styles.css | 244570 bytes | sha256: 65f145a66b7853105e3a75d7e9d288c7e64efee4fc7d9fbc2fd84a94e2f3e4e3
 - cloudflare/config.json | 323 bytes | sha256: 585093498f7646a334ff7c60c76e98325b27b9ce6fc9f54c479d59e25e50c40e
 - cloudflare/schema.sql | 1566 bytes | sha256: 9fa7e8e05ed202bbf4d2c59c84b84b97497b0c41ad0f7fdc7bffe8e754e3640a
 - cloudflare/worker.js | 44835 bytes | sha256: e7ad73ba0d8c933ebdb34896b56c0798938878350e3768538a1683f4a6a604cc
-- index.html | 68534 bytes | sha256: c5f6b7a40c82713f7feb424c3065a820b96d085c2deb6ed3839804821092a490
+- index.html | 67514 bytes | sha256: 4d05184db00409d6e4fdd5d26d60e3509570209c731a1b50e01147a48797032d
 - inicio.html | 77288 bytes | sha256: 54c334ad8696ad1edf2d609d3e597b80aa72fafa0e054b332fb4ad2990f94d26
 - manifest.json | 1340 bytes | sha256: 30feb2e83eca6d7fdf1c69f111ad3fde7b2b71e97f8510650686135b7847ea65
 - privacy.html | 7738 bytes | sha256: 3c9db3eb99707718304e124d34610b161efba9fc6ddbc06d78cb1a4cc2e48211
-- sw.js | 2438 bytes | sha256: 2f0f12921835620266103b236be1764bbe6578818310a17b55c44ed0b003b84a
+- sw.js | 2438 bytes | sha256: 29b0b7704c70f092a9c1f48139e52535e48309a29b3b19034dc42ae970e51955
 - terms.html | 8274 bytes | sha256: 48e63c4672f68b84e7bf662d3735e6868dd3cdc0dc151bd8772bb2e1ed7e4509
 - tests/datos_prueba.json | 52526 bytes | sha256: db66997bbe34b71ef063326547139fd179332eecc0e56f1480cd956ff68d3e70
 - tests/smoke.py | 64214 bytes | sha256: 5b80c098e2dd3486cdcf977959d8735966cea931de880a53579e83a76dba1b86
@@ -163,10 +163,10 @@ Lo usan el Gem de Gemini «BioPeat Dev» y el proyecto de Claude «BioPeat Dev»
 - **`inicio.html`** comparte `bp_theme` y `bp_lang` con la app y usa su misma estética. Sus textos van en dos bloques `data-lang="es"` / `data-lang="en"`.
 - **Se actualiza solo en GitHub** (no lo hagas a mano): versión, «Qué hace la app (vNN)» e **Historial** de CONTEXTO_BIOPEAT.md (se copia del «Registro de cambios» de index.html) y MAPA_DEL_CODIGO.md. Por eso la línea del Registro de cambios es obligatoria y debe resumir bien el cambio.
 ===== END FILE: AGENTS.md =====
-===== FILE: CONTEXTO_BIOPEAT.md | sha256: e6d31b7b914e9e9ce006cac23a29f4cbd4946abc6ebabd69c0ff5d656a65fdb1 | sha256_lf: 95eac7ef416c92d6c921f8392a2a270e5ddb14a629d8bb687ae67141c50d3604 | eol: crlf =====
+===== FILE: CONTEXTO_BIOPEAT.md | sha256: 1f648eff1726a10b22a8e3105888f5d4554d08172d84c037048525822362b57c | sha256_lf: edef912bc5122ec136ba95307d48654122cc4dd07db3028650aa9e74362b26e6 | eol: crlf =====
 # CONTEXTO · BioPeat
 
-**Versión actual: v85** (revisión de datos 27)
+**Versión actual: v86** (revisión de datos 27)
 
 Documento maestro. Lo lee la IA que programa BioPeat (Gemini «BioPeat Dev» o Claude). Los cambios se entregan en bloques `@@@` y los aplica y prueba `actualizar.html`. **Se actualiza sustituyendo el texto de cada apartado, nunca añadiendo apartados nuevos al final.** Si algo de aquí contradice al código, manda el código; avisa de la diferencia.
 
@@ -246,7 +246,7 @@ Se guardan por perfil en `state.v54.breakfast` y `state.v54.shake` y se editan e
 - **No inventes cifras atribuidas a Peat.** Donde no hay cifra suya, se usa la meta personal.
 - **Mujer:** la tabla `OPT_FEMALE` cambia solo lo que tiene fuente (se aplica con `applySexOpt()` en cada `render()`): hierro tope 18 mg (oficial; Peat: el estrógeno hace absorber más hierro, «From PMS to Menopause»), zinc 8 mg (oficial), magnesio 400 mg (Peat/Dinkov; «Nutrition for Women»: corta los calambres menstruales), sodio sin restringir (edema premenstrual), y notas de Peat en vitamina A, E, B2 y calcio. `femaleWhy()` añade una frase de Peat para mujer en los equilibrios. **Peat no dio cifras distintas para mujer en PUFA, Ca:P ni C:P: son las mismas (4 g, 1,2 y 3).** Metas de partida de un perfil nuevo: `NEW_PROFILE_MICRO`.
 
-## 6. Qué hace la app (v85)
+## 6. Qué hace la app (v86)
 Una sola página. Barra inferior **Hoy · Registro · Añadir · Semana · Más** (no cambiar el orden) y botón redondo de **Gimnasio**.
 - **Menú lateral** (tocar el logo): Perfiles (tocar = usar; ⚙ = asistente; ✎ renombrar; × borrar; «+ Crear perfil nuevo»), Exportar datos para IA y Pregunta a tu IA. La lista se desplaza sola sin mover la página.
 - **Asistente de perfil** (`wizOpen({mode})`, modos `first` / `new` / `edit`): 5 pasos (Tú · Objetivo · Comidas · Suplementos · Resumen con las metas de un día de entreno y uno de descanso). Sale solo al empezar de cero (con botón para restaurar una copia). Al crear un perfil se puede empezar de cero o copiar la despensa y la pauta del perfil activo. Al guardar, las dosis y aportes de la pauta se conservan (si cambias la dosis, el aporte se escala).
@@ -288,6 +288,7 @@ Una sola página. Barra inferior **Hoy · Registro · Añadir · Semana · Más*
 - **Prohibido** añadir otro `<script>` o «envolver» funciones (`x=function…`, `window.x=…`): la v54 lo hizo y el perfil de mujer volvía a hombre al recargar. `smoke.py` lo detecta y falla.
 
 ## 10. Historial (una línea por versión, máximo 8)
+- **v86 · Antigravity:** Retirada la pantalla de arranque artificial (#bp-splash) para abrir la app al instante tras el icono nativo del sistema, conservando todas las mejoras de fluidez (content-visibility, guardado asíncrono tras pintar, respuesta táctil y caché optimizada).
 - **v85 · Antigravity:** Pantalla de arranque animada mejorada: siempre sobre fondo negro desde el primer fotograma (CSS crítico inline y precarga del icono), visible ~0,9 s con entrada y pulso dorado del logo + marca BioPeat antes de desvanecerse suavemente hacia la app.
 - **v84 · Antigravity + Claude:** Fluidez (propuestas Copilot adaptadas a arquitectura modular): pantalla de arranque animada (#bp-splash) en modo claro/oscuro, content-visibility ampliado a todas las secciones fuera de pantalla, guardado asíncrono tras pintar (queueSave/flushQueuedSave) con protección en cierre y segundo plano, respuesta táctil inmediata con animaciones suaves y comprobación de versión sin caché en sw.js.
 - **v83 · Antigravity:** Botones flotantes arrastrables de menú (logo semitransparente) y gimnasio, botón flotante semitransparente de modo claro/oscuro arriba a la derecha al hacer scroll, corrección de solape en porcentajes de macros y mismos 3 anillos compactos en Modo resumen.
@@ -295,18 +296,17 @@ Una sola página. Barra inferior **Hoy · Registro · Añadir · Semana · Más*
 - **v81 · Antigravity:** Lanzamiento global: arquitectura modular rápida, caché instantánea, iconos claros, instalación universal (Instagram/Brave/Chrome/iOS) con traspaso de perfil, despensa con peso por unidad, análisis corto de gimnasio con IA, barra superior fija sin solapamientos e inglés automático fuera de países hispanohablantes.
 - **v80 · Antigravity:** Nuevo logotipo definitivo Llama Solar Áurea (Master v2) en toda la app (claro y oscuro), web de inicio e iconos PWA.
 - **v79 · Antigravity:** Nuevo logotipo BP geométrico solar en la app (claro y oscuro), web de inicio e iconos PWA.
-- **v78 · Antigravity:** Ajustes y sincronización en la nube simplificados sin tecnicismos: guía clara en 2 pasos para conectar dispositivos y recuperar tras desinstalar, y envío/guardado del enlace personal en un toque (WhatsApp, Notas, correo o copiar).
 
 ## 11. Pendiente / ideas
 - Unificar las capas de CSS sin cambiar el aspecto (hay reglas repetidas de varias versiones).
 - Gimnasio: aplicar el mismo estilo de «preguntas numeradas» que Semana.
 ===== END FILE: CONTEXTO_BIOPEAT.md =====
-===== FILE: MAPA_DEL_CODIGO.md | sha256: e0c9ad253ffc71bfd9694baa666a2243c0d470559a6b0bc0a22933e1e6b7f08e | sha256_lf: fca68b2dd6496436a2e06d52f0de6dff03eaaede26362c297801489bdc1c5c25 | eol: crlf =====
-# MAPA DEL CÓDIGO · BioPeat v85 (revisión de datos 27)
+===== FILE: MAPA_DEL_CODIGO.md | sha256: 2497685a2cb584e711a77112aa1ab0ad284b2ab0510a314c9a6089bb82e77041 | sha256_lf: d38f4cd1758c0cfe17c37679e92a120257a2e3849ebddf22bb44ef88854ac98b | eol: crlf =====
+# MAPA DEL CÓDIGO · BioPeat v86 (revisión de datos 27)
 
 Generado con `python tools/mapa.py`. No lo edites a mano. Las líneas son orientativas: busca siempre por nombre.
 
-Arquitectura modular: `index.html` (66 KB), `assets/styles.css`, `assets/data.js`, `assets/app.js` (513 KB) y `assets/i18n-en.js`.
+Arquitectura modular: `index.html` (65 KB), `assets/styles.css`, `assets/data.js`, `assets/app.js` (514 KB) y `assets/i18n-en.js`.
 
 ## Secciones de la página (id)
 
@@ -323,182 +323,182 @@ Arquitectura modular: `index.html` (66 KB), `assets/styles.css`, `assets/data.js
 
 ## JavaScript: bloques y funciones (en orden)
 
-- L74 constante `REF_MAP` — Valores de referencia USDA FoodData Central por 100 g (aprox.). Revisa tu etiqueta si difiere.
-- L75 constante `REF_CACHE`
-- L77 `ensureRefIndex()`
-- L84 `refNutrients(id)`
-- L92 constante `STRIP_PREP_RE`
-- L93 `findRef(text,strict=false)`
-- L116 `refCatalogCompact()`
-- L117 `fromRef(id,amount,meal,note='',srcText='')`
-- L122 `optInfo(k,goal)`
-- L129 `optState(k,v,goal)` — Estado de un valor frente a su zona: 'none' | 'low' | 'ok' | 'high' | 'ref'
-- L137 `optLine(k,goal,unit)`
-- L144 `optRefHTML(k,goal,unit)`
-- L145 constante `FAF`
-- L147 constante `LOC`
-- L151 `number(v,min=0,max=1e6)`
-- L157 `decimalInputs(root=document)`
-- L158 `localDate(d=new Date()`
-- L159 `validDate(s)`
-- L164 `shift(s,n)`
-- L172 `stripProto(o)`
-- L179 `cleanBio(b)`
-- L188 constante `CONTEXT` — Contexto libre de cada perfil (lo escribe el usuario en sus notas). Vacío por defecto.
-- L190 constante `GOAL_TYPES` — Ajustes de perfil por defecto (se usan ya en defaults(), por eso van aquí arriba). Detalle en «Perfiles: sexo, objetivo…».
-- L196 constante `DAY_TYPES`
-- L197 constante `NEW_V54`
-- L201 `defaults()` — Usuario nuevo: sin pauta, sin desayuno ni batido fijos y sin alimentos de marca; el asistente lo configura.
-- L204 `bmr(w=state.profile.weight)` — Mifflin-St Jeor: +5 en hombre, -161 en mujer.
-- L210 `targetFor(d)` — Prioridad: 1) ajuste manual de ese día (state.days[d].macroGoals) 2) metas globales (targetMode all/split) 3) plan por defecto.
-- L235 `cleanNutrients(o,required=false)`
-- L247 `cleanEntry(e)`
-- L252 `cleanPlan(p)`
-- L256 `planEntry(p)`
-- L265 `seedPlan(d,whichDate)`
-- L269 `ensureDay(d=date)`
-- L276 `effectiveEntries(d=day()`
-- L277 constante `SALTED_IDS`
-- L278 constante `SWEET_RE`
-- L279 `inferFatShares(e,txt=normalize((e?.name||'')`
-- L297 `inferredNutrients(e)`
-- L339 `totals(entries)`
-- L351 `change(fn,message='Guardado')`
-- L357 `afterPaint(fn)`
-- L358 `queueSave(idle=false)`
-- L365 `flushQueuedSave(hard=false)`
-- L370 `undo()`
-- L378 `toast(text,canUndo=false)`
-- L386 constante `CLICK_HANDLERS` — Un solo listener de clic para toda la página; cada sección registra su manejador con onClick().
-- L387 `onClick(fn)`
-- L389 `attempt(fn)`
-- L393 `modal(title,body)`
-- L402 `modalRestore()`
-- L412 `afterModal(fn)` — Cierra la ventana y espera a que el historial se asiente antes de desplazar la página.
-- L413 `modalBack()`
-- L414 `goDate(d)`
-- L421 `renderHeader()`
-- L434 `renderRows(entries)`
-- L438 `entryValues(e)`
-- L439 `renderLog()`
-- L446 `fromFood(id,amount,meal)`
-- L452 `pantryId(name)`
-- L454 `rememberFood(e)` — Guarda en Mi despensa (por 100 g) un plato analizado por la IA, para reconocerlo después sin IA.
-- L473 `addEntries(entries,message='Añadido',d=date,opts={})`
-- L482 `recipe(kind)`
-- L489 `summary(entries)`
-- L493 `renderPresetInfo()`
-- L506 `stripCode(raw)`
-- L512 `sanitizeNutrients(o,grams=100,fallbackRefId='')`
-- L539 `parseBIO(raw,meal=$('meal-select')`
-- L551 `parseSmart(raw)`
-- L555 constante `COUNT`
-- L556 constante `UNIT_RE`
-- L620 `offToNutrients(nut={},fallbackName='')` — Open Food Facts (gratis, sin clave, CORS nativo): consulta por código de barras o texto.
-- L641 `lookupOFFBarcode(code,signal,ms=3200)`
-- L657 `searchOFF(query,signal,ms=4500)`
-- L676 `openProductSearch()`
-- L715 `nutrientFields(n,prefix='n_')`
-- L716 `readNutrients(form,prefix='n_')`
-- L721 `editEntry(id)`
-- L730 `editFood(id,pending=null)`
-- L735 `usageStats(days=90)`
-- L743 `renderFoods(forceList=false)`
-- L755 `nutrientSources(key)`
-- L762 constante `SUPP_SLOTS` — Tu pauta de hoy: checklist por momento del día. Marcar = toma confirmada; desmarcar = vuelve a prevista.
-- L763 `suppSlot(meal)`
-- L764 `renderSupps()`
-- L779 `editPlan(id)`
-- L786 `renderSettings()`
+- L75 constante `REF_MAP` — Valores de referencia USDA FoodData Central por 100 g (aprox.). Revisa tu etiqueta si difiere.
+- L76 constante `REF_CACHE`
+- L78 `ensureRefIndex()`
+- L85 `refNutrients(id)`
+- L93 constante `STRIP_PREP_RE`
+- L94 `findRef(text,strict=false)`
+- L117 `refCatalogCompact()`
+- L118 `fromRef(id,amount,meal,note='',srcText='')`
+- L123 `optInfo(k,goal)`
+- L130 `optState(k,v,goal)` — Estado de un valor frente a su zona: 'none' | 'low' | 'ok' | 'high' | 'ref'
+- L138 `optLine(k,goal,unit)`
+- L145 `optRefHTML(k,goal,unit)`
+- L146 constante `FAF`
+- L148 constante `LOC`
+- L152 `number(v,min=0,max=1e6)`
+- L158 `decimalInputs(root=document)`
+- L159 `localDate(d=new Date()`
+- L160 `validDate(s)`
+- L165 `shift(s,n)`
+- L173 `stripProto(o)`
+- L180 `cleanBio(b)`
+- L189 constante `CONTEXT` — Contexto libre de cada perfil (lo escribe el usuario en sus notas). Vacío por defecto.
+- L191 constante `GOAL_TYPES` — Ajustes de perfil por defecto (se usan ya en defaults(), por eso van aquí arriba). Detalle en «Perfiles: sexo, objetivo…».
+- L197 constante `DAY_TYPES`
+- L198 constante `NEW_V54`
+- L202 `defaults()` — Usuario nuevo: sin pauta, sin desayuno ni batido fijos y sin alimentos de marca; el asistente lo configura.
+- L205 `bmr(w=state.profile.weight)` — Mifflin-St Jeor: +5 en hombre, -161 en mujer.
+- L211 `targetFor(d)` — Prioridad: 1) ajuste manual de ese día (state.days[d].macroGoals) 2) metas globales (targetMode all/split) 3) plan por defecto.
+- L236 `cleanNutrients(o,required=false)`
+- L248 `cleanEntry(e)`
+- L253 `cleanPlan(p)`
+- L257 `planEntry(p)`
+- L266 `seedPlan(d,whichDate)`
+- L270 `ensureDay(d=date)`
+- L277 `effectiveEntries(d=day()`
+- L278 constante `SALTED_IDS`
+- L279 constante `SWEET_RE`
+- L280 `inferFatShares(e,txt=normalize((e?.name||'')`
+- L298 `inferredNutrients(e)`
+- L340 `totals(entries)`
+- L352 `change(fn,message='Guardado')`
+- L358 `afterPaint(fn)`
+- L359 `queueSave(idle=false)`
+- L366 `flushQueuedSave(hard=false)`
+- L371 `undo()`
+- L379 `toast(text,canUndo=false)`
+- L387 constante `CLICK_HANDLERS` — Un solo listener de clic para toda la página; cada sección registra su manejador con onClick().
+- L388 `onClick(fn)`
+- L390 `attempt(fn)`
+- L394 `modal(title,body)`
+- L403 `modalRestore()`
+- L413 `afterModal(fn)` — Cierra la ventana y espera a que el historial se asiente antes de desplazar la página.
+- L414 `modalBack()`
+- L415 `goDate(d)`
+- L422 `renderHeader()`
+- L435 `renderRows(entries)`
+- L439 `entryValues(e)`
+- L440 `renderLog()`
+- L447 `fromFood(id,amount,meal)`
+- L453 `pantryId(name)`
+- L455 `rememberFood(e)` — Guarda en Mi despensa (por 100 g) un plato analizado por la IA, para reconocerlo después sin IA.
+- L474 `addEntries(entries,message='Añadido',d=date,opts={})`
+- L483 `recipe(kind)`
+- L490 `summary(entries)`
+- L494 `renderPresetInfo()`
+- L507 `stripCode(raw)`
+- L513 `sanitizeNutrients(o,grams=100,fallbackRefId='')`
+- L540 `parseBIO(raw,meal=$('meal-select')`
+- L552 `parseSmart(raw)`
+- L556 constante `COUNT`
+- L557 constante `UNIT_RE`
+- L621 `offToNutrients(nut={},fallbackName='')` — Open Food Facts (gratis, sin clave, CORS nativo): consulta por código de barras o texto.
+- L642 `lookupOFFBarcode(code,signal,ms=3200)`
+- L658 `searchOFF(query,signal,ms=4500)`
+- L677 `openProductSearch()`
+- L716 `nutrientFields(n,prefix='n_')`
+- L717 `readNutrients(form,prefix='n_')`
+- L722 `editEntry(id)`
+- L731 `editFood(id,pending=null)`
+- L736 `usageStats(days=90)`
+- L744 `renderFoods(forceList=false)`
+- L756 `nutrientSources(key)`
+- L763 constante `SUPP_SLOTS` — Tu pauta de hoy: checklist por momento del día. Marcar = toma confirmada; desmarcar = vuelve a prevista.
+- L764 `suppSlot(meal)`
+- L765 `renderSupps()`
+- L780 `editPlan(id)`
+- L787 `renderSettings()`
 
 ### IA y fotos: prompt BIOPEAT (ración completa; lo desconocido queda null, nunca 0)
 
-- L807 `makePrompt(meal='Comida',note='')`
-- L812 `pantryHint()` — Prompt específico de FOTO: un objeto por ingrediente, con tamaño estimado por referencias y tu despensa como base.
-- L816 `pantryCompact()`
-- L820 constante `MEAL_AI_SCHEMA`
-- L861 `mealSystemPrompt(usePhoto)`
-- L877 `hydrateAIItems(rawItems,fallback,usePhoto,aiModel,signal)`
-- L926 `photoPrompt(meal,note)`
-- L929 `resetPhoto()`
-- L940 `openPhoto()`
-- L946 `shrinkPhoto(file)`
-- L949 `selectPhoto(file)`
+- L808 `makePrompt(meal='Comida',note='')`
+- L813 `pantryHint()` — Prompt específico de FOTO: un objeto por ingrediente, con tamaño estimado por referencias y tu despensa como base.
+- L817 `pantryCompact()`
+- L821 constante `MEAL_AI_SCHEMA`
+- L862 `mealSystemPrompt(usePhoto)`
+- L878 `hydrateAIItems(rawItems,fallback,usePhoto,aiModel,signal)`
+- L927 `photoPrompt(meal,note)`
+- L930 `resetPhoto()`
+- L941 `openPhoto()`
+- L947 `shrinkPhoto(file)`
+- L950 `selectPhoto(file)`
 
 ### Datos: validación, migración de copias antiguas, almacenamiento y copias
 
-- L975 `cleanDayGoals(g)` — Valida un ajuste manual de macros de un día: {p,f} y opcionalmente kcal.
-- L982 `cleanFood(id,f)`
-- L989 `migrateBase(o)`
-- L1009 `download(name,text,type)`
-- L1018 `portable()`
-- L1072 `syncAppIcons()`
-- L1080 `downloadAppIcons()`
-- L1117 constante `PROFILES_KEY`
-- L1119 `ensureProfilesStore()`
-- L1139 `resetProfileSessionUI()`
-- L1146 `saveProfilesStore(st)`
-- L1155 `syncCurrentProfileToStore(snapObj=null,immediate=true)`
-- L1166 `activeProfileName()`
-- L1170 `renderProfilesList()`
-- L1212 `switchProfile(id)`
-- L1234 `deleteProfileById(id)`
-- L1259 `refreshDrawerSummary()`
-- L1276 `toggleLeftDrawer(force)`
-- L1291 `buildAIExportText(rangeOverride)`
-- L1546 `copyAIExport()`
-- L1560 `downloadAIExport()`
-- L1569 `renderDrawerChat()`
-- L1588 `buildDrawerChatContext()`
-- L1627 `buildDrawerChatPrompt(question)`
-- L1639 `askDrawerAI(rawQuestion)`
-- L1728 constante `CLOUD_OFF_KEY`
-- L1739 `bytesToB64(u8)`
-- L1740 `b64ToBytes(s)`
-- L1741 `bytesToB64Url(u8)`
-- L1742 `sha256Hex(str)`
-- L1743 `sha256Bytes(str)`
-- L1744 `generateSyncKey()`
-- L1745 `ensureSyncKey()`
-- L1746 `mirrorSyncKey(k)`
-- L1747 `deriveSyncCreds(keyStr)`
-- L1753 `hasMeaningfulData()`
-- L1760 `buildCloudBundle()`
-- L1767 `encryptVaultPayload(obj,keyStr)`
-- L1775 `readDecompressedText(bytes,maxBytes=10*1024*1024)`
-- L1791 `decryptVaultPayload(resp,keyStr)`
-- L1803 `bundleHash(bundle)`
-- L1807 `applyCloudBundle(o,rev=1)`
-- L1817 `cloudPull(keyStr,opts={})`
-- L1837 `cloudPush(opts={})`
-- L1874 `scheduleCloudPush()`
-- L1880 `scheduleAutoCloudPull(delayMs=120)`
-- L1894 `saveSyncToPassMgr()`
-- L1901 `trySilentPassMgrRecovery()`
-- L1911 `extractSyncKeyInput(val)`
-- L1917 `applySyncKey(rawKey,opts={})`
-- L1938 `takeSyncCode()`
-- L1949 `renderCloudStatus()`
-- L1972 `buildMagicSyncUrl()`
-- L1979 `openMagicSyncModal()`
-- L1988 `shareMagicSyncLink()`
-- L1995 `copyMagicSyncLink()`
-- L2000 `openCloudLinkModal()`
-- L2003 `deleteCloudBackup(confirmed=false)`
-- L2040 `mirrorToIDB(raw,profRaw)`
-- L2043 `storageStatus()`
-- L2050 `idbReadWrite(mode,value,key='current')`
-- L2051 `openDB()`
-- L2053 `flushDeferredSave()`
-- L2064 `save(skipCloud=false)`
+- L976 `cleanDayGoals(g)` — Valida un ajuste manual de macros de un día: {p,f} y opcionalmente kcal.
+- L983 `cleanFood(id,f)`
+- L990 `migrateBase(o)`
+- L1010 `download(name,text,type)`
+- L1019 `portable()`
+- L1073 `syncAppIcons()`
+- L1081 `downloadAppIcons()`
+- L1118 constante `PROFILES_KEY`
+- L1120 `ensureProfilesStore()`
+- L1140 `resetProfileSessionUI()`
+- L1147 `saveProfilesStore(st)`
+- L1156 `syncCurrentProfileToStore(snapObj=null,immediate=true)`
+- L1167 `activeProfileName()`
+- L1171 `renderProfilesList()`
+- L1213 `switchProfile(id)`
+- L1235 `deleteProfileById(id)`
+- L1260 `refreshDrawerSummary()`
+- L1277 `toggleLeftDrawer(force)`
+- L1292 `buildAIExportText(rangeOverride)`
+- L1547 `copyAIExport()`
+- L1561 `downloadAIExport()`
+- L1570 `renderDrawerChat()`
+- L1589 `buildDrawerChatContext()`
+- L1628 `buildDrawerChatPrompt(question)`
+- L1640 `askDrawerAI(rawQuestion)`
+- L1729 constante `CLOUD_OFF_KEY`
+- L1740 `bytesToB64(u8)`
+- L1741 `b64ToBytes(s)`
+- L1742 `bytesToB64Url(u8)`
+- L1743 `sha256Hex(str)`
+- L1744 `sha256Bytes(str)`
+- L1745 `generateSyncKey()`
+- L1746 `ensureSyncKey()`
+- L1747 `mirrorSyncKey(k)`
+- L1748 `deriveSyncCreds(keyStr)`
+- L1754 `hasMeaningfulData()`
+- L1761 `buildCloudBundle()`
+- L1768 `encryptVaultPayload(obj,keyStr)`
+- L1776 `readDecompressedText(bytes,maxBytes=10*1024*1024)`
+- L1792 `decryptVaultPayload(resp,keyStr)`
+- L1804 `bundleHash(bundle)`
+- L1808 `applyCloudBundle(o,rev=1)`
+- L1818 `cloudPull(keyStr,opts={})`
+- L1838 `cloudPush(opts={})`
+- L1875 `scheduleCloudPush()`
+- L1881 `scheduleAutoCloudPull(delayMs=120)`
+- L1895 `saveSyncToPassMgr()`
+- L1902 `trySilentPassMgrRecovery()`
+- L1912 `extractSyncKeyInput(val)`
+- L1918 `applySyncKey(rawKey,opts={})`
+- L1939 `takeSyncCode()`
+- L1950 `renderCloudStatus()`
+- L1973 `buildMagicSyncUrl()`
+- L1980 `openMagicSyncModal()`
+- L1989 `shareMagicSyncLink()`
+- L1996 `copyMagicSyncLink()`
+- L2001 `openCloudLinkModal()`
+- L2004 `deleteCloudBackup(confirmed=false)`
+- L2041 `mirrorToIDB(raw,profRaw)`
+- L2044 `storageStatus()`
+- L2051 `idbReadWrite(mode,value,key='current')`
+- L2052 `openDB()`
+- L2054 `flushDeferredSave()`
+- L2065 `save(skipCloud=false)`
 
 ### Eventos generales: añadir con un toque, editar, eliminar
 
-- L2093 `setQuantity(id,value,msg='Cantidad actualizada')`
-- L2097 `niceStep(v)`
-- L2098 `stepQuantity(id,dir)`
-- L2152 `renderAppInfo(force=false)`
-- L2184 `init()`
+- L2094 `setQuantity(id,value,msg='Cantidad actualizada')`
+- L2098 `niceStep(v)`
+- L2099 `stepQuantity(id,dir)`
+- L2153 `renderAppInfo(force=false)`
+- L2185 `init()`
 - L2221 `upgradeTo11(s,o)` — Revisión 11 (antigua): solo marca la revisión. La corrección de la pauta de entonces ya está en los datos.
 
 ### Navegación: una sola página; la barra inferior solo desplaza
@@ -964,7 +964,7 @@ INSTRUCCIONES DEL ZIP DE VUELTA (DESDE CERO):
 - Entrega un ZIP llamado: COPILOT_A_ANTIGRAVITY_YYYYMMDD-HHMMSS-biopeat-<6hex>.zip
 - Incluye HANDOFF.json con:
   - protocol_version: "1.1", direction: "copilot_to_antigravity", origin_mode: "copilot_from_scratch"
-  - project: "biopeat", repo_url: "https://github.com/BioPeat/biopeat.git", branch: "main", source_commit: "46df7dc31bde40e1c4a9630d7a69676450273368"
+  - project: "biopeat", repo_url: "https://github.com/BioPeat/biopeat.git", branch: "main", source_commit: "a4281d81cb8fd2cb8ee68e9f78159598098b5cfc"
   - task_id único (>=8 chars), created_at, objective, files (con sha256 en minúsculas)
 - Incluye RESPUESTA.md, PRUEBAS.md y, si hay cambios, PATCH.diff y/o files/ (deleted_files opcional).
 - PROHIBIDO: ejecutables binarios, scripts no declarados, rutas .. o absolutas, secretos o rutas locales.

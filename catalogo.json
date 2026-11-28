@@ -1,6 +1,6 @@
 {
   "protocol_version": "1.1",
-  "updated_at": "2026-11-28T13:15:18.484327+00:00",
+  "updated_at": "2026-11-28T13:23:12.397882+00:00",
   "projects": [
     {
       "name": "biopeat",
@@ -8,11 +8,11 @@
       "repo_url": "https://github.com/BioPeat/biopeat.git",
       "pages_url": "https://biopeat.github.io/biopeat/",
       "branch": "main",
-      "commit": "46df7dc31bde40e1c4a9630d7a69676450273368",
+      "commit": "a4281d81cb8fd2cb8ee68e9f78159598098b5cfc",
       "dirty_local": false,
       "public": true,
       "status": "synced",
-      "synced_at": "2026-11-28T13:15:18.484327+00:00",
+      "synced_at": "2026-11-28T13:23:12.397882+00:00",
       "file_count": 28,
       "omitted_count": 3,
       "estado_txt_path": "catalogo/biopeat/ESTADO_biopeat.txt",

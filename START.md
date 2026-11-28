@@ -40,6 +40,6 @@ Sin incidencias adicionales.
 
 | Proyecto | Visibilidad | Commit actual (`source_commit`) | Enlaces directos |
 |---|---|---|---|
-| biopeat | Público | `ec2226cf72d2a734c8d932f81309082ca875bce0` | [ESTADO.md](catalogo/biopeat/ESTADO.md) · [resumen.html](catalogo/biopeat/resumen.html) · [estado.json](catalogo/biopeat/estado.json) · [AGENTS.md](catalogo/biopeat/files/AGENTS.md) |
+| biopeat | Público | `46df7dc31bde40e1c4a9630d7a69676450273368` | [ESTADO.md](catalogo/biopeat/ESTADO.md) · [resumen.html](catalogo/biopeat/resumen.html) · [estado.json](catalogo/biopeat/estado.json) · [AGENTS.md](catalogo/biopeat/files/AGENTS.md) |
 | Finanzas | Público | `6b246e0353ec5c7f7432339a60a30989f5316a03` | [ESTADO.md](catalogo/finanzas/ESTADO.md) · [resumen.html](catalogo/finanzas/resumen.html) · [estado.json](catalogo/finanzas/estado.json) · [AGENTS.md](catalogo/finanzas/files/AGENTS.md) |
 | estadisticas | Público | `d2b6ba9be4dec2cf0f4d5e158b78b089a8f61c80` | [ESTADO.md](catalogo/estadisticas/ESTADO.md) · [resumen.html](catalogo/estadisticas/resumen.html) · [estado.json](catalogo/estadisticas/estado.json) · [AGENTS.md](catalogo/estadisticas/files/AGENTS.md) |

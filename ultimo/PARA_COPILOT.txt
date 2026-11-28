@@ -1,14 +1,14 @@
 PUENTE IA · SIN TRASPASO ACTIVO PENDIENTE
 ======================================================================
-ULTIMA TAREA CERRADA: reparto-puntos-ad1eddfd
-PROYECTO: estadisticas
-REPOSITORIO: https://github.com/BioPeat/estadisticas.git
-COMMIT FINAL: 42f6ecdfb20a067c4cdf4ee6e7b291347901ab3c
+ULTIMA TAREA CERRADA: biopeat-v84-fluidez-copilot
+PROYECTO: biopeat
+REPOSITORIO: https://github.com/BioPeat/biopeat.git
+COMMIT FINAL: ec2226cf72d2a734c8d932f81309082ca875bce0
 ESTADO: applied
-ACTUALIZADO UTC: 2026-11-24T14:25:56.051938+00:00
+ACTUALIZADO UTC: 2026-11-28T12:53:57.173601+00:00
 
 RESUMEN:
-Modal Reparto de puntos ampliado con resumen, mapa de puntos y evolución individual sin tocar Minutos; SW actualizado.
+Adaptadas las 5 propuestas de fluidez de Copilot (v81) a BioPeat modular v84: splash animado claro/oscuro, content-visibility ampliado, guardado diferido queueSave/flushQueuedSave, respuesta tactil/animaciones suaves y sw.js v15 sin cache en ?u=.
 
 SI QUIERES EMPEZAR UNA TAREA NUEVA DESDE CERO EN COPILOT:
 - Usa el archivo ESTADO_<app>.txt del catálogo de la app correspondiente en el panel.

@@ -4,11 +4,11 @@
   "repo_url": "https://github.com/BioPeat/biopeat.git",
   "pages_url": "https://biopeat.github.io/biopeat/",
   "branch": "main",
-  "commit": "37a739f533a135013931b269c378d19af62daf3c",
+  "commit": "ec2226cf72d2a734c8d932f81309082ca875bce0",
   "dirty_local": false,
   "public": true,
   "status": "synced",
-  "synced_at": "2026-11-28T12:47:08.443514+00:00",
+  "synced_at": "2026-11-28T12:53:58.420282+00:00",
   "file_count": 28,
   "omitted_count": 3,
   "estado_txt_path": "catalogo/biopeat/ESTADO_biopeat.txt",
@@ -25,8 +25,8 @@
     },
     {
       "path": ".github/workflows/check.yml",
-      "size": 1155,
-      "sha256": "5bbdf962382a98d33dc3ba9a04fdfefde2634251e2be9f1dba20d7fced074233"
+      "size": 1189,
+      "sha256": "c56dee73363f0ed364615b9c877af452479e291f55c6f2ebbee3c8cb887c5d96"
     },
     {
       "path": ".gitignore",
@@ -40,13 +40,13 @@
     },
     {
       "path": "CONTEXTO_BIOPEAT.md",
-      "size": 22058,
-      "sha256": "c4e384e8b8ecafe366a40f5d84ac4d882008ec73ada3d027b99bce35a43d5768"
+      "size": 22176,
+      "sha256": "e05c8b6dc58ab4ebf8b1e84839eb1ae1ce4dc058520f6ab8fe8a49034215706e"
     },
     {
       "path": "MAPA_DEL_CODIGO.md",
-      "size": 26725,
-      "sha256": "79e505e6e00be8ad13a52a686fcda9b5c10a17e3fa052919ad498adf13884134"
+      "size": 26821,
+      "sha256": "55dd962f509ad8eecb250966e0570979fdcea44a76d145061f5d537d1df8c6c8"
     },
     {
       "path": "README.md",
@@ -55,8 +55,8 @@
     },
     {
       "path": "assets/app.js",
-      "size": 533243,
-      "sha256": "f29b378939abdbbcefa4abb213e1fb808fb3d87b5f2b651e6c4f9a46f45eea8c"
+      "size": 534575,
+      "sha256": "4a47febf1c37bbbea8842e7775e0a5925713a0a27c455ac3b6991a14ab4a1b86"
     },
     {
       "path": "assets/data.js",
@@ -70,8 +70,8 @@
     },
     {
       "path": "assets/styles.css",
-      "size": 243218,
-      "sha256": "4702bd1db3fff90e0c1e10e7bf66f255ac98519cb79c9a1259a1efb9ccab4c1a"
+      "size": 246260,
+      "sha256": "08a05ca70081829b38ccd1f051648875e89dd93401ee721d34aa5b9fbd46a316"
     },
     {
       "path": "cloudflare/config.json",
@@ -90,8 +90,8 @@
     },
     {
       "path": "index.html",
-      "size": 67632,
-      "sha256": "1753f202b24340a3e657e9e4b1f02dc0cde0027dc340acbfd6ce47364c71e713"
+      "size": 67668,
+      "sha256": "bb03e1d7096fd5a8ad6b8e41abe33290dd11f49c4e2c48c726bf3d4012d28a4d"
     },
     {
       "path": "inicio.html",
@@ -110,8 +110,8 @@
     },
     {
       "path": "sw.js",
-      "size": 1975,
-      "sha256": "022e7753983c184705843a71ea5652b091c069fdcb1233b61d79930cd4e2fe9f"
+      "size": 2438,
+      "sha256": "05d80f3113ffe7a35ea50dbb9734148d74d548beb92d296d1a2fefaee66db1a5"
     },
     {
       "path": "terms.html",

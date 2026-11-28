@@ -1,13 +1,13 @@
 # Último estado del puente
 
-- **Última tarea registrada:** [reparto-puntos-ad1eddfd](handoffs/reparto-puntos-ad1eddfd/RESULTADO.md) (detalle: [ORIGEN_COPILOT.md](handoffs/reparto-puntos-ad1eddfd/ORIGEN_COPILOT.md))
+- **Última tarea registrada:** [biopeat-v84-fluidez-copilot](handoffs/biopeat-v84-fluidez-copilot/RESULTADO.md) (detalle: [ORIGEN_COPILOT.md](handoffs/biopeat-v84-fluidez-copilot/ORIGEN_COPILOT.md))
 - **Modo:** `copilot_from_scratch`
 - **Estado:** `applied`
-- **Proyecto:** estadisticas
-- **Repositorio:** https://github.com/BioPeat/estadisticas.git
-- **Commit final:** `42f6ecdfb20a067c4cdf4ee6e7b291347901ab3c`
+- **Proyecto:** biopeat
+- **Repositorio:** https://github.com/BioPeat/biopeat.git
+- **Commit final:** `ec2226cf72d2a734c8d932f81309082ca875bce0`
 - **Catálogo actual para tareas desde cero:** [CATALOGO.md](CATALOGO.md)
 
 ## Resumen
 
-Modal Reparto de puntos ampliado con resumen, mapa de puntos y evolución individual sin tocar Minutos; SW actualizado.
+Adaptadas las 5 propuestas de fluidez de Copilot (v81) a BioPeat modular v84: splash animado claro/oscuro, content-visibility ampliado, guardado diferido queueSave/flushQueuedSave, respuesta tactil/animaciones suaves y sw.js v15 sin cache en ?u=.

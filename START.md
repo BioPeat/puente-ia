@@ -14,23 +14,23 @@
 
 # Resultado de importación y cierre
 
-- **ID:** reparto-puntos-ad1eddfd
+- **ID:** biopeat-v84-fluidez-copilot
 - **Modo de origen:** `copilot_from_scratch`
-- **Proyecto:** estadisticas
-- **Repositorio:** https://github.com/BioPeat/estadisticas.git
+- **Proyecto:** biopeat
+- **Repositorio:** https://github.com/BioPeat/biopeat.git
 - **Rama:** main
-- **Commit de origen:** `0c2fc471b076516b9ca44449c20c5fb85988e2f9`
-- **Commit final:** `42f6ecdfb20a067c4cdf4ee6e7b291347901ab3c`
+- **Commit de origen:** `ffc06dffd33b35e2ab67e185582e8735984e641b`
+- **Commit final:** `ec2226cf72d2a734c8d932f81309082ca875bce0`
 - **Estado:** `applied`
-- **Registrado (UTC):** 2026-11-24T14:25:56.051938+00:00
+- **Registrado (UTC):** 2026-11-28T12:53:57.173601+00:00
 
 ## Resumen
 
-Modal Reparto de puntos ampliado con resumen, mapa de puntos y evolución individual sin tocar Minutos; SW actualizado.
+Adaptadas las 5 propuestas de fluidez de Copilot (v81) a BioPeat modular v84: splash animado claro/oscuro, content-visibility ampliado, guardado diferido queueSave/flushQueuedSave, respuesta tactil/animaciones suaves y sw.js v15 sin cache en ?u=.
 
 ## Pruebas ejecutadas en Antigravity
 
-validate.py, worker_mock.mjs, smoke.py, updater_e2e.py
+node --check, security_check.py, smoke.py y revision visual movil claro/oscuro
 
 ## Notas
 
@@ -40,6 +40,6 @@ Sin incidencias adicionales.
 
 | Proyecto | Visibilidad | Commit actual (`source_commit`) | Enlaces directos |
 |---|---|---|---|
-| biopeat | Público | `37a739f533a135013931b269c378d19af62daf3c` | [ESTADO.md](catalogo/biopeat/ESTADO.md) · [resumen.html](catalogo/biopeat/resumen.html) · [estado.json](catalogo/biopeat/estado.json) · [AGENTS.md](catalogo/biopeat/files/AGENTS.md) |
+| biopeat | Público | `ec2226cf72d2a734c8d932f81309082ca875bce0` | [ESTADO.md](catalogo/biopeat/ESTADO.md) · [resumen.html](catalogo/biopeat/resumen.html) · [estado.json](catalogo/biopeat/estado.json) · [AGENTS.md](catalogo/biopeat/files/AGENTS.md) |
 | Finanzas | Público | `6b246e0353ec5c7f7432339a60a30989f5316a03` | [ESTADO.md](catalogo/finanzas/ESTADO.md) · [resumen.html](catalogo/finanzas/resumen.html) · [estado.json](catalogo/finanzas/estado.json) · [AGENTS.md](catalogo/finanzas/files/AGENTS.md) |
 | estadisticas | Público | `d2b6ba9be4dec2cf0f4d5e158b78b089a8f61c80` | [ESTADO.md](catalogo/estadisticas/ESTADO.md) · [resumen.html](catalogo/estadisticas/resumen.html) · [estado.json](catalogo/estadisticas/estado.json) · [AGENTS.md](catalogo/estadisticas/files/AGENTS.md) |

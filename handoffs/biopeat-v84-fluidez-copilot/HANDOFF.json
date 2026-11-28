@@ -1,0 +1,13 @@
+{
+  "protocol_version": "1.1",
+  "task_id": "biopeat-v84-fluidez-copilot",
+  "direction": "copilot_to_antigravity",
+  "origin_mode": "copilot_from_scratch",
+  "project": "biopeat",
+  "repo_url": "https://github.com/BioPeat/biopeat.git",
+  "branch": "main",
+  "source_commit": "ffc06dffd33b35e2ab67e185582e8735984e641b",
+  "created_at": "2026-11-28T12:53:57.173601+00:00",
+  "objective": "Adaptadas las 5 propuestas de fluidez de Copilot (v81) a BioPeat modular v84: splash animado claro/oscuro, content-visibility ampliado, guardado diferido queueSave/flushQueuedSave, respuesta tactil/animaciones suaves y sw.js v15 sin cache en ?u=.",
+  "files": []
+}

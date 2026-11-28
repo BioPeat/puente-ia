@@ -2,6 +2,7 @@
 
 | Fecha UTC | ID | Modo | Proyecto | Estado | Commit |
 |---|---|---|---|---|---|
+| 2026-11-28 12:53 | [biopeat-v84-fluidez-copilot](handoffs/biopeat-v84-fluidez-copilot/RESULTADO.md) | `copilot_from_scratch` | biopeat | `applied` | `ec2226c` |
 | 2026-11-24 14:25 | [reparto-puntos-ad1eddfd](handoffs/reparto-puntos-ad1eddfd/RESULTADO.md) | `copilot_from_scratch` | estadisticas | `applied` | `42f6ecd` |
 | 2026-11-23 18:02 | [20261123-173818-estadisticas-033ac0](handoffs/20261123-173818-estadisticas-033ac0/RESULTADO.md) | `reply_to_handoff` | estadisticas | `applied` | `1c052b2` |
 | 2026-11-23 17:38 | [20261123-173818-estadisticas-033ac0](handoffs/20261123-173818-estadisticas-033ac0/HANDOFF.md) | `reply_to_handoff` | estadisticas | `ready_for_copilot` | `fb7a56a` |
